@@ -1,0 +1,206 @@
+{
+ "id": "cc24_before2014",
+ "title": "24색 클래식 (2014.11 이전)",
+ "space": "Lab",
+ "whitePoint": [
+  0.3457,
+  0.3585
+ ],
+ "rows": 4,
+ "columns": 6,
+ "source": "X-Rite (2016) New color specifications for ColorChecker SG and Classic Charts, via colour-science (BSD-3-Clause)",
+ "patches": [
+  {
+   "name": "dark skin",
+   "values": [
+    37.986,
+    13.555,
+    14.059
+   ]
+  },
+  {
+   "name": "light skin",
+   "values": [
+    65.711,
+    18.13,
+    17.81
+   ]
+  },
+  {
+   "name": "blue sky",
+   "values": [
+    49.927,
+    -4.88,
+    -21.905
+   ]
+  },
+  {
+   "name": "foliage",
+   "values": [
+    43.139,
+    -13.095,
+    21.905
+   ]
+  },
+  {
+   "name": "blue flower",
+   "values": [
+    55.112,
+    8.844,
+    -25.399
+   ]
+  },
+  {
+   "name": "bluish green",
+   "values": [
+    70.719,
+    -33.397,
+    -0.199
+   ]
+  },
+  {
+   "name": "orange",
+   "values": [
+    62.661,
+    36.067,
+    57.096
+   ]
+  },
+  {
+   "name": "purplish blue",
+   "values": [
+    40.02,
+    10.41,
+    -45.964
+   ]
+  },
+  {
+   "name": "moderate red",
+   "values": [
+    51.124,
+    48.239,
+    16.248
+   ]
+  },
+  {
+   "name": "purple",
+   "values": [
+    30.325,
+    22.976,
+    -21.587
+   ]
+  },
+  {
+   "name": "yellow green",
+   "values": [
+    72.532,
+    -23.709,
+    57.255
+   ]
+  },
+  {
+   "name": "orange yellow",
+   "values": [
+    71.941,
+    19.363,
+    67.857
+   ]
+  },
+  {
+   "name": "blue",
+   "values": [
+    28.778,
+    14.179,
+    -50.297
+   ]
+  },
+  {
+   "name": "green",
+   "values": [
+    55.261,
+    -38.342,
+    31.37
+   ]
+  },
+  {
+   "name": "red",
+   "values": [
+    42.101,
+    53.378,
+    28.19
+   ]
+  },
+  {
+   "name": "yellow",
+   "values": [
+    81.733,
+    4.039,
+    79.819
+   ]
+  },
+  {
+   "name": "magenta",
+   "values": [
+    51.935,
+    49.986,
+    -14.574
+   ]
+  },
+  {
+   "name": "cyan",
+   "values": [
+    51.038,
+    -28.631,
+    -28.638
+   ]
+  },
+  {
+   "name": "white 9.5 (.05 D)",
+   "values": [
+    96.539,
+    -0.425,
+    1.186
+   ]
+  },
+  {
+   "name": "neutral 8 (.23 D)",
+   "values": [
+    81.257,
+    -0.638,
+    -0.335
+   ]
+  },
+  {
+   "name": "neutral 6.5 (.44 D)",
+   "values": [
+    66.766,
+    -0.734,
+    -0.504
+   ]
+  },
+  {
+   "name": "neutral 5 (.70 D)",
+   "values": [
+    50.867,
+    -0.153,
+    -0.27
+   ]
+  },
+  {
+   "name": "neutral 3.5 (1.05 D)",
+   "values": [
+    35.656,
+    -0.421,
+    -1.231
+   ]
+  },
+  {
+   "name": "black 2 (1.5 D)",
+   "values": [
+    20.461,
+    -0.079,
+    -0.973
+   ]
+  }
+ ]
+}

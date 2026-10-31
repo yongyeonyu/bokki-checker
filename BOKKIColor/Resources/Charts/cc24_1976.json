@@ -1,0 +1,206 @@
+{
+ "id": "cc24_1976",
+ "title": "24색 클래식 (1976 원본)",
+ "space": "xyY",
+ "whitePoint": [
+  0.31006,
+  0.31616
+ ],
+ "rows": 4,
+ "columns": 6,
+ "source": "McCamy et al. (1976), via colour-science (BSD-3-Clause)",
+ "patches": [
+  {
+   "name": "dark skin",
+   "values": [
+    0.4002,
+    0.3504,
+    0.1005
+   ]
+  },
+  {
+   "name": "light skin",
+   "values": [
+    0.3773,
+    0.3446,
+    0.3582
+   ]
+  },
+  {
+   "name": "blue sky",
+   "values": [
+    0.247,
+    0.2514,
+    0.1933
+   ]
+  },
+  {
+   "name": "foliage",
+   "values": [
+    0.3372,
+    0.422,
+    0.1329
+   ]
+  },
+  {
+   "name": "blue flower",
+   "values": [
+    0.2651,
+    0.24,
+    0.2427
+   ]
+  },
+  {
+   "name": "bluish green",
+   "values": [
+    0.2608,
+    0.343,
+    0.4306
+   ]
+  },
+  {
+   "name": "orange",
+   "values": [
+    0.506,
+    0.407,
+    0.3005
+   ]
+  },
+  {
+   "name": "purplish blue",
+   "values": [
+    0.211,
+    0.175,
+    0.12
+   ]
+  },
+  {
+   "name": "moderate red",
+   "values": [
+    0.4533,
+    0.3058,
+    0.1977
+   ]
+  },
+  {
+   "name": "purple",
+   "values": [
+    0.2845,
+    0.202,
+    0.0656
+   ]
+  },
+  {
+   "name": "yellow green",
+   "values": [
+    0.38,
+    0.4887,
+    0.4429
+   ]
+  },
+  {
+   "name": "orange yellow",
+   "values": [
+    0.4729,
+    0.4375,
+    0.4306
+   ]
+  },
+  {
+   "name": "blue",
+   "values": [
+    0.1866,
+    0.1285,
+    0.0611
+   ]
+  },
+  {
+   "name": "green",
+   "values": [
+    0.3046,
+    0.4782,
+    0.2339
+   ]
+  },
+  {
+   "name": "red",
+   "values": [
+    0.5385,
+    0.3129,
+    0.12
+   ]
+  },
+  {
+   "name": "yellow",
+   "values": [
+    0.448,
+    0.4703,
+    0.591
+   ]
+  },
+  {
+   "name": "magenta",
+   "values": [
+    0.3635,
+    0.2325,
+    0.1977
+   ]
+  },
+  {
+   "name": "cyan",
+   "values": [
+    0.1958,
+    0.2519,
+    0.1977
+   ]
+  },
+  {
+   "name": "white 9.5 (.05 D)",
+   "values": [
+    0.3101,
+    0.3163,
+    0.9001
+   ]
+  },
+  {
+   "name": "neutral 8 (.23 D)",
+   "values": [
+    0.3101,
+    0.3163,
+    0.591
+   ]
+  },
+  {
+   "name": "neutral 6.5 (.44 D)",
+   "values": [
+    0.3101,
+    0.3163,
+    0.362
+   ]
+  },
+  {
+   "name": "neutral 5 (.70 D)",
+   "values": [
+    0.3101,
+    0.3163,
+    0.1977
+   ]
+  },
+  {
+   "name": "neutral 3.5 (1.05 D)",
+   "values": [
+    0.3101,
+    0.3163,
+    0.09
+   ]
+  },
+  {
+   "name": "black 2 (1.5 D)",
+   "values": [
+    0.3101,
+    0.3163,
+    0.0313
+   ]
+  }
+ ]
+}
