@@ -16,7 +16,6 @@ struct SlateView: View {
     @AppStorage("slate.iso") private var iso = "ISO 100"
     @AppStorage("slate.scene") private var scene = "1"
     @AppStorage("slate.take") private var take = 1
-    @State private var editing = false
     @Environment(CustomChartStore.self) private var store
 
     private var chart: PatchChart {
@@ -34,7 +33,6 @@ struct SlateView: View {
             }
         }
         .background(Color.black)
-        .sheet(isPresented: $editing) { editor }
     }
 
     private func info(wide: Bool) -> some View {
@@ -43,33 +41,63 @@ struct SlateView: View {
                 Text(ctx.date, format: .dateTime.year().month().day().hour().minute().second())
                     .font(.system(.headline, design: .monospaced))
             }
-            Text(project).font(.title2.bold()).lineLimit(1)
+            // Every field is typed into directly: tapping the text puts the cursor there.
+            slateField("프로젝트", $project, font: .title2.bold())
             HStack(alignment: .firstTextBaseline, spacing: 18) {
-                Text("S \(scene)").font(.system(size: 34, weight: .heavy, design: .rounded))
-                Text("T \(take)").font(.system(size: 34, weight: .heavy, design: .rounded))
+                HStack(spacing: 4) {
+                    Text("S").font(.system(size: 34, weight: .heavy, design: .rounded))
+                    slateField("씬", $scene, font: .system(size: 34, weight: .heavy, design: .rounded))
+                        .frame(width: 90)
+                }
+                HStack(spacing: 4) {
+                    Text("T").font(.system(size: 34, weight: .heavy, design: .rounded))
+                    TextField("테이크", value: $take, format: .number)
+                        .keyboardType(.numberPad)
+                        .font(.system(size: 34, weight: .heavy, design: .rounded))
+                        .frame(width: 90)
+                }
+                Button { take = max(1, take - 1) } label: { Image(systemName: "minus.circle.fill") }
+                Button { take += 1 } label: { Image(systemName: "plus.circle.fill") }
             }
+            .font(.title2)
             Group {
-                Text(camera)
-                Text("\(profile) · \(wb) · \(iso)")
-                Text(chart.title).foregroundStyle(.gray)
+                slateField("카메라", $camera)
+                HStack(spacing: 6) {
+                    slateField("프로파일", $profile)
+                    Text("·")
+                    slateField("WB", $wb)
+                    Text("·")
+                    slateField("ISO", $iso)
+                }
             }
             .font(.system(.subheadline, design: .monospaced))
-            .lineLimit(2)
+            Menu {
+                ForEach(ChartCatalog.referenceIDs.filter { !$0.hasPrefix("sg140") }, id: \.self) { id in
+                    Button(ChartCatalog.references[id]?.title ?? id) { chartID = id }
+                }
+                ForEach(store.charts.filter { [24, 45].contains($0.patches.count) }) { c in
+                    Button("✎ " + c.title) { chartID = c.id }
+                }
+            } label: {
+                Label(chart.title, systemImage: "chevron.up.chevron.down")
+                    .font(.system(.subheadline, design: .monospaced)).foregroundStyle(.gray)
+            }
             Spacer(minLength: 4)
             neutralStrip.frame(maxHeight: wide ? 120 : 70)
-            if showControls {
-                HStack {
-                    Button { take = max(1, take - 1) } label: { Image(systemName: "minus.circle.fill") }
-                    Button { take += 1 } label: { Image(systemName: "plus.circle.fill") }
-                    Spacer()
-                    Button("편집") { editing = true }.buttonStyle(.borderedProminent)
-                }
-                .font(.title2)
-            }
         }
         .foregroundStyle(.white)
         .padding(14)
         .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
+    }
+
+    /// Borderless text field styled as slate text; focus (cursor) comes from a plain tap.
+    private func slateField(_ prompt: String, _ text: Binding<String>, font: Font = .system(.subheadline, design: .monospaced)) -> some View {
+        TextField(prompt, text: text)
+            .font(font)
+            .textFieldStyle(.plain)
+            .autocorrectionDisabled()
+            .textInputAutocapitalization(.never)
+            .lineLimit(1)
     }
 
     /// White / 18% gray / black for quick WB and exposure picking in the grade.
@@ -81,40 +109,6 @@ struct SlateView: View {
                     .overlay(Rectangle().stroke(Color(white: 0.3), lineWidth: 1))
                     .onTapGesture { onSelect(Patch(name: item.0, spec: item.1)) }
             }
-        }
-    }
-
-    private var editor: some View {
-        NavigationStack {
-            Form {
-                Section("기준 체커") {
-                    Picker("체커", selection: $chartID) {
-                        ForEach(ChartCatalog.referenceIDs.filter { !$0.hasPrefix("sg140") }, id: \.self) { id in
-                            Text(ChartCatalog.references[id]?.title ?? id).tag(id)
-                        }
-                        ForEach(store.charts.filter { [24, 45].contains($0.patches.count) }) { c in
-                            Text("✎ " + c.title).tag(c.id)
-                        }
-                    }
-                }
-                Section("촬영 정보") {
-                    TextField("프로젝트", text: $project)
-                    TextField("카메라", text: $camera)
-                    Picker("프로파일", selection: $profile) {
-                        ForEach(["D-Log M", "D-Log", "HLG", "Normal", "Log (기타)"], id: \.self) { Text($0) }
-                    }
-                    TextField("화이트밸런스", text: $wb)
-                    TextField("ISO / 셔터", text: $iso)
-                    TextField("씬", text: $scene)
-                    Stepper("테이크 \(take)", value: $take, in: 1...999)
-                }
-                Section("Resolve 매칭 팁") {
-                    Text("컬러 페이지 › Color Match › 차트: ColorChecker Classic (45색은 수동 매칭), Source Gamma: DJI D-Log M, Target: Rec.709 Gamma 2.4. 체커 화면이 프레임의 1/3 이상 차도록, 반사 없이 정면에서 촬영하세요.")
-                        .font(.footnote)
-                }
-            }
-            .navigationTitle("슬레이트 편집")
-            .toolbar { Button("완료") { editing = false } }
         }
     }
 }
