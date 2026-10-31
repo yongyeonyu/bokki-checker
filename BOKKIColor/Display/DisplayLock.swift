@@ -93,9 +93,12 @@ final class DisplayLock {
     /// Conditions that change emitted colour or brightness and that the app can detect.
     func refreshWarnings() {
         var w: [String] = []
+        // The simulator cannot change brightness, so the check only applies on a device.
+        #if !targetEnvironment(simulator)
         if savedBrightness != nil, let screen, screen.brightness < Self.target - 0.01 {
-            w.append("밝기가 100%가 아닙니다")
+            w.append(String(format: "밝기 %.0f%% (100%%가 아님)", screen.brightness * 100))
         }
+        #endif
         if ProcessInfo.processInfo.isLowPowerModeEnabled { w.append("저전력 모드: 밝기 제한 가능") }
         switch ProcessInfo.processInfo.thermalState {
         case .serious, .critical: w.append("기기 과열: 화면 감광 중일 수 있음")

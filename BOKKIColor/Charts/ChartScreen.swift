@@ -46,6 +46,12 @@ struct ChartScreen: View {
                 if !lock.warnings.isEmpty { warningBadge }
             }
         }
+        .simultaneousGesture(
+            // Swipe down to close; a mostly vertical drag of at least 120 pt.
+            DragGesture(minimumDistance: 40).onEnded { v in
+                if v.translation.height > 120, abs(v.translation.width) < v.translation.height { dismiss() }
+            }
+        )
         .statusBarHidden()
         .persistentSystemOverlays(.hidden)
         .onAppear {
