@@ -31,33 +31,52 @@ struct DisplayCheckView: View {
                 } header: { Text("자동 점검") } footer: {
                     Text("True Tone · Night Shift · 자동 밝기는 iOS가 앱에 상태를 알려주지 않으므로 아래에서 직접 확인하세요.")
                 }
-                Section("수동 점검") {
+                Section {
                     ForEach(Array(items.enumerated()), id: \.offset) { i, item in
-                        Button {
-                            if checked.contains(i) { checked.remove(i) } else { checked.insert(i) }
-                        } label: {
-                            HStack(alignment: .top, spacing: 12) {
+                        HStack(alignment: .top, spacing: 12) {
+                            Button {
+                                if checked.contains(i) { checked.remove(i) } else { checked.insert(i) }
+                            } label: {
                                 Image(systemName: checked.contains(i) ? "checkmark.circle.fill" : "circle")
                                     .foregroundStyle(checked.contains(i) ? .green : .secondary).font(.title3)
-                                VStack(alignment: .leading, spacing: 3) {
-                                    Text(item.0).font(.body.weight(.semibold)).foregroundStyle(.primary)
-                                    Text(item.1).font(.caption).foregroundStyle(.blue)
-                                    Text(item.2).font(.caption).foregroundStyle(.secondary)
-                                }
                             }
+                            .buttonStyle(.borderless)
+                            VStack(alignment: .leading, spacing: 3) {
+                                Text(item.0).font(.body.weight(.semibold))
+                                Text(item.1).font(.caption).foregroundStyle(.blue)
+                                Text(item.2).font(.caption).foregroundStyle(.secondary)
+                            }
+                            Spacer(minLength: 0)
+                            Button {
+                                openSettings(path: item.1)
+                            } label: {
+                                Label("설정", systemImage: "arrow.up.forward.app")
+                                    .labelStyle(.iconOnly).font(.title3)
+                            }
+                            .buttonStyle(.borderless)
+                            .accessibilityLabel("설정 열기: \(item.0)")
                         }
                     }
+                } header: {
+                    Text("수동 점검")
+                } footer: {
+                    Text("‘설정’을 누르면 설정 앱이 열리고 경로가 복사됩니다. iOS는 특정 설정 화면으로 직접 이동하는 공개 주소를 제공하지 않아, 설정 앱 첫 화면에서 경로를 따라가세요.")
                 }
                 Section {
-                    Button("설정 앱 열기") {
-                        if let url = URL(string: UIApplication.openSettingsURLString) { UIApplication.shared.open(url) }
-                    }
+                    Button("설정 앱 열기") { openSettings(path: nil) }
                 }
             }
             .navigationTitle("디스플레이 점검")
             .toolbar { Button("완료") { dismiss() } }
             .onAppear { lock.refreshWarnings() }
         }
+    }
+
+    /// Copies the menu path (when given) and opens Settings. Public iOS API only opens the app's own
+    /// settings page, so the path on the clipboard is what leads the user to the right screen.
+    private func openSettings(path: String?) {
+        if let path { UIPasteboard.general.string = path }
+        if let url = URL(string: UIApplication.openSettingsURLString) { UIApplication.shared.open(url) }
     }
 }
 
