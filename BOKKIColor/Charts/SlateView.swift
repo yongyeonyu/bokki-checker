@@ -16,6 +16,8 @@ struct SlateView: View {
     @AppStorage("slate.iso") private var iso = "ISO 100"
     @AppStorage("slate.sceneNo") private var scene = 1
     @AppStorage("slate.take") private var take = 1
+    /// User-saved camera names, one per line.
+    @AppStorage("slate.savedCameras") private var savedCamerasRaw = ""
     /// Only the title and camera name are typed; everything else is picked or stepped.
     enum Field { case title, camera }
     @FocusState private var focus: Field?
@@ -86,7 +88,7 @@ struct SlateView: View {
                         .submitLabel(.done)
                         .onSubmit { focus = nil }
                     Menu {
-                        ForEach(Self.cameras, id: \.self) { name in Button(name) { camera = name } }
+                        cameraMenu
                     } label: {
                         Image(systemName: "chevron.down").font(.caption2).opacity(0.6).frame(width: 28, height: 28)
                     }
@@ -137,7 +139,49 @@ struct SlateView: View {
         return f
     }()
 
-    static let cameras = ["Osmo Action 5 Pro", "Osmo Action 4", "Osmo Pocket 3", "Osmo 360", "iPhone", "BOKKI CAM"]
+    static let cameras = [
+        "DJI Osmo Action 5 Pro", "DJI Osmo Action 4", "DJI Osmo Action 3", "DJI Osmo Pocket 3", "DJI Osmo 360",
+        "GoPro HERO13 Black", "GoPro HERO12 Black", "Insta360 Ace Pro 2", "Insta360 X4",
+        "iPhone 17 Pro", "iPhone 16 Pro", "Sony ZV-1 II", "BOKKI CAM",
+    ]
+
+    private var savedCameras: [String] {
+        savedCamerasRaw.split(separator: "\n").map(String.init).filter { !$0.isEmpty }
+    }
+
+    /// Saved cameras first, then built-in presets; the typed name can be saved for next time.
+    @ViewBuilder
+    private var cameraMenu: some View {
+        let name = camera.trimmingCharacters(in: .whitespaces)
+        if !name.isEmpty, !savedCameras.contains(name), !Self.cameras.contains(name) {
+            Button { savedCamerasRaw = (savedCameras + [name]).joined(separator: "\n") } label: {
+                Label("‘\(name)’ 저장", systemImage: "plus.circle")
+            }
+        }
+        if !savedCameras.isEmpty {
+            Section("저장한 카메라") {
+                ForEach(savedCameras, id: \.self) { saved in
+                    Button { camera = saved } label: {
+                        if saved == camera { Label(saved, systemImage: "checkmark") } else { Text(saved) }
+                    }
+                }
+                Menu {
+                    ForEach(savedCameras, id: \.self) { saved in
+                        Button(role: .destructive) {
+                            savedCamerasRaw = savedCameras.filter { $0 != saved }.joined(separator: "\n")
+                        } label: { Label(saved, systemImage: "trash") }
+                    }
+                } label: { Label("저장한 카메라 삭제", systemImage: "trash") }
+            }
+        }
+        Section("기본 목록") {
+            ForEach(Self.cameras, id: \.self) { preset in
+                Button { camera = preset } label: {
+                    if preset == camera { Label(preset, systemImage: "checkmark") } else { Text(preset) }
+                }
+            }
+        }
+    }
     static let profiles = ["D-Log M", "D-Log", "HLG", "Normal", "Rec.709"]
     static let whiteBalances = ["Auto", "2800K", "3200K", "4000K", "5000K", "5600K", "6500K", "7500K"]
     static let isos = ["ISO 100", "ISO 200", "ISO 400", "ISO 800", "ISO 1600", "ISO 3200"]

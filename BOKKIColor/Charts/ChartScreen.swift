@@ -26,8 +26,8 @@ struct ChartScreen: View {
     @State private var savedNotice = false
     /// Pending auto-hide; replaced on every interaction.
     @State private var hideTask: Task<Void, Never>?
-    /// True while the settings menu is open, so the controls stay up until the user taps the chart.
-    @State private var pinned = false
+    /// True while the display settings sheet is open; the controls stay up until it closes.
+    @State private var settingsOpen = false
     @Environment(CustomChartStore.self) private var store
 
     private var originalChart: PatchChart? { if case let .patches(c) = item.kind { c } else { nil } }
@@ -66,9 +66,8 @@ struct ChartScreen: View {
         }
         .onChange(of: selected) { _, new in if new == nil { reveal() } }
         .onChange(of: saving) { _, now in if !now { reveal() } }
-        .onChange(of: space) { _, _ in pinned = false; scheduleHide() }
-        .onChange(of: aspectRaw) { _, _ in pinned = false; scheduleHide() }
-        .onChange(of: surroundRaw) { _, _ in pinned = false; scheduleHide() }
+        .onChange(of: settingsOpen) { _, open in if !open { reveal() } }
+        .sheet(isPresented: $settingsOpen) { displaySettings }
         .sheet(item: $selected) { patch in
             detail(for: patch).presentationDetents([.medium, .large]).presentationBackground(Color(.systemBackground))
         }
@@ -144,14 +143,13 @@ struct ChartScreen: View {
 
     private func hideNow() {
         hideTask?.cancel()
-        pinned = false
         withAnimation(.easeInOut(duration: 0.15)) { showControls = false }
     }
 
     /// Hides after 1 s, unless a sheet, alert or the settings menu is open.
     private func scheduleHide() {
         hideTask?.cancel()
-        guard !pinned, selected == nil, !saving else { return }
+        guard !settingsOpen, selected == nil, !saving else { return }
         hideTask = Task {
             try? await Task.sleep(for: .seconds(1))
             guard !Task.isCancelled else { return }
@@ -183,16 +181,7 @@ struct ChartScreen: View {
                     Text("\(space.title) · 밝기 \(lockBrightness ? "100% 고정" : "수동")").font(.caption2).opacity(0.8)
                 }
                 Spacer()
-                Menu {
-                    Picker("색공간", selection: $space) { ForEach(OutputSpace.allCases) { Text($0.title).tag($0) } }
-                    if isPatches || item.kind == .slate {
-                        Picker("비율", selection: $aspectRaw) { ForEach(AspectMode.allCases) { Text($0.title).tag($0.rawValue) } }
-                    }
-                    if isPatches {
-                        Picker("주변색", selection: $surroundRaw) { ForEach(Surround.allCases) { Text($0.title).tag($0.rawValue) } }
-                    }
-                } label: { Image(systemName: "slider.horizontal.3") }
-                    .simultaneousGesture(TapGesture().onEnded { pinned = true; hideTask?.cancel() })
+                Button { hideTask?.cancel(); settingsOpen = true } label: { Image(systemName: "slider.horizontal.3") }
                 if isPatches {
                     Button { aspectRaw = (aspect == .physical ? AspectMode.fill : .physical).rawValue } label: {
                         Image(systemName: aspect == .physical ? "rectangle.arrowtriangle.2.outward" : "rectangle.arrowtriangle.2.inward")
@@ -235,8 +224,28 @@ struct ChartScreen: View {
             }
         }
         .foregroundStyle(.primary)
-        .simultaneousGesture(TapGesture().onEnded { if !pinned { scheduleHide() } })
+        .simultaneousGesture(TapGesture().onEnded { if !settingsOpen { scheduleHide() } })
         .transition(.opacity)
+    }
+
+    /// Colour space / ratio / surround, in a sheet so the controls never vanish while choosing.
+    private var displaySettings: some View {
+        NavigationStack {
+            Form {
+                Picker("색공간", selection: $space) { ForEach(OutputSpace.allCases) { Text($0.title).tag($0) } }
+                    .pickerStyle(.segmented)
+                if isPatches {
+                    Picker("비율", selection: $aspectRaw) { ForEach(AspectMode.allCases) { Text($0.title).tag($0.rawValue) } }
+                        .pickerStyle(.segmented)
+                    Picker("주변색", selection: $surroundRaw) { ForEach(Surround.allCases) { Text($0.title).tag($0.rawValue) } }
+                        .pickerStyle(.segmented)
+                }
+            }
+            .navigationTitle("표시 설정")
+            .navigationBarTitleDisplayMode(.inline)
+            .toolbar { Button("완료") { settingsOpen = false } }
+        }
+        .presentationDetents([.height(isPatches ? 300 : 180)])
     }
 
     private var warningBadge: some View {
