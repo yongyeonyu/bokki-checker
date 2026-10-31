@@ -18,6 +18,8 @@ struct SlateView: View {
     @AppStorage("slate.take") private var take = 1
     /// User-saved camera names, one per line.
     @AppStorage("slate.savedCameras") private var savedCamerasRaw = ""
+    @State private var addingCamera = false
+    @State private var newCameraName = ""
     /// Only the title and camera name are typed; everything else is picked or stepped.
     enum Field { case title, camera }
     @FocusState private var focus: Field?
@@ -41,6 +43,18 @@ struct SlateView: View {
             .animation(.easeInOut(duration: 0.2), value: focus)
         }
         .background(Color.black.ignoresSafeArea())
+        .alert("카메라 추가", isPresented: $addingCamera) {
+            TextField("카메라 이름", text: $newCameraName)
+            Button("저장") {
+                let name = newCameraName.trimmingCharacters(in: .whitespaces)
+                guard !name.isEmpty else { return }
+                if !savedCameras.contains(name) { savedCamerasRaw = (savedCameras + [name]).joined(separator: "\n") }
+                camera = name
+            }
+            Button("취소", role: .cancel) {}
+        } message: {
+            Text("저장한 카메라는 목록 위쪽에 표시되고 언제든 다시 고를 수 있습니다.")
+        }
         // Close-keyboard button, pinned just above the keyboard while typing.
         .overlay(alignment: .bottomTrailing) {
             if focus != nil {
@@ -152,11 +166,8 @@ struct SlateView: View {
     /// Saved cameras first, then built-in presets; the typed name can be saved for next time.
     @ViewBuilder
     private var cameraMenu: some View {
-        let name = camera.trimmingCharacters(in: .whitespaces)
-        if !name.isEmpty, !savedCameras.contains(name), !Self.cameras.contains(name) {
-            Button { savedCamerasRaw = (savedCameras + [name]).joined(separator: "\n") } label: {
-                Label("‘\(name)’ 저장", systemImage: "plus.circle")
-            }
+        Button { newCameraName = ""; addingCamera = true } label: {
+            Label("카메라 추가…", systemImage: "plus.circle")
         }
         if !savedCameras.isEmpty {
             Section("저장한 카메라") {
