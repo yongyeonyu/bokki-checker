@@ -103,11 +103,14 @@ struct SlateView: View {
                         .focused($focus, equals: .camera)
                         .submitLabel(.done)
                         .onSubmit { focus = nil }
+                        // Hug the text so the ⌄ sits right after the camera name.
+                        .fixedSize(horizontal: true, vertical: false)
                     Menu {
                         cameraMenu
                     } label: {
                         Image(systemName: "chevron.down").font(.caption2).opacity(0.6).frame(width: 28, height: 28)
                     }
+                    Spacer(minLength: 0)
                 }
                 ViewThatFits(in: .horizontal) {
                     HStack(spacing: 6) {
