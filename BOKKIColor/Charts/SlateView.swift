@@ -74,6 +74,8 @@ struct SlateView: View {
 
     private func info(wide: Bool) -> some View {
         VStack(alignment: .leading, spacing: 10) {
+            // Portrait: the W / 18% / K strip sits right under the checker, above the shot info.
+            if !wide { neutralStrip.frame(height: 70) }
             TimelineView(.periodic(from: .now, by: 1)) { ctx in
                 Text(Self.stamp.string(from: ctx.date))
                     .font(.system(.headline, design: .monospaced))
@@ -139,7 +141,7 @@ struct SlateView: View {
                     .lineLimit(1).minimumScaleFactor(0.6)
             }
             Spacer(minLength: 4)
-            neutralStrip.frame(maxHeight: wide ? 120 : 70)
+            if wide { neutralStrip.frame(maxHeight: 120) }
         }
         .foregroundStyle(.white)
         .padding(14)
