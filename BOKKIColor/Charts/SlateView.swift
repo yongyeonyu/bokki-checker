@@ -61,13 +61,13 @@ struct SlateView: View {
             }
             .font(.title2)
             Group {
-                slateField("카메라", $camera)
+                SlatePickerField(prompt: "카메라", text: $camera, options: Self.cameras)
                 HStack(spacing: 6) {
-                    slateField("프로파일", $profile)
+                    SlatePickerField(prompt: "프로파일", text: $profile, options: Self.profiles)
                     Text("·")
-                    slateField("WB", $wb)
+                    SlatePickerField(prompt: "WB", text: $wb, options: Self.whiteBalances)
                     Text("·")
-                    slateField("ISO", $iso)
+                    SlatePickerField(prompt: "ISO", text: $iso, options: Self.isos)
                 }
             }
             .font(.system(.subheadline, design: .monospaced))
@@ -90,6 +90,11 @@ struct SlateView: View {
         .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
     }
 
+    static let cameras = ["Osmo Action 5 Pro", "Osmo Action 4", "Osmo Pocket 3", "Osmo 360", "iPhone", "BOKKI CAM"]
+    static let profiles = ["D-Log M", "D-Log", "HLG", "Normal", "Rec.709"]
+    static let whiteBalances = ["Auto", "2800K", "3200K", "4000K", "5000K", "5600K", "6500K", "7500K"]
+    static let isos = ["ISO 100", "ISO 200", "ISO 400", "ISO 800", "ISO 1600", "ISO 3200"]
+
     /// Borderless text field styled as slate text; focus (cursor) comes from a plain tap.
     private func slateField(_ prompt: String, _ text: Binding<String>, font: Font = .system(.subheadline, design: .monospaced)) -> some View {
         TextField(prompt, text: text)
@@ -108,6 +113,44 @@ struct SlateView: View {
                 Rectangle().fill(item.1.color(in: space))
                     .overlay(Rectangle().stroke(Color(white: 0.3), lineWidth: 1))
                     .onTapGesture { onSelect(Patch(name: item.0, spec: item.1)) }
+            }
+        }
+    }
+}
+
+/// Slate value with presets: tap opens a dropdown on the slate itself; "직접 입력" switches to typing.
+private struct SlatePickerField: View {
+    let prompt: String
+    @Binding var text: String
+    let options: [String]
+    @State private var typing = false
+    @FocusState private var focused: Bool
+
+    var body: some View {
+        if typing {
+            TextField(prompt, text: $text)
+                .textFieldStyle(.plain)
+                .autocorrectionDisabled()
+                .textInputAutocapitalization(.never)
+                .focused($focused)
+                .onSubmit { typing = false }
+                .onChange(of: focused) { _, now in if !now { typing = false } }
+                .onAppear { focused = true }
+        } else {
+            Menu {
+                ForEach(options, id: \.self) { option in
+                    Button { text = option } label: {
+                        if option == text { Label(option, systemImage: "checkmark") } else { Text(option) }
+                    }
+                }
+                Divider()
+                Button { typing = true } label: { Label("직접 입력", systemImage: "keyboard") }
+            } label: {
+                HStack(spacing: 2) {
+                    Text(text.isEmpty ? prompt : text).lineLimit(1)
+                    Image(systemName: "chevron.down").font(.caption2).opacity(0.6)
+                }
+                .foregroundStyle(.white)
             }
         }
     }
