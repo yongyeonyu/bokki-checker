@@ -1,6 +1,7 @@
 import SwiftUI
 
-/// Full-screen chart presenter. Tap toggles controls; tap a patch while controls are shown to see its values.
+/// Full-screen chart presenter. Controls and overlays show on tap and hide 1 s later.
+/// Tapping a patch while they are visible opens its values.
 struct ChartScreen: View {
     let item: ChartItem
     @Environment(\.dismiss) private var dismiss
@@ -23,6 +24,10 @@ struct ChartScreen: View {
     @State private var saving = false
     @State private var saveName = ""
     @State private var savedNotice = false
+    /// Pending auto-hide; replaced on every interaction.
+    @State private var hideTask: Task<Void, Never>?
+    /// True while the settings menu is open, so the controls stay up until the user taps the chart.
+    @State private var pinned = false
     @Environment(CustomChartStore.self) private var store
 
     private var originalChart: PatchChart? { if case let .patches(c) = item.kind { c } else { nil } }
@@ -35,19 +40,28 @@ struct ChartScreen: View {
         ZStack {
             chartContent
                 .ignoresSafeArea()
-                .onTapGesture { withAnimation(.easeInOut(duration: 0.15)) { showControls.toggle() } }
-            if showControls { controls }
-            if !lock.warnings.isEmpty { warningBadge }
+                .onTapGesture { if showControls { hideNow() } else { reveal() } }
+            if showControls {
+                controls
+                if !lock.warnings.isEmpty { warningBadge }
+            }
         }
         .statusBarHidden()
         .persistentSystemOverlays(.hidden)
         .onAppear {
             if working == nil { working = originalChart }
             lock.start(lockBrightness: lockBrightness)
-            // Start clean: controls fade out shortly so the first capture is unobstructed.
-            DispatchQueue.main.asyncAfter(deadline: .now() + 2.5) { withAnimation { showControls = false } }
+            reveal()
         }
-        .onDisappear { lock.stop() }
+        .onDisappear {
+            hideTask?.cancel()
+            lock.stop()
+        }
+        .onChange(of: selected) { _, new in if new == nil { reveal() } }
+        .onChange(of: saving) { _, now in if !now { reveal() } }
+        .onChange(of: space) { _, _ in pinned = false; scheduleHide() }
+        .onChange(of: aspectRaw) { _, _ in pinned = false; scheduleHide() }
+        .onChange(of: surroundRaw) { _, _ in pinned = false; scheduleHide() }
         .sheet(item: $selected) { patch in
             detail(for: patch).presentationDetents([.medium, .large]).presentationBackground(Color(.systemBackground))
         }
@@ -113,8 +127,40 @@ struct ChartScreen: View {
         DispatchQueue.main.asyncAfter(deadline: .now() + 2) { savedNotice = false }
     }
 
+    /// Shows the controls and hides them again 1 s after the last interaction.
+    private func reveal() {
+        withAnimation(.easeInOut(duration: 0.15)) { showControls = true }
+        scheduleHide()
+    }
+
+    private func hideNow() {
+        hideTask?.cancel()
+        pinned = false
+        withAnimation(.easeInOut(duration: 0.15)) { showControls = false }
+    }
+
+    /// Hides after 1 s, unless a sheet, alert or the settings menu is open.
+    private func scheduleHide() {
+        hideTask?.cancel()
+        guard !pinned, selected == nil, !saving else { return }
+        hideTask = Task {
+            try? await Task.sleep(for: .seconds(1))
+            guard !Task.isCancelled else { return }
+            hideNow()
+        }
+    }
+
     private func handleTap(_ patch: Patch?) {
-        if let patch, showControls { selected = patch } else { withAnimation(.easeInOut(duration: 0.15)) { showControls.toggle() } }
+        guard let patch else {
+            if showControls { hideNow() } else { reveal() }
+            return
+        }
+        if showControls {
+            hideTask?.cancel()
+            selected = patch
+        } else {
+            reveal()
+        }
     }
 
     private var isPatches: Bool { if case .patches = item.kind { true } else { false } }
@@ -137,6 +183,7 @@ struct ChartScreen: View {
                         Picker("주변색", selection: $surroundRaw) { ForEach(Surround.allCases) { Text($0.title).tag($0.rawValue) } }
                     }
                 } label: { Image(systemName: "slider.horizontal.3") }
+                    .simultaneousGesture(TapGesture().onEnded { pinned = true; hideTask?.cancel() })
                 if isPatches {
                     Button { aspectRaw = (aspect == .physical ? AspectMode.fill : .physical).rawValue } label: {
                         Image(systemName: aspect == .physical ? "rectangle.arrowtriangle.2.outward" : "rectangle.arrowtriangle.2.inward")
@@ -179,6 +226,7 @@ struct ChartScreen: View {
             }
         }
         .foregroundStyle(.primary)
+        .simultaneousGesture(TapGesture().onEnded { if !pinned { scheduleHide() } })
         .transition(.opacity)
     }
 
@@ -189,7 +237,7 @@ struct ChartScreen: View {
                 .padding(6)
                 .background(Color.orange.opacity(0.9), in: Capsule())
                 .foregroundStyle(.black)
-                .padding(.top, showControls ? 64 : 4)
+                .padding(.top, 64)
             Spacer()
         }
         .allowsHitTesting(false)
