@@ -39,7 +39,8 @@ struct ChartScreen: View {
     var body: some View {
         ZStack {
             chartContent
-                .ignoresSafeArea()
+                // The slate keeps inside the safe area (rounded corners, camera housing, keyboard).
+                .ignoresSafeArea(item.kind == .slate ? SafeAreaRegions() : .all)
                 .onTapGesture { if showControls { hideNow() } else { reveal() } }
             if showControls {
                 controls
