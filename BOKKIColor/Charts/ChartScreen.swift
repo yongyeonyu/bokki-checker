@@ -127,6 +127,8 @@ struct ChartScreen: View {
             chart.subtitle = "튜닝 · 기본: \(base.title)"
             chart.source = "BOKKI 튜닝 (기본값: \(base.source.isEmpty ? base.title : base.source))"
             chart.patches = chart.patches.map { var p = $0; p.id = UUID(); return p }
+            // Tuning a tuned copy still files it under the original built-in chart.
+            chart.baseID = base.baseID ?? (base.id.hasPrefix("custom_") ? nil : base.id)
         }
         store.save(chart)
         savedNotice = true

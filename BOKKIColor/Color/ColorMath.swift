@@ -100,6 +100,16 @@ enum ColorMath {
         v <= 0.04045 ? v / 12.92 : pow((v + 0.055) / 1.055, 2.4)
     }
 
+    /// ITU-R BT.709 OETF (scene linear -> video signal).
+    static func encodeRec709(_ v: Double) -> Double {
+        let c = max(0, min(1, v))
+        return c < 0.018 ? 4.5 * c : 1.099 * pow(c, 0.45) - 0.099
+    }
+
+    static func decodeRec709(_ v: Double) -> Double {
+        v < 0.081 ? v / 4.5 : pow((v + 0.099) / 1.099, 1 / 0.45)
+    }
+
     // MARK: Correlated colour temperature -> chromaticity
     /// CIE daylight locus (4000–25000 K) and Kim et al. Planckian approximation (1667–4000 K).
     static func cctToXY(_ t: Double) -> SIMD2<Double> {

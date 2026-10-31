@@ -4,11 +4,16 @@ import CoreGraphics
 /// Builds 16-bit-per-channel CGImages so ramps are rendered with no 8-bit banding.
 enum RampImage {
     static func make(width: Int, height: Int, space: OutputSpace, pixel: (Int, Int) -> Vec3) -> CGImage? {
-        let cs = CGColorSpace(name: space == .displayP3 ? CGColorSpace.displayP3 : CGColorSpace.sRGB)!
+        let cs = CGColorSpace(name: space.displaySpace == .displayP3 ? CGColorSpace.displayP3 : CGColorSpace.sRGB)!
         var buf = [UInt16](repeating: 0, count: width * height * 4)
         for y in 0..<height {
             for x in 0..<width {
-                let v = pixel(x, y)
+                var v = pixel(x, y)
+                // Rec.709 pixels are BT.709 signal values; convert to the sRGB curve the screen uses.
+                if space == .rec709 {
+                    v = Vec3(ColorMath.encodeSRGB(ColorMath.decodeRec709(v.x)), ColorMath.encodeSRGB(ColorMath.decodeRec709(v.y)),
+                             ColorMath.encodeSRGB(ColorMath.decodeRec709(v.z)))
+                }
                 let o = (y * width + x) * 4
                 buf[o] = UInt16(max(0, min(1, v.x)) * 65535)
                 buf[o + 1] = UInt16(max(0, min(1, v.y)) * 65535)
@@ -118,14 +123,19 @@ struct PatternView: View {
         .color(ColorSpec.encoded(Vec3(r, g, b), space: .sRGB).color(in: space))
     }
 
+    /// Video signal levels (bars are defined as Rec.709 code values).
+    private func v709(_ r: Double, _ g: Double, _ b: Double) -> GraphicsContext.Shading {
+        .color(ColorSpec.encoded(Vec3(r, g, b), space: .rec709).color(in: space))
+    }
+
     private func drawSMPTE(_ ctx: GraphicsContext, _ s: CGSize) {
         let w = s.width / 7
         let top: [(Double, Double, Double)] = [(0.75, 0.75, 0.75), (0.75, 0.75, 0), (0, 0.75, 0.75), (0, 0.75, 0), (0.75, 0, 0.75), (0.75, 0, 0), (0, 0, 0.75)]
         let mid: [(Double, Double, Double)] = [(0, 0, 0.75), (0.075, 0.075, 0.075), (0.75, 0, 0.75), (0.075, 0.075, 0.075), (0, 0.75, 0.75), (0.075, 0.075, 0.075), (0.75, 0.75, 0.75)]
         let h1 = s.height * 0.67, h2 = s.height * 0.08
         for i in 0..<7 {
-            ctx.fill(Path(CGRect(x: CGFloat(i) * w, y: 0, width: w + 0.5, height: h1)), with: c(top[i].0, top[i].1, top[i].2))
-            ctx.fill(Path(CGRect(x: CGFloat(i) * w, y: h1, width: w + 0.5, height: h2)), with: c(mid[i].0, mid[i].1, mid[i].2))
+            ctx.fill(Path(CGRect(x: CGFloat(i) * w, y: 0, width: w + 0.5, height: h1)), with: v709(top[i].0, top[i].1, top[i].2))
+            ctx.fill(Path(CGRect(x: CGFloat(i) * w, y: h1, width: w + 0.5, height: h2)), with: v709(mid[i].0, mid[i].1, mid[i].2))
         }
         // Bottom: -I, 100% white, +Q, black, PLUGE (-4/0/+4 %), black.
         let y = h1 + h2, h = s.height - y
@@ -136,7 +146,7 @@ struct PatternView: View {
         ]
         var x: CGFloat = 0
         for (units, col) in parts {
-            ctx.fill(Path(CGRect(x: x, y: y, width: units * w + 0.5, height: h)), with: c(col.0, col.1, col.2))
+            ctx.fill(Path(CGRect(x: x, y: y, width: units * w + 0.5, height: h)), with: v709(col.0, col.1, col.2))
             x += units * w
         }
     }

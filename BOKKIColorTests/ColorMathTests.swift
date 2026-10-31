@@ -88,6 +88,33 @@ final class ColorMathTests: XCTestCase {
     }
 }
 
+final class Rec709Tests: XCTestCase {
+    func testOETFReferencePoints() {
+        XCTAssertEqual(ColorMath.encodeRec709(0.18), 0.4090, accuracy: 0.0005)   // 18% gray
+        XCTAssertEqual(ColorMath.encodeRec709(1), 1, accuracy: 1e-9)
+        XCTAssertEqual(ColorMath.decodeRec709(ColorMath.encodeRec709(0.42)), 0.42, accuracy: 1e-9)
+        XCTAssertEqual(ColorMath.decodeRec709(ColorMath.encodeRec709(0.01)), 0.01, accuracy: 1e-9)
+    }
+
+    func testSameLightAsSRGB() throws {
+        // Rec.709 shares sRGB primaries, so the emitted light must match; only the code values differ.
+        let spec = try XCTUnwrap(ChartCatalog.references["cc24_after2014"]).patches[1].spec
+        let a = spec.linear(in: .sRGB), b = spec.linear(in: .rec709)
+        XCTAssertEqual(a.x, b.x, accuracy: 1e-9); XCTAssertEqual(a.y, b.y, accuracy: 1e-9); XCTAssertEqual(a.z, b.z, accuracy: 1e-9)
+        XCTAssertNotEqual(spec.code8(in: .sRGB).0, spec.code8(in: .rec709).0)
+    }
+
+    func testLegalRangeAndBars() {
+        let white = ColorInfo(.gray(1), space: .rec709)
+        XCTAssertTrue(white.lines.contains { $0.1 == "R 235  G 235  B 235" })
+        XCTAssertTrue(white.lines.contains { $0.1 == "R 940  G 940  B 940" })
+        // A 75% bar is a 709 signal of 0.75: full 191, legal 180.
+        let bar = ColorInfo(.encoded(Vec3(0.75, 0.75, 0), space: .rec709), space: .rec709)
+        XCTAssertEqual(bar.rgb8.0, 191)
+        XCTAssertTrue(bar.lines.contains { $0.1.hasPrefix("R 180  G 180  B 16") })
+    }
+}
+
 final class TuningTests: XCTestCase {
     func testLabD50IsExactForLabDefinitions() {
         let lab = ColorSpec.lab(42.43, 51.05, 28.62).labD50
@@ -104,6 +131,14 @@ final class TuningTests: XCTestCase {
         XCTAssertNotEqual(working, base)
         working.patches[0] = base.patches[0]
         XCTAssertEqual(working, base)
+    }
+
+    func testBaseIDSurvivesJSON() throws {
+        var chart = try XCTUnwrap(ChartCatalog.references["cc24_after2014"])
+        chart.id = "custom_test"
+        chart.baseID = "cc24_after2014"
+        let decoded = try JSONDecoder().decode(PatchChart.self, from: JSONEncoder().encode(chart))
+        XCTAssertEqual(decoded.baseID, "cc24_after2014")
     }
 
     func testTunedChartRoundTripsThroughJSON() throws {

@@ -45,9 +45,21 @@ struct ColorInfo {
         return (ch(encoded.x), ch(encoded.y), ch(encoded.z), Int((k * 100).rounded()))
     }
 
+    /// Video legal range (8-bit 16–235, 10-bit 64–940) of the encoded value.
+    private func legal(_ bits: Int) -> (Int, Int, Int) {
+        let (lo, span) = bits == 8 ? (16.0, 219.0) : (64.0, 876.0)
+        return (Int((lo + span * encoded.x).rounded()), Int((lo + span * encoded.y).rounded()), Int((lo + span * encoded.z).rounded()))
+    }
+
     var lines: [(String, String)] {
         let c8 = rgb8, c10 = rgb10, c16 = rgb16
-        return [
+        var video: [(String, String)] = []
+        if space == .rec709 {
+            let l8 = legal(8), l10 = legal(10)
+            video = [("리미티드 8비트 (16–235)", "R \(l8.0)  G \(l8.1)  B \(l8.2)"),
+                     ("리미티드 10비트 (64–940)", "R \(l10.0)  G \(l10.1)  B \(l10.2)")]
+        }
+        return video + [
             ("24비트 (8bit/ch)", "\(hex24)   R \(c8.0)  G \(c8.1)  B \(c8.2)"),
             ("16비트/ch (48bit)", "R \(c16.0)  G \(c16.1)  B \(c16.2)"),
             ("16비트 RGB565", String(format: "0x%04X", rgb565)),

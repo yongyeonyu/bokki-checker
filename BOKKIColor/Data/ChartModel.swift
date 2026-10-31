@@ -27,6 +27,8 @@ struct PatchChart: Identifiable, Hashable, Codable {
     /// Free-form layout: one [x, y, w, h] per patch in card units, card is `cardSize` [w, h].
     var layoutRects: [[Double]]? = nil
     var cardSize: [Double]? = nil
+    /// For a tuned custom chart: the id of the built-in chart it was tuned from (shown nested under it).
+    var baseID: String? = nil
 
     /// The chart turned 90° clockwise (how a landscape card looks when shot in portrait).
     var rotatedClockwise: PatchChart {

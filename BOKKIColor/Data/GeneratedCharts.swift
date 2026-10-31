@@ -250,7 +250,7 @@ enum GeneratedCharts {
         let bars: [(String, Vec3)] = [("White", Vec3(1, 1, 1)), ("Yellow", Vec3(1, 1, 0)), ("Cyan", Vec3(0, 1, 1)), ("Green", Vec3(0, 1, 0)),
                                       ("Magenta", Vec3(1, 0, 1)), ("Red", Vec3(1, 0, 0)), ("Blue", Vec3(0, 0, 1))]
         return PatchChart(id: "bars7", title: "7색 컬러바 100%", subtitle: "화이트·옐로·시안·그린·마젠타·레드·블루", rows: 1, columns: 7,
-                          patches: bars.map { Patch(name: $0.0, spec: .encoded($0.1, space: .sRGB), reference: "Rec.709 100%") },
+                          patches: bars.map { Patch(name: $0.0, spec: .encoded($0.1, space: .rec709), reference: "Rec.709 100%") },
                           physicalGap: 0, physicalBorder: 0.15, patchAspect: 0.22)
     }
 
@@ -260,7 +260,7 @@ enum GeneratedCharts {
                                       ("Green 75", Vec3(0, 0.75, 0)), ("Magenta 75", Vec3(0.75, 0, 0.75)), ("Red 75", Vec3(0.75, 0, 0)),
                                       ("Blue 75", Vec3(0, 0, 0.75)), ("Black", Vec3(0, 0, 0))]
         return PatchChart(id: "ebu75", title: "EBU 75% 컬러바", subtitle: "Rec.709 75% 바", rows: 1, columns: bars.count,
-                          patches: bars.map { Patch(name: $0.0, spec: .encoded($0.1, space: .sRGB), reference: "Rec.709") },
+                          patches: bars.map { Patch(name: $0.0, spec: .encoded($0.1, space: .rec709), reference: "Rec.709") },
                           physicalGap: 0, physicalBorder: 0)
     }
 
@@ -268,7 +268,7 @@ enum GeneratedCharts {
         let bars: [(String, Vec3)] = [("White", Vec3(1, 1, 1)), ("Yellow", Vec3(1, 1, 0)), ("Cyan", Vec3(0, 1, 1)), ("Green", Vec3(0, 1, 0)),
                                       ("Magenta", Vec3(1, 0, 1)), ("Red", Vec3(1, 0, 0)), ("Blue", Vec3(0, 0, 1)), ("Black", Vec3(0, 0, 0))]
         return PatchChart(id: "bars100", title: "100% 컬러바", subtitle: "Rec.709 풀 레벨", rows: 1, columns: bars.count,
-                          patches: bars.map { Patch(name: $0.0, spec: .encoded($0.1, space: .sRGB), reference: "Rec.709 100%") },
+                          patches: bars.map { Patch(name: $0.0, spec: .encoded($0.1, space: .rec709), reference: "Rec.709 100%") },
                           physicalGap: 0, physicalBorder: 0)
     }
 }

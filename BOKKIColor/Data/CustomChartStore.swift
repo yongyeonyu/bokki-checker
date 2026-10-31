@@ -42,6 +42,20 @@ final class CustomChartStore {
         save()
     }
 
+    func remove(id: String) {
+        charts.removeAll { $0.id == id }
+        save()
+    }
+
+    func rename(id: String, to title: String) {
+        guard let i = charts.firstIndex(where: { $0.id == id }) else { return }
+        charts[i].title = title
+        save()
+    }
+
+    /// Tuned charts filed under a built-in chart, oldest first.
+    func children(of baseID: String) -> [PatchChart] { charts.filter { $0.baseID == baseID } }
+
     func remove(at offsets: IndexSet) {
         charts.remove(atOffsets: offsets)
         save()

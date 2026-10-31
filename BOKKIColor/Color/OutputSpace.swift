@@ -1,17 +1,25 @@
 import SwiftUI
 
-/// Output colour space the chart is encoded in. Both use D65 white and the sRGB transfer curve,
-/// so the display emits identical light for in-gamut colours whichever is chosen.
+/// Output colour space the chart is encoded in. All use D65 white, so the display emits identical
+/// light for in-gamut colours whichever is chosen; what changes is the gamut and the code values.
 enum OutputSpace: String, CaseIterable, Identifiable, Codable {
-    case displayP3, sRGB
+    case displayP3, sRGB, rec709
     var id: String { rawValue }
 
     var title: String {
         switch self {
         case .displayP3: "Display P3"
-        case .sRGB: "sRGB / Rec.709"
+        case .sRGB: "sRGB"
+        case .rec709: "Rec.709"
         }
     }
+
+    /// Rec.709 code values use the BT.709 OETF; sRGB and Display P3 use the sRGB curve.
+    func encode(_ v: Double) -> Double { self == .rec709 ? ColorMath.encodeRec709(v) : ColorMath.encodeSRGB(v) }
+    func decode(_ v: Double) -> Double { self == .rec709 ? ColorMath.decodeRec709(v) : ColorMath.decodeSRGB(v) }
+
+    /// Space the screen is driven in. Rec.709 shares sRGB primaries, so it is shown through the sRGB path.
+    var displaySpace: OutputSpace { self == .rec709 ? .sRGB : self }
 
     var xyzToLinear: Mat3 { Self.matrices[self]!.inverse }
     var linearToXYZ: Mat3 { Self.matrices[self]! }
@@ -19,6 +27,7 @@ enum OutputSpace: String, CaseIterable, Identifiable, Codable {
     private static let matrices: [OutputSpace: Mat3] = [
         .displayP3: ColorMath.rgbToXYZ(r: SIMD2(0.680, 0.320), g: SIMD2(0.265, 0.690), b: SIMD2(0.150, 0.060), white: ColorMath.whiteD65),
         .sRGB: ColorMath.rgbToXYZ(r: SIMD2(0.640, 0.330), g: SIMD2(0.300, 0.600), b: SIMD2(0.150, 0.060), white: ColorMath.whiteD65),
+        .rec709: ColorMath.rgbToXYZ(r: SIMD2(0.640, 0.330), g: SIMD2(0.300, 0.600), b: SIMD2(0.150, 0.060), white: ColorMath.whiteD65),
     ]
 }
 
@@ -47,15 +56,15 @@ enum ColorSpec: Hashable, Codable {
             let d65 = white == ColorMath.whiteD65 ? v : ColorMath.adaptation(from: white, to: ColorMath.whiteD65) * v
             return space.xyzToLinear * d65
         case let .encoded(v, src):
-            let lin = Vec3(ColorMath.decodeSRGB(v.x), ColorMath.decodeSRGB(v.y), ColorMath.decodeSRGB(v.z))
+            let lin = Vec3(src.decode(v.x), src.decode(v.y), src.decode(v.z))
             return src == space ? lin : space.xyzToLinear * (src.linearToXYZ * lin)
         }
     }
 
     func encoded(in space: OutputSpace) -> Vec3 {
         if case let .encoded(v, src) = self, src == space { return v }
-        let l = linear(in: space)
-        return Vec3(ColorMath.encodeSRGB(l.x), ColorMath.encodeSRGB(l.y), ColorMath.encodeSRGB(l.z))
+        let l = linear(in: space).clamped(lowerBound: Vec3(repeating: 0), upperBound: Vec3(repeating: 1))
+        return Vec3(space.encode(l.x), space.encode(l.y), space.encode(l.z))
     }
 
     /// True when the colour cannot be shown in `space` without clipping (0.2% tolerance).
@@ -87,7 +96,8 @@ enum ColorSpec: Hashable, Codable {
     }
 
     func color(in space: OutputSpace) -> Color {
-        let e = encoded(in: space)
-        return Color(space == .displayP3 ? .displayP3 : .sRGB, red: e.x, green: e.y, blue: e.z, opacity: 1)
+        let shown = space.displaySpace
+        let e = encoded(in: shown)
+        return Color(shown == .displayP3 ? .displayP3 : .sRGB, red: e.x, green: e.y, blue: e.z, opacity: 1)
     }
 }

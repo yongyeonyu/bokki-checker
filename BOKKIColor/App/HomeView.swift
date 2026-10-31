@@ -7,8 +7,19 @@ struct HomeView: View {
     @State private var showSettings = false
     @State private var importing = false
     @State private var importError: String?
+    @State private var renaming: PatchChart?
+    @State private var renameText = ""
+    @State private var deleting: PatchChart?
 
-    private var categories: [ChartCategory] { ChartCatalog.categories(custom: store.charts) }
+    /// Ids of every built-in chart; tuned charts filed under one of these are shown nested under it.
+    private static let builtInIDs = Set(ChartCatalog.categories(custom: []).flatMap { $0.items.map(\.id) })
+
+    /// Imported charts, plus tuned charts whose original is no longer in the catalog.
+    private var looseCustom: [PatchChart] {
+        store.charts.filter { $0.baseID.map { !Self.builtInIDs.contains($0) } ?? true }
+    }
+
+    private var categories: [ChartCategory] { ChartCatalog.categories(custom: looseCustom) }
 
     var body: some View {
         NavigationStack {
@@ -27,9 +38,14 @@ struct HomeView: View {
                 ForEach(categories) { cat in
                     Section {
                         ForEach(cat.items) { item in
-                            Button { presented = item } label: { ChartRow(item: item) }
+                            if cat.id == "custom", let chart = looseCustom.first(where: { $0.id == item.id }) {
+                                customRow(chart, nested: false)
+                            } else {
+                                Button { presented = item } label: { ChartRow(item: item) }
+                                // Tuned copies sit under their original, like a folder.
+                                ForEach(store.children(of: item.id)) { customRow($0, nested: true) }
+                            }
                         }
-                        .onDelete(perform: cat.id == "custom" ? { store.remove(at: $0) } : nil)
                         if cat.id == "custom" {
                             Button { importing = true } label: { Label("CSV / CGATS 파일 가져오기", systemImage: "plus") }
                         }
@@ -60,9 +76,56 @@ struct HomeView: View {
                 importError = error.localizedDescription
             }
         }
+        .alert("이름 변경", isPresented: Binding(get: { renaming != nil }, set: { if !$0 { renaming = nil } })) {
+            TextField("이름", text: $renameText)
+            Button("저장") {
+                let name = renameText.trimmingCharacters(in: .whitespaces)
+                if let id = renaming?.id, !name.isEmpty { store.rename(id: id, to: name) }
+                renaming = nil
+            }
+            Button("취소", role: .cancel) { renaming = nil }
+        }
+        .confirmationDialog("이 커스텀 체커를 삭제할까요?", isPresented: Binding(get: { deleting != nil }, set: { if !$0 { deleting = nil } }),
+                            titleVisibility: .visible) {
+            Button("삭제", role: .destructive) {
+                if let id = deleting?.id { store.remove(id: id) }
+                deleting = nil
+            }
+            Button("취소", role: .cancel) { deleting = nil }
+        } message: {
+            Text(deleting?.title ?? "")
+        }
         .alert("가져오기 실패", isPresented: Binding(get: { importError != nil }, set: { if !$0 { importError = nil } })) {
             Button("확인", role: .cancel) {}
         } message: { Text(importError ?? "") }
+    }
+}
+
+extension HomeView {
+    /// A saved custom chart: tap to open, trailing menu to edit colours, rename or delete.
+    @ViewBuilder
+    fileprivate func customRow(_ chart: PatchChart, nested: Bool) -> some View {
+        HStack(spacing: 8) {
+            Button { presented = ChartItem(chart) } label: {
+                HStack(spacing: 8) {
+                    if nested {
+                        Image(systemName: "arrow.turn.down.right").foregroundStyle(.secondary).font(.footnote)
+                    }
+                    ChartRow(item: ChartItem(chart))
+                }
+            }
+            .buttonStyle(.plain)
+            Spacer(minLength: 0)
+            Menu {
+                Button { presented = ChartItem(chart) } label: { Label("색상 편집", systemImage: "slider.horizontal.3") }
+                Button { renameText = chart.title; renaming = chart } label: { Label("이름 변경", systemImage: "pencil") }
+                Button(role: .destructive) { deleting = chart } label: { Label("삭제", systemImage: "trash") }
+            } label: {
+                Image(systemName: "ellipsis.circle").font(.title3).frame(width: 36, height: 36)
+            }
+            .buttonStyle(.borderless)
+        }
+        .padding(.leading, nested ? 24 : 0)
     }
 }
 

@@ -94,7 +94,7 @@ struct SettingsView: View {
                 Section {
                     Picker("출력 색공간", selection: $space) { ForEach(OutputSpace.allCases) { Text($0.title).tag($0) } }
                 } footer: {
-                    Text("Display P3 권장: 24색 전체를 클립 없이 표시합니다. sRGB에서는 일부 패치(예: cyan)가 개멋 밖이라 클립됩니다. 두 모드 모두 D65 화이트·sRGB 전달함수를 사용합니다.")
+                    Text("Display P3 권장: 24색 전체를 클립 없이 표시합니다. sRGB·Rec.709는 원색이 같아 화면 색이 같고, cyan 패치만 약간 클립됩니다. Rec.709를 고르면 패치 값이 BT.709 감마 코드값(풀/리미티드 레인지)으로 표시되어 카메라의 Rec.709 출력과 바로 비교할 수 있습니다.")
                 }
                 Section {
                     Toggle("체커 화면에서 밝기 100% 고정", isOn: $lockBrightness)

@@ -102,7 +102,7 @@ enum ChartCatalog {
                                   ChartItem(id: "checker", title: "체커보드", subtitle: "샤프닝 할로 · 정렬", kind: .pattern(.checkerboard)),
                                   ChartItem(id: "grid", title: "왜곡 그리드", subtitle: "배럴/핀쿠션 왜곡", kind: .pattern(.distortionGrid))]),
         ]
-        cats.append(ChartCategory(id: "custom", title: "커스텀 체커", symbol: "square.and.arrow.down", summary: "튜닝해서 저장한 체커 · CSV / CGATS 가져오기 · 왼쪽으로 밀어 삭제",
+        cats.append(ChartCategory(id: "custom", title: "커스텀 체커", symbol: "square.and.arrow.down", summary: "가져온 체커 · 튜닝한 체커는 각 원본 체커 아래에 표시됩니다 · ⋯ 메뉴로 편집/이름 변경/삭제",
                                   items: custom.map(ChartItem.init)))
         return cats
     }
