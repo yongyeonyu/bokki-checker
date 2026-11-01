@@ -124,11 +124,16 @@ final class CalibrationLink: NSObject {
     enum State: Equatable { case waiting, connected(String), reconnecting(String) }
 
     /// How long a dropped camera has to rejoin before the screen goes back to a new QR.
-    static let rejoinWindow: Duration = .seconds(60)
+    static let rejoinWindow: Duration = .seconds(30)
+    /// No message from a connected camera for this long while a target is up: it has stopped or hung
+    /// (its own timeouts are 5 s at most), so the screen offers a way out instead of a silent target.
+    static let stallWindow: Duration = .seconds(15)
 
     private(set) var state: State = .waiting
     private(set) var frame: CalibrationFrame?
     private(set) var lastError: String?
+    /// A target is up but the camera has gone quiet (see `stallWindow`).
+    private(set) var stalled = false
     /// Camera that finished the last run (after `end`), shown on the waiting screen.
     private(set) var lastFinished: String?
     /// Fresh for every waiting screen; advertised in the discovery info and shown as a QR so a CAM
@@ -150,11 +155,18 @@ final class CalibrationLink: NSObject {
     @ObservationIgnored private var camera: MCPeerID?
     @ObservationIgnored private var lastShown: (seq: Int, data: Data)?
     @ObservationIgnored private var rejoinTimeout: Task<Void, Never>?
+    @ObservationIgnored private var stallWatch: Task<Void, Never>?
     @ObservationIgnored private let log = Logger(subsystem: "com.bokki.checker", category: "calibration")
 
     func start() {
         lastFinished = nil
         beginWaiting()
+    }
+
+    /// Drops the current camera and target and shows a fresh QR.
+    func restart() {
+        log.info("restart by user")
+        start()
     }
 
     func stop() {
@@ -197,6 +209,9 @@ final class CalibrationLink: NSObject {
     private func tearDown() {
         rejoinTimeout?.cancel()
         rejoinTimeout = nil
+        stallWatch?.cancel()
+        stallWatch = nil
+        stalled = false
         advertiser?.stopAdvertisingPeer()
         advertiser?.delegate = nil
         advertiser = nil
@@ -234,6 +249,8 @@ final class CalibrationLink: NSObject {
             rejoinTimeout?.cancel()
             rejoinTimeout = nil
             log.info("hello from \(peerID.displayName, privacy: .public), rejoin \(self.frame != nil)")
+            // After a rejoin the repeated `show` is drawn again, so `shown` waits for a clean frame.
+            lastShown = nil
             state = .connected(m.device ?? peerID.displayName)
             let native = UIScreen.main.nativeBounds.size
             let display = CalibrationDisplayInfo(brightnessLocked: true, widthPx: Int(native.width), heightPx: Int(native.height))
@@ -364,6 +381,18 @@ final class CalibrationLink: NSObject {
     fileprivate func received(_ data: Data, in session: MCSession, from peerID: MCPeerID) {
         guard session === self.session, peerID == camera else { return }
         handle(data, from: peerID)
+        watchForStall()
+    }
+
+    private func watchForStall() {
+        stalled = false
+        stallWatch?.cancel()
+        stallWatch = Task { [weak self] in
+            try? await Task.sleep(for: CalibrationLink.stallWindow)
+            guard let self, !Task.isCancelled, self.frame != nil else { return }
+            self.log.info("camera quiet for \(CalibrationLink.stallWindow, privacy: .public)")
+            self.stalled = true
+        }
     }
 }
 

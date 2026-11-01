@@ -17,6 +17,9 @@ struct CalibrationScreen: View {
                 Color.black
                 if let frame = link.frame {
                     target(frame, size: geo.size)
+                    if let notice = lostNotice {
+                        lostPanel(notice)
+                    }
                 } else {
                     // The corner markers stay up while waiting, so the camera can be framed first.
                     fiducials(size: geo.size)
@@ -55,6 +58,31 @@ struct CalibrationScreen: View {
         }
         .onChange(of: link.frame == nil) { _, _ in showClose = false }
         .onChange(of: scenePhase) { _, phase in if phase == .active { link.resume() } }
+    }
+
+    /// Shown over the target only once the camera is gone or silent, so it never spoils a shot.
+    private var lostNotice: String? {
+        if case .reconnecting(let name) = link.state { return "\(name) 연결이 끊겼습니다. 다시 연결을 기다리는 중…" }
+        if link.stalled { return "BOKKI CAM 응답이 없습니다. BOKKI CAM에서 캘리브레이션이 멈췄거나 끝났을 수 있습니다." }
+        return nil
+    }
+
+    private func lostPanel(_ notice: String) -> some View {
+        VStack(spacing: 14) {
+            Label(notice, systemImage: "exclamationmark.triangle.fill")
+                .font(.callout.weight(.semibold)).multilineTextAlignment(.center)
+            HStack(spacing: 12) {
+                Button("새 QR로 다시 연결") { link.restart() }
+                    .buttonStyle(.borderedProminent)
+                Button("닫기") { dismiss() }
+                    .buttonStyle(.bordered)
+            }
+        }
+        .foregroundStyle(.white)
+        .padding(20)
+        .background(.black.opacity(0.85), in: RoundedRectangle(cornerRadius: 16))
+        .frame(maxWidth: 520)
+        .padding(40)
     }
 
     private func status(size: CGSize) -> some View {
