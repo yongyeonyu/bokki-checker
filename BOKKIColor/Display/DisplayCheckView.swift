@@ -25,14 +25,14 @@ struct DisplayCheckView: View {
     }
 
     private let items: [Item] = [
-        Item(title: "True Tone 끄기", path: "설정 › 디스플레이 및 밝기 › True Tone", note: "주변광에 따라 화이트포인트가 바뀌어 매번 색이 달라집니다.", keyword: "True Tone", url: "App-prefs:DISPLAY"),
-        Item(title: "Night Shift 끄기", path: "설정 › 디스플레이 및 밝기 › Night Shift", note: "예약 시간에 화면이 노랗게 변합니다.", keyword: "Night Shift", url: "App-prefs:DISPLAY&path=BLUE_LIGHT_REDUCTION"),
-        Item(title: "자동 밝기 끄기", path: "설정 › 손쉬운 사용 › 디스플레이 및 텍스트 크기 › 자동 밝기", note: "앱이 100%로 고정하지만 자동 밝기가 다시 낮출 수 있습니다.", keyword: "자동 밝기", url: "App-prefs:ACCESSIBILITY&path=DISPLAY_AND_TEXT"),
-        Item(title: "화이트 포인트 줄이기 끄기", path: "설정 › 손쉬운 사용 › 디스플레이 및 텍스트 크기", note: "밝은 색의 세기를 줄여 하이라이트가 어두워집니다.", keyword: "화이트 포인트 줄이기", url: "App-prefs:ACCESSIBILITY&path=DISPLAY_AND_TEXT"),
-        Item(title: "색상 필터 / 반전 끄기", path: "설정 › 손쉬운 사용 › 디스플레이 및 텍스트 크기", note: "모든 색이 바뀝니다.", keyword: "색상 필터", url: "App-prefs:ACCESSIBILITY&path=DISPLAY_AND_TEXT/DISPLAY_FILTER"),
-        Item(title: "레퍼런스 모드 (iPad Pro)", path: "설정 › 디스플레이 및 밝기 › 고급 › 레퍼런스 모드", note: "지원 기기에서 켜면 가장 정확한 P3/SDR 출력이 됩니다. 켜면 밝기 고정이 기기 정책에 따릅니다.", keyword: "레퍼런스 모드", url: "App-prefs:DISPLAY&path=ADVANCED"),
-        Item(title: "저전력 모드 끄기 · 충전 연결", path: "제어 센터 / 설정 › 배터리", note: "저전력·과열 시 시스템이 최대 밝기를 제한합니다.", keyword: "저전력 모드", url: "App-prefs:BATTERY_USAGE"),
-        Item(title: "보호필름·반사 제거", path: "무광/블루라이트 필름은 색을 바꿉니다", note: "화면을 정면에서, 주변 조명이 비치지 않게 촬영하세요.", keyword: nil),
+        Item(title: tr("True Tone 끄기"), path: tr("설정 › 디스플레이 및 밝기 › True Tone"), note: tr("주변광에 따라 화이트포인트가 바뀌어 매번 색이 달라집니다."), keyword: "True Tone", url: "App-prefs:DISPLAY"),
+        Item(title: tr("Night Shift 끄기"), path: tr("설정 › 디스플레이 및 밝기 › Night Shift"), note: tr("예약 시간에 화면이 노랗게 변합니다."), keyword: "Night Shift", url: "App-prefs:DISPLAY&path=BLUE_LIGHT_REDUCTION"),
+        Item(title: tr("자동 밝기 끄기"), path: tr("설정 › 손쉬운 사용 › 디스플레이 및 텍스트 크기 › 자동 밝기"), note: tr("앱이 100%로 고정하지만 자동 밝기가 다시 낮출 수 있습니다."), keyword: tr("자동 밝기"), url: "App-prefs:ACCESSIBILITY&path=DISPLAY_AND_TEXT"),
+        Item(title: tr("화이트 포인트 줄이기 끄기"), path: tr("설정 › 손쉬운 사용 › 디스플레이 및 텍스트 크기"), note: tr("밝은 색의 세기를 줄여 하이라이트가 어두워집니다."), keyword: tr("화이트 포인트 줄이기"), url: "App-prefs:ACCESSIBILITY&path=DISPLAY_AND_TEXT"),
+        Item(title: tr("색상 필터 / 반전 끄기"), path: tr("설정 › 손쉬운 사용 › 디스플레이 및 텍스트 크기"), note: tr("모든 색이 바뀝니다."), keyword: tr("색상 필터"), url: "App-prefs:ACCESSIBILITY&path=DISPLAY_AND_TEXT/DISPLAY_FILTER"),
+        Item(title: tr("레퍼런스 모드 (iPad Pro)"), path: tr("설정 › 디스플레이 및 밝기 › 고급 › 레퍼런스 모드"), note: tr("지원 기기에서 켜면 가장 정확한 P3/SDR 출력이 됩니다. 켜면 밝기 고정이 기기 정책에 따릅니다."), keyword: tr("레퍼런스 모드"), url: "App-prefs:DISPLAY&path=ADVANCED"),
+        Item(title: tr("저전력 모드 끄기 · 충전 연결"), path: tr("제어 센터 / 설정 › 배터리"), note: tr("저전력·과열 시 시스템이 최대 밝기를 제한합니다."), keyword: tr("저전력 모드"), url: "App-prefs:BATTERY_USAGE"),
+        Item(title: tr("보호필름·반사 제거"), path: tr("무광/블루라이트 필름은 색을 바꿉니다"), note: tr("화면을 정면에서, 주변 조명이 비치지 않게 촬영하세요."), keyword: nil),
     ]
 
     var body: some View {
@@ -41,43 +41,43 @@ struct DisplayCheckView: View {
                 Section {
                     // Run once for the shoot, then switch everything back when done.
                     if shootModeOn {
-                        Label("촬영 모드 켜짐 — 촬영이 끝나면 ‘지금 종료’를 누르세요", systemImage: "record.circle")
+                        Label(tr("촬영 모드 켜짐 — 촬영이 끝나면 ‘지금 종료’를 누르세요"), systemImage: "record.circle")
                             .foregroundStyle(.orange).font(.callout)
                     }
                     Button {
                         DisplayShortcut.run(shortcutName)
                         shootModeOn = true
                     } label: {
-                        Label("지금 실행", systemImage: "bolt.badge.checkmark.fill")
+                        Label(tr("지금 실행"), systemImage: "bolt.badge.checkmark.fill")
                             .font(.headline)
                     }
                     Button {
                         DisplayShortcut.run(restoreName)
                         shootModeOn = false
                     } label: {
-                        Label("지금 종료 (원래대로)", systemImage: "arrow.uturn.backward")
+                        Label(tr("지금 종료 (원래대로)"), systemImage: "arrow.uturn.backward")
                             .font(.headline)
                     }
                     // Signed shortcut files bundled with the app; the share sheet's 단축어 app imports them.
                     ForEach([shortcutName, restoreName], id: \.self) { name in
                         if let file = DisplayShortcut.shareableFile(name) {
                             ShareLink(item: file) {
-                                Label("‘\(name)’ 단축어 자동 추가", systemImage: "square.and.arrow.down")
+                                Label(String(format: tr("‘%@’ 단축어 자동 추가"), name), systemImage: "square.and.arrow.down")
                             }
                         }
                     }
-                    DisclosureGroup("직접 만들기", isExpanded: $showGuide) {
+                    DisclosureGroup(tr("직접 만들기"), isExpanded: $showGuide) {
                         VStack(alignment: .leading, spacing: 8) {
-                            Text("iOS는 앱이 True Tone·Night Shift 같은 설정을 직접 바꾸지 못하게 합니다. 대신 단축어 앱이 바꿀 수 있어서, 아래 단축어를 한 번 만들어 두면 위 버튼 한 번으로 모두 바뀝니다.")
+                            Text(tr("iOS는 앱이 True Tone·Night Shift 같은 설정을 직접 바꾸지 못하게 합니다. 대신 단축어 앱이 바꿀 수 있어서, 아래 단축어를 한 번 만들어 두면 위 버튼 한 번으로 모두 바뀝니다."))
                                 .font(.caption).foregroundStyle(.secondary)
-                            Text("1. 단축어 앱 › 오른쪽 위 + › ‘동작 추가’")
-                            Text("2. 동작을 검색해 차례로 추가하고 모두 ‘끔’으로:\n   · True Tone 설정\n   · Night Shift 설정\n   · 저전력 모드 설정\n   · 화이트 포인트 줄이기 설정\n   · 색상 필터 설정")
-                            Text("3. ‘밝기 설정’을 추가하고 100%")
-                            Text("4. 단축어 이름을 정확히 ‘\(shortcutName)’로 저장")
-                            Text("5. (선택) 같은 동작을 ‘켬’으로 바꾼 ‘\(restoreName)’도 만들면 촬영 후 되돌릴 수 있습니다.")
-                            Text("자동 밝기는 단축어로도 바꿀 수 없어 설정 › 손쉬운 사용에서 한 번 꺼 두세요.")
+                            Text(tr("1. 단축어 앱 › 오른쪽 위 + › ‘동작 추가’"))
+                            Text(tr("2. 동작을 검색해 차례로 추가하고 모두 ‘끔’으로:\n   · True Tone 설정\n   · Night Shift 설정\n   · 저전력 모드 설정\n   · 화이트 포인트 줄이기 설정\n   · 색상 필터 설정"))
+                            Text(tr("3. ‘밝기 설정’을 추가하고 100%"))
+                            Text(String(format: tr("4. 단축어 이름을 정확히 ‘%@’로 저장"), shortcutName))
+                            Text(String(format: tr("5. (선택) 같은 동작을 ‘켬’으로 바꾼 ‘%@’도 만들면 촬영 후 되돌릴 수 있습니다."), restoreName))
+                            Text(tr("자동 밝기는 단축어로도 바꿀 수 없어 설정 › 손쉬운 사용에서 한 번 꺼 두세요."))
                                 .font(.caption).foregroundStyle(.orange)
-                            Button("단축어 앱 열기") {
+                            Button(tr("단축어 앱 열기")) {
                                 if let url = URL(string: "shortcuts://create-shortcut") { UIApplication.shared.open(url) }
                             }
                             .buttonStyle(.borderedProminent)
@@ -86,20 +86,20 @@ struct DisplayCheckView: View {
                         .padding(.vertical, 4)
                     }
                 } header: {
-                    Text("원클릭 촬영 모드")
+                    Text(tr("원클릭 촬영 모드"))
                 } footer: {
-                    Text("‘지금 실행’은 촬영용 설정을 켜고, ‘지금 종료’는 원래대로 돌립니다. 처음 한 번 ‘자동 추가’를 누르고 공유 목록에서 ‘단축어’를 고른 뒤 ‘단축어 추가’를 누르세요. True Tone·Night Shift·저전력 모드·화이트 포인트 줄이기·색상 반전·색상 필터를 끄고 밝기를 100%로 맞춥니다. 예전에 추가한 단축어는 지우고 다시 추가하세요. 실행이 끝나면 이 앱으로 돌아옵니다.")
+                    Text(tr("‘지금 실행’은 촬영용 설정을 켜고, ‘지금 종료’는 원래대로 돌립니다. 처음 한 번 ‘자동 추가’를 누르고 공유 목록에서 ‘단축어’를 고른 뒤 ‘단축어 추가’를 누르세요. True Tone·Night Shift·저전력 모드·화이트 포인트 줄이기·색상 반전·색상 필터를 끄고 밝기를 100%로 맞춥니다. 예전에 추가한 단축어는 지우고 다시 추가하세요. 실행이 끝나면 이 앱으로 돌아옵니다."))
                 }
                 Section {
-                    LabeledContent("현재 밝기", value: "\(Int(UIScreen.main.brightness * 100))%")
-                    LabeledContent("체커 화면 밝기", value: "자동 100% 고정")
+                    LabeledContent(tr("현재 밝기"), value: "\(Int(UIScreen.main.brightness * 100))%")
+                    LabeledContent(tr("체커 화면 밝기"), value: tr("자동 100% 고정"))
                     if lock.warnings.isEmpty {
-                        Label("감지된 문제 없음", systemImage: "checkmark.seal.fill").foregroundStyle(.green)
+                        Label(tr("감지된 문제 없음"), systemImage: "checkmark.seal.fill").foregroundStyle(.green)
                     } else {
                         ForEach(lock.warnings, id: \.self) { Label($0, systemImage: "exclamationmark.triangle.fill").foregroundStyle(.orange) }
                     }
-                } header: { Text("자동 점검") } footer: {
-                    Text("True Tone · Night Shift · 자동 밝기는 iOS가 앱에 상태를 알려주지 않으므로 아래에서 직접 확인하세요.")
+                } header: { Text(tr("자동 점검")) } footer: {
+                    Text(tr("True Tone · Night Shift · 자동 밝기는 iOS가 앱에 상태를 알려주지 않으므로 아래에서 직접 확인하세요."))
                 }
                 Section {
                     ForEach(Array(items.enumerated()), id: \.offset) { i, item in
@@ -121,29 +121,29 @@ struct DisplayCheckView: View {
                                 Button {
                                     openSettings(keyword: keyword, url: item.url)
                                 } label: {
-                                    Label("설정", systemImage: "arrow.up.forward.app")
+                                    Label(tr("설정"), systemImage: "arrow.up.forward.app")
                                         .labelStyle(.iconOnly).font(.title3)
                                 }
                                 .buttonStyle(.borderless)
-                                .accessibilityLabel("설정 열기: \(item.title)")
+                                .accessibilityLabel(String(format: tr("설정 열기: %@"), item.title))
                             }
                         }
                     }
                 } header: {
-                    Text("수동 점검")
+                    Text(tr("수동 점검"))
                 } footer: {
                     if let copiedKeyword {
-                        Text("‘\(copiedKeyword)’를 복사했습니다. 설정 화면 아래 검색창에 붙여넣으면 바로 찾아갑니다.").foregroundStyle(.blue)
+                        Text(String(format: tr("‘%@’를 복사했습니다. 설정 화면 아래 검색창에 붙여넣으면 바로 찾아갑니다."), copiedKeyword)).foregroundStyle(.blue)
                     } else {
-                        Text("↗︎를 누르면 설정 앱이 열리고 항목 이름이 복사됩니다. 설정 검색창에 붙여넣어 바로 이동하세요. iOS는 앱이 설정의 특정 화면을 직접 열 수 있게 하지 않습니다.")
+                        Text(tr("↗︎를 누르면 설정 앱이 열리고 항목 이름이 복사됩니다. 설정 검색창에 붙여넣어 바로 이동하세요. iOS는 앱이 설정의 특정 화면을 직접 열 수 있게 하지 않습니다."))
                     }
                 }
                 Section {
-                    Button("설정 앱 열기") { openSettings(keyword: nil) }
+                    Button(tr("설정 앱 열기")) { openSettings(keyword: nil) }
                 }
             }
-            .navigationTitle("디스플레이 점검")
-            .toolbar { Button("완료") { dismiss() } }
+            .navigationTitle(tr("디스플레이 점검"))
+            .toolbar { Button(tr("완료")) { dismiss() } }
             .onAppear { lock.refreshWarnings() }
         }
     }
@@ -176,23 +176,23 @@ struct SettingsView: View {
         NavigationStack {
             Form {
                 Section {
-                    Picker("출력 색공간", selection: $space) { ForEach(OutputSpace.allCases) { Text($0.title).tag($0) } }
+                    Picker(tr("출력 색공간"), selection: $space) { ForEach(OutputSpace.allCases) { Text($0.title).tag($0) } }
                 } footer: {
-                    Text("Display P3 권장: 24색 전체를 클립 없이 표시합니다. sRGB·Rec.709는 원색이 같아 화면 색이 같고, cyan 패치만 약간 클립됩니다. Rec.709를 고르면 패치 값이 BT.709 감마 코드값(풀/리미티드 레인지)으로 표시되어 카메라의 Rec.709 출력과 바로 비교할 수 있습니다.")
+                    Text(tr("Display P3 권장: 24색 전체를 클립 없이 표시합니다. sRGB·Rec.709는 원색이 같아 화면 색이 같고, cyan 패치만 약간 클립됩니다. Rec.709를 고르면 패치 값이 BT.709 감마 코드값(풀/리미티드 레인지)으로 표시되어 카메라의 Rec.709 출력과 바로 비교할 수 있습니다."))
                 }
                 Section {
-                    Toggle("체커 화면에서 밝기 100% 고정", isOn: $lockBrightness)
+                    Toggle(tr("체커 화면에서 밝기 100% 고정"), isOn: $lockBrightness)
                 } footer: {
-                    Text("켜면 체커를 여는 동안 밝기를 최대로 유지하고(사용자가 바꿔도 즉시 복귀), 화면 꺼짐을 막습니다. 닫으면 원래 밝기로 돌아갑니다.")
+                    Text(tr("켜면 체커를 여는 동안 밝기를 최대로 유지하고(사용자가 바꿔도 즉시 복귀), 화면 꺼짐을 막습니다. 닫으면 원래 밝기로 돌아갑니다."))
                 }
-                Section("체커 표시") {
-                    Picker("비율", selection: $aspectRaw) { ForEach(AspectMode.allCases) { Text($0.title).tag($0.rawValue) } }
-                    Picker("주변색", selection: $surroundRaw) { ForEach(Surround.allCases) { Text($0.title).tag($0.rawValue) } }
-                    Toggle("세로 화면에서 가로형 체커 90° 회전", isOn: $autoRotate)
+                Section(tr("체커 표시")) {
+                    Picker(tr("비율"), selection: $aspectRaw) { ForEach(AspectMode.allCases) { Text($0.title).tag($0.rawValue) } }
+                    Picker(tr("주변색"), selection: $surroundRaw) { ForEach(Surround.allCases) { Text($0.title).tag($0.rawValue) } }
+                    Toggle(tr("세로 화면에서 가로형 체커 90° 회전"), isOn: $autoRotate)
                 }
             }
-            .navigationTitle("설정")
-            .toolbar { Button("완료") { dismiss() } }
+            .navigationTitle(tr("설정"))
+            .toolbar { Button(tr("완료")) { dismiss() } }
         }
     }
 }

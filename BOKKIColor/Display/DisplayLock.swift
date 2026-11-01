@@ -4,7 +4,7 @@ import UIKit
 enum AspectMode: String, CaseIterable, Identifiable {
     case physical, fill
     var id: String { rawValue }
-    var title: String { self == .physical ? "실물 비율" : "화면 꽉 채움" }
+    var title: String { self == .physical ? tr("실물 비율") : tr("화면 꽉 채움") }
 }
 
 enum Surround: String, CaseIterable, Identifiable {
@@ -12,9 +12,9 @@ enum Surround: String, CaseIterable, Identifiable {
     var id: String { rawValue }
     var title: String {
         switch self {
-        case .black: "블랙"
-        case .gray18: "18% 그레이"
-        case .white: "화이트"
+        case .black: tr("블랙")
+        case .gray18: tr("18% 그레이")
+        case .white: tr("화이트")
         }
     }
     var spec: ColorSpec {
@@ -41,8 +41,8 @@ enum SettingsKey {
 
 /// Runs the user's Shortcuts shortcuts that switch display settings iOS won't let an app change.
 enum DisplayShortcut {
-    static let defaultName = "BOKKI 촬영 모드"
-    static let defaultRestoreName = "BOKKI 촬영 종료"
+    static let defaultName = "BOKKI Shoot Mode"
+    static let defaultRestoreName = "BOKKI Shoot End"
 
     /// The bundled signed shortcut, copied out as `<name>.shortcut` for the share sheet. It is stored
     /// as `.bokkishortcut` in the project because macOS/iCloud import (and remove) loose `.shortcut` files.
@@ -125,17 +125,17 @@ final class DisplayLock {
         // The simulator cannot change brightness, so the check only applies on a device.
         #if !targetEnvironment(simulator)
         if savedBrightness != nil, let screen, screen.brightness < Self.target - 0.01 {
-            w.append(String(format: "밝기 %.0f%% (100%%가 아님)", screen.brightness * 100))
+            w.append(String(format: tr("밝기 %.0f%% (100%%가 아님)"), screen.brightness * 100))
         }
         #endif
-        if ProcessInfo.processInfo.isLowPowerModeEnabled { w.append("저전력 모드: 밝기 제한 가능") }
+        if ProcessInfo.processInfo.isLowPowerModeEnabled { w.append(tr("저전력 모드: 밝기 제한 가능")) }
         switch ProcessInfo.processInfo.thermalState {
-        case .serious, .critical: w.append("기기 과열: 화면 감광 중일 수 있음")
+        case .serious, .critical: w.append(tr("기기 과열: 화면 감광 중일 수 있음"))
         default: break
         }
-        if UIAccessibility.isInvertColorsEnabled { w.append("색상 반전 켜짐") }
-        if UIAccessibility.isGrayscaleEnabled { w.append("흑백(색상 필터) 켜짐") }
-        if UIAccessibility.isDarkerSystemColorsEnabled { w.append("대비 증가 켜짐") }
+        if UIAccessibility.isInvertColorsEnabled { w.append(tr("색상 반전 켜짐")) }
+        if UIAccessibility.isGrayscaleEnabled { w.append(tr("흑백(색상 필터) 켜짐")) }
+        if UIAccessibility.isDarkerSystemColorsEnabled { w.append(tr("대비 증가 켜짐")) }
         warnings = w
     }
 }

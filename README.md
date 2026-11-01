@@ -1,6 +1,6 @@
-# BOKKI Checker
+# BOKKI Chart
 
-On-screen color checkers for tuning camera color on iPhone and iPad.
+On-screen color charts for tuning camera color on iPhone and iPad.
 
 - Reference charts from published data: X-Rite ColorChecker Classic (before/after Nov 2014), 1976, 2005, BabelColor average, SG 140, TE226 V2 (45)
 - Physical-ratio and full-screen-fill layouts

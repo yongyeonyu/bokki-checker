@@ -56,24 +56,24 @@ struct ColorInfo {
         var video: [(String, String)] = []
         if space == .rec709 {
             let l8 = legal(8), l10 = legal(10)
-            video = [("리미티드 8비트 (16–235)", "R \(l8.0)  G \(l8.1)  B \(l8.2)"),
-                     ("리미티드 10비트 (64–940)", "R \(l10.0)  G \(l10.1)  B \(l10.2)")]
+            video = [(tr("리미티드 8비트 (16–235)"), "R \(l8.0)  G \(l8.1)  B \(l8.2)"),
+                     (tr("리미티드 10비트 (64–940)"), "R \(l10.0)  G \(l10.1)  B \(l10.2)")]
         }
         return video + [
-            ("24비트 (8bit/ch)", "\(hex24)   R \(c8.0)  G \(c8.1)  B \(c8.2)"),
-            ("16비트/ch (48bit)", "R \(c16.0)  G \(c16.1)  B \(c16.2)"),
-            ("16비트 RGB565", String(format: "0x%04X", rgb565)),
-            ("8비트 RGB332", String(format: "0x%02X  (%d)", rgb332, rgb332)),
-            ("10비트/ch", "R \(c10.0)  G \(c10.1)  B \(c10.2)"),
-            ("정규화 0–1", String(format: "%.4f  %.4f  %.4f", encoded.x, encoded.y, encoded.z)),
-            ("CMYK (단순 변환)", { let c = cmyk; return "C \(c.0) M \(c.1) Y \(c.2) K \(c.3)" }()),
-            ("선형 광량", String(format: "%.4f  %.4f  %.4f", linear.x, linear.y, linear.z)),
+            (tr("24비트 (8bit/ch)"), "\(hex24)   R \(c8.0)  G \(c8.1)  B \(c8.2)"),
+            (tr("16비트/ch (48bit)"), "R \(c16.0)  G \(c16.1)  B \(c16.2)"),
+            (tr("16비트 RGB565"), String(format: "0x%04X", rgb565)),
+            (tr("8비트 RGB332"), String(format: "0x%02X  (%d)", rgb332, rgb332)),
+            (tr("10비트/ch"), "R \(c10.0)  G \(c10.1)  B \(c10.2)"),
+            (tr("정규화 0–1"), String(format: "%.4f  %.4f  %.4f", encoded.x, encoded.y, encoded.z)),
+            (tr("CMYK (단순 변환)"), { let c = cmyk; return "C \(c.0) M \(c.1) Y \(c.2) K \(c.3)" }()),
+            (tr("선형 광량"), String(format: "%.4f  %.4f  %.4f", linear.x, linear.y, linear.z)),
         ]
     }
 
     var shortLabel: String { let c = rgb8; return "\(hex24)\n\(c.0) \(c.1) \(c.2)" }
 
     var copyText: String {
-        (["색공간: \(space.title)" + (outOfGamut ? " (개멋 밖, 클립됨)" : "")] + lines.map { "\($0.0): \($0.1)" }).joined(separator: "\n")
+        ([String(format: tr("색공간: %@"), space.title) + (outOfGamut ? tr(" (개멋 밖, 클립됨)") : "")] + lines.map { "\($0.0): \($0.1)" }).joined(separator: "\n")
     }
 }

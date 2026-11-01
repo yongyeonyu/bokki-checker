@@ -20,13 +20,13 @@ struct PatchDetailView: View {
                         VStack(alignment: .leading, spacing: 4) {
                             HStack {
                                 Text(patch.name).font(.headline)
-                                if patch.tuned == true { Text("튜닝됨").font(.caption2.bold()).padding(.horizontal, 6).background(.orange, in: Capsule()) }
+                                if patch.tuned == true { Text(tr("튜닝됨")).font(.caption2.bold()).padding(.horizontal, 6).background(.orange, in: Capsule()) }
                             }
                             if let ref = original?.reference ?? patch.reference {
-                                Text((patch.tuned == true ? "기본값 " : "") + ref).font(.system(.caption, design: .monospaced)).foregroundStyle(.secondary)
+                                Text((patch.tuned == true ? tr("기본값 ") : "") + ref).font(.system(.caption, design: .monospaced)).foregroundStyle(.secondary)
                             }
                             let lab = patch.spec.lab(in: current)
-                            Text(String(format: "표시 Lab(D50) %.1f / %.1f / %.1f", lab.x, lab.y, lab.z))
+                            Text(String(format: tr("표시 Lab(D50) %.1f / %.1f / %.1f"), lab.x, lab.y, lab.z))
                                 .font(.system(.caption2, design: .monospaced)).foregroundStyle(.secondary)
                         }
                     }
@@ -44,16 +44,16 @@ struct PatchDetailView: View {
                         }
                     } header: {
                         HStack {
-                            Text(space.title + (space == current ? " (현재 출력)" : ""))
-                            if info.outOfGamut { Text("· 개멋 밖, 클립됨").foregroundStyle(.orange) }
+                            Text(space.title + (space == current ? tr(" (현재 출력)") : ""))
+                            if info.outOfGamut { Text(tr("· 개멋 밖, 클립됨")).foregroundStyle(.orange) }
                         }
                     }
                 }
             }
-            .navigationTitle("패치 색상 정보")
+            .navigationTitle(tr("패치 색상 정보"))
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
-                Button(copied ? "복사됨" : "복사") {
+                Button(copied ? tr("복사됨") : tr("복사")) {
                     UIPasteboard.general.string = "\(patch.name)\n" + (patch.reference.map { "\($0)\n" } ?? "")
                         + OutputSpace.allCases.map { ColorInfo(patch.spec, space: $0).copyText }.joined(separator: "\n\n")
                     copied = true

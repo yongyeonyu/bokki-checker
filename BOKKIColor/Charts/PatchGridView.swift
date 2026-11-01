@@ -105,7 +105,7 @@ struct PatchLabel: View {
         VStack(spacing: 1) {
             Text((patch.tuned == true ? "✎ " : "") + patch.name).fontWeight(.semibold).lineLimit(1)
             if !compact { Text(info.shortLabel).multilineTextAlignment(.center) }
-            if info.outOfGamut { Text("⚠︎ 개멋 밖") }
+            if info.outOfGamut { Text(tr("⚠︎ 개멋 밖")) }
         }
         .font(.system(size: compact ? 8 : 10, design: .monospaced))
         .minimumScaleFactor(0.5)

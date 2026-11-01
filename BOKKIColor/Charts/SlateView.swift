@@ -61,17 +61,17 @@ struct SlateView: View {
             // Earlier builds filled in a preset camera; start blank unless the user saved that name.
             if Self.legacyCameras.contains(camera) && !savedCameras.contains(camera) { camera = "" }
         }
-        .alert("카메라 추가", isPresented: $addingCamera) {
-            TextField("카메라 이름", text: $newCameraName)
-            Button("저장") {
+        .alert(tr("카메라 추가"), isPresented: $addingCamera) {
+            TextField(tr("카메라 이름"), text: $newCameraName)
+            Button(tr("저장")) {
                 let name = newCameraName.trimmingCharacters(in: .whitespaces)
                 guard !name.isEmpty else { return }
                 if !savedCameras.contains(name) { savedCamerasRaw = (savedCameras + [name]).joined(separator: "\n") }
                 camera = name
             }
-            Button("취소", role: .cancel) {}
+            Button(tr("취소"), role: .cancel) {}
         } message: {
-            Text("저장한 카메라는 ⌄ 목록에서 언제든 다시 고를 수 있습니다.")
+            Text(tr("저장한 카메라는 ⌄ 목록에서 언제든 다시 고를 수 있습니다."))
         }
         // Close-keyboard button, pinned just above the keyboard while typing.
         .overlay(alignment: .bottomTrailing) {
@@ -83,7 +83,7 @@ struct SlateView: View {
                         .frame(width: 48, height: 40)
                         .background(.ultraThinMaterial, in: Capsule())
                 }
-                .accessibilityLabel("키보드 닫기")
+                .accessibilityLabel(tr("키보드 닫기"))
                 .padding(10)
                 .transition(.opacity)
             }
@@ -100,7 +100,7 @@ struct SlateView: View {
                     .lineLimit(1).minimumScaleFactor(0.5)
             }
             // Tapping the title or camera name puts the cursor there directly.
-            slateField("영상 제목", $project, font: (wide ? Font.title3 : .title2).bold())
+            slateField(tr("영상 제목"), $project, font: (wide ? Font.title3 : .title2).bold())
                 .focused($focus, equals: .title)
                 .submitLabel(.next)
                 .onSubmit { focus = .camera }
@@ -122,14 +122,14 @@ struct SlateView: View {
                 }
                 ViewThatFits(in: .horizontal) {
                     HStack(spacing: 6) {
-                        SlatePickerField(prompt: "프로파일", text: $profile, options: Self.profiles)
+                        SlatePickerField(prompt: tr("프로파일"), text: $profile, options: Self.profiles)
                         Text("·")
                         SlatePickerField(prompt: "WB", text: $wb, options: Self.whiteBalances)
                         Text("·")
                         SlatePickerField(prompt: "ISO", text: $iso, options: Self.isos)
                     }
                     VStack(alignment: .leading, spacing: 6) {
-                        SlatePickerField(prompt: "프로파일", text: $profile, options: Self.profiles)
+                        SlatePickerField(prompt: tr("프로파일"), text: $profile, options: Self.profiles)
                         HStack(spacing: 6) {
                             SlatePickerField(prompt: "WB", text: $wb, options: Self.whiteBalances)
                             Text("·")
@@ -157,7 +157,7 @@ struct SlateView: View {
                         .font(.system(.subheadline, design: .monospaced))
                         .lineLimit(1)
                 }
-                slateField("영상 제목", $project, font: .title3.bold())
+                slateField(tr("영상 제목"), $project, font: .title3.bold())
                     .focused($focus, equals: .title)
                     .submitLabel(.next)
                     .onSubmit { focus = .camera }
@@ -169,7 +169,7 @@ struct SlateView: View {
                 cameraRow
             }
             HStack(spacing: 6) {
-                SlatePickerField(prompt: "프로파일", text: $profile, options: Self.profiles)
+                SlatePickerField(prompt: tr("프로파일"), text: $profile, options: Self.profiles)
                 Text("·")
                 SlatePickerField(prompt: "WB", text: $wb, options: Self.whiteBalances)
                 Text("·")
@@ -185,7 +185,7 @@ struct SlateView: View {
 
     private var cameraRow: some View {
         HStack(spacing: 4) {
-            slateField("카메라 이름", $camera)
+            slateField(tr("카메라 이름"), $camera)
                 .focused($focus, equals: .camera)
                 .submitLabel(.done)
                 .onSubmit { focus = nil }
@@ -237,10 +237,10 @@ struct SlateView: View {
     @ViewBuilder
     private var cameraMenu: some View {
         Button { newCameraName = ""; addingCamera = true } label: {
-            Label("카메라 추가…", systemImage: "plus.circle")
+            Label(tr("카메라 추가…"), systemImage: "plus.circle")
         }
         if !savedCameras.isEmpty {
-            Section("저장한 카메라") {
+            Section(tr("저장한 카메라")) {
                 ForEach(savedCameras, id: \.self) { saved in
                     Button { camera = saved } label: {
                         if saved == camera { Label(saved, systemImage: "checkmark") } else { Text(saved) }
@@ -252,7 +252,7 @@ struct SlateView: View {
                             savedCamerasRaw = savedCameras.filter { $0 != saved }.joined(separator: "\n")
                         } label: { Label(saved, systemImage: "trash") }
                     }
-                } label: { Label("저장한 카메라 삭제", systemImage: "trash") }
+                } label: { Label(tr("저장한 카메라 삭제"), systemImage: "trash") }
             }
         }
     }

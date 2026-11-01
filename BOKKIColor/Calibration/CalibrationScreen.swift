@@ -43,7 +43,7 @@ struct CalibrationScreen: View {
                         .frame(width: 44, height: 44).background(.white.opacity(0.15), in: Circle())
                 }
                 .padding(.bottom, 48)
-                .accessibilityLabel("닫기")
+                .accessibilityLabel(tr("닫기"))
             }
         }
         .onAppear {
@@ -64,8 +64,8 @@ struct CalibrationScreen: View {
 
     /// Shown over the target only once the camera is gone or silent, so it never spoils a shot.
     private var lostNotice: String? {
-        if case .reconnecting(let name) = link.state { return "\(name) 연결이 끊겼습니다. 다시 연결을 기다리는 중…" }
-        if link.stalled { return "BOKKI CAM 응답이 없습니다. BOKKI CAM에서 캘리브레이션이 멈췄거나 끝났을 수 있습니다." }
+        if case .reconnecting(let name) = link.state { return String(format: tr("%@ 연결이 끊겼습니다. 다시 연결을 기다리는 중…"), name) }
+        if link.stalled { return tr("BOKKI CAM 응답이 없습니다. BOKKI CAM에서 캘리브레이션이 멈췄거나 끝났을 수 있습니다.") }
         return nil
     }
 
@@ -74,9 +74,9 @@ struct CalibrationScreen: View {
             Label(notice, systemImage: "exclamationmark.triangle.fill")
                 .font(.callout.weight(.semibold)).multilineTextAlignment(.center)
             HStack(spacing: 12) {
-                Button("새 QR로 다시 연결") { link.restart() }
+                Button(tr("새 QR로 다시 연결")) { link.restart() }
                     .buttonStyle(.borderedProminent)
-                Button("닫기") { dismiss() }
+                Button(tr("닫기")) { dismiss() }
                     .buttonStyle(.bordered)
             }
         }
@@ -92,35 +92,35 @@ struct CalibrationScreen: View {
             switch link.state {
             case .waiting:
                 if let name = link.lastFinished {
-                    Label("\(name) 캘리브레이션 완료 — 결과는 BOKKI CAM에서 확인하세요.", systemImage: "checkmark.circle.fill")
+                    Label(String(format: tr("%@ 캘리브레이션 완료 — 결과는 BOKKI CAM에서 확인하세요."), name), systemImage: "checkmark.circle.fill")
                         .font(.callout.weight(.semibold)).foregroundStyle(.green)
                 }
-                Text("BOKKI CAM 연결 대기 중").font(.title2.bold())
+                Text(tr("BOKKI CAM 연결 대기 중")).font(.title2.bold())
                 // Big enough for BOKKI CAM to read from about 1 m; white quiet zone around the code.
                 let side = min(min(size.width, size.height) * 0.5, max(size.width, size.height) * 0.36)
                 if let qr = Self.qrImage(link.pairingPayload) {
                     Image(uiImage: qr).interpolation(.none).resizable().scaledToFit()
                         .frame(width: side, height: side)
                         .padding(side * 0.08).background(.white)
-                        .accessibilityLabel("BOKKI CAM 연결 QR 코드")
+                        .accessibilityLabel(tr("BOKKI CAM 연결 QR 코드"))
                 }
-                Text("BOKKI CAM 사진 화면에 이 QR을 비추면 이 화면에 바로 연결됩니다.\n또는 BOKKI CAM에서 캘리브레이션을 시작하세요 (Bluetooth · Wi-Fi 켜기).")
+                Text(tr("BOKKI CAM 사진 화면에 이 QR을 비추면 이 화면에 바로 연결됩니다.\n또는 BOKKI CAM에서 캘리브레이션을 시작하세요 (Bluetooth · Wi-Fi 켜기)."))
                     .multilineTextAlignment(.center).foregroundStyle(.white.opacity(0.7))
             case .connected(let name):
                 Image(systemName: "link.circle.fill").font(.system(size: 56)).foregroundStyle(.green)
-                Text("\(name) 연결됨").font(.title2.bold())
-                Text("BOKKI CAM이 타깃을 띄울 때까지 화면을 카메라 쪽으로 두세요.")
+                Text(String(format: tr("%@ 연결됨"), name)).font(.title2.bold())
+                Text(tr("BOKKI CAM이 타깃을 띄울 때까지 화면을 카메라 쪽으로 두세요."))
                     .foregroundStyle(.white.opacity(0.7))
             case .reconnecting(let name):
                 ProgressView().tint(.white).controlSize(.large)
-                Text("\(name) 재연결 대기 중").font(.title2.bold())
-                Text("연결이 잠시 끊겼습니다. BOKKI CAM이 자동으로 다시 연결합니다.")
+                Text(String(format: tr("%@ 재연결 대기 중"), name)).font(.title2.bold())
+                Text(tr("연결이 잠시 끊겼습니다. BOKKI CAM이 자동으로 다시 연결합니다."))
                     .foregroundStyle(.white.opacity(0.7))
             }
-            Label("BOKKI CAM 화면에 네 모서리의 흰 사각형이 모두 들어오게 맞추세요. 화면을 정면에서, 프레임을 거의 채우게 찍어야 합니다.",
+            Label(tr("BOKKI CAM 화면에 네 모서리의 흰 사각형이 모두 들어오게 맞추세요. 화면을 정면에서, 프레임을 거의 채우게 찍어야 합니다."),
                   systemImage: "viewfinder")
                 .font(.callout.weight(.semibold)).multilineTextAlignment(.center).padding(.top, 12)
-            Text("True Tone · Night Shift · 자동 밝기를 끄고, 화면을 닦고, 조명이 화면에 비치지 않게 두세요.")
+            Text(tr("True Tone · Night Shift · 자동 밝기를 끄고, 화면을 닦고, 조명이 화면에 비치지 않게 두세요."))
                 .font(.footnote).foregroundStyle(.orange)
         }
         .foregroundStyle(.white)

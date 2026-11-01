@@ -81,7 +81,7 @@ struct ReferenceDataset: Decodable {
             }
         }
         let fine = rows * columns > 60
-        return PatchChart(id: id, title: title, subtitle: subtitle, rows: rows, columns: columns, patches: items,
+        return PatchChart(id: id, title: tr(title), subtitle: subtitle, rows: rows, columns: columns, patches: items,
                           physicalGap: fine ? 0.06 : 0.125, physicalBorder: fine ? 0.15 : 0.25, source: source)
     }
 

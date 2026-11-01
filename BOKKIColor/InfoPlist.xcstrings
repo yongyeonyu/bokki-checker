@@ -1,0 +1,22 @@
+{
+  "sourceLanguage": "ko",
+  "strings": {
+    "NSLocalNetworkUsageDescription": {
+      "localizations": {
+        "ko": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "근처의 BOKKI CAM과 연결해 카메라 색 보정용 체커를 표시합니다."
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Connects to a nearby BOKKI CAM to show charts for camera color calibration."
+          }
+        }
+      }
+    }
+  },
+  "version": "1.0"
+}

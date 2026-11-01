@@ -5,8 +5,8 @@ enum ImportError: LocalizedError {
     case empty, unreadable
     var errorDescription: String? {
         switch self {
-        case .empty: "패치 데이터를 찾지 못했습니다. 'name,L,a,b' 형식의 CSV 또는 LAB_L/LAB_A/LAB_B 필드가 있는 CGATS 파일을 사용하세요."
-        case .unreadable: "파일을 읽을 수 없습니다."
+        case .empty: tr("패치 데이터를 찾지 못했습니다. 'name,L,a,b' 형식의 CSV 또는 LAB_L/LAB_A/LAB_B 필드가 있는 CGATS 파일을 사용하세요.")
+        case .unreadable: tr("파일을 읽을 수 없습니다.")
         }
     }
 }
@@ -109,7 +109,7 @@ final class CustomChartStore {
         }
         guard !patches.isEmpty else { return nil }
         columns = max(1, min(columns, patches.count))
-        return PatchChart(id: "custom_\(UUID().uuidString)", title: title, subtitle: "\(patches.count)패치 · 가져온 체커",
-                          rows: (patches.count + columns - 1) / columns, columns: columns, patches: patches, source: "사용자 가져오기")
+        return PatchChart(id: "custom_\(UUID().uuidString)", title: title, subtitle: String(format: tr("%lld패치 · 가져온 체커"), patches.count),
+                          rows: (patches.count + columns - 1) / columns, columns: columns, patches: patches, source: tr("사용자 가져오기"))
     }
 }

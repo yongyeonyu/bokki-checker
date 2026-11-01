@@ -29,8 +29,8 @@ struct HomeView: View {
                     Button { showCheck = true } label: {
                         Label {
                             VStack(alignment: .leading) {
-                                Text("촬영 전 디스플레이 점검").font(.headline)
-                                Text("True Tone · Night Shift · 자동 밝기 끄기 — 항상 같은 색을 내기 위한 필수 단계")
+                                Text(tr("촬영 전 디스플레이 점검")).font(.headline)
+                                Text(tr("True Tone · Night Shift · 자동 밝기 끄기 — 항상 같은 색을 내기 위한 필수 단계"))
                                     .font(.caption).foregroundStyle(.secondary)
                             }
                         } icon: { Image(systemName: "checklist") }
@@ -38,8 +38,8 @@ struct HomeView: View {
                     Button { calibrating = true } label: {
                         Label {
                             VStack(alignment: .leading) {
-                                Text("BOKKI CAM 캘리브레이션").font(.headline)
-                                Text("근처의 BOKKI CAM과 연결 — 카메라가 요청하는 체커·색상을 전체 화면으로 표시")
+                                Text(tr("BOKKI CAM 캘리브레이션")).font(.headline)
+                                Text(tr("근처의 BOKKI CAM과 연결 — 카메라가 요청하는 체커·색상을 전체 화면으로 표시"))
                                     .font(.caption).foregroundStyle(.secondary)
                             }
                         } icon: { Image(systemName: "camera.aperture") }
@@ -57,7 +57,7 @@ struct HomeView: View {
                             }
                         }
                         if cat.id == "custom" {
-                            Button { importing = true } label: { Label("CSV / CGATS 파일 가져오기", systemImage: "plus") }
+                            Button { importing = true } label: { Label(tr("CSV / CGATS 파일 가져오기"), systemImage: "plus") }
                         }
                     } header: {
                         Label(cat.title, systemImage: cat.symbol)
@@ -65,12 +65,12 @@ struct HomeView: View {
                         Text(cat.summary)
                     }
                 }
-                Section("데이터 출처") {
-                    Text("X-Rite (2016) ColorChecker Classic/SG 공식 사양, BabelColor 평균값, Image Engineering TE226 V2 — colour-science 데이터셋(BSD-3) 경유. Monk Skin Tone Scale © Google, CC BY 4.0. ColorChecker는 X-Rite/Calibrite의 상표이며 본 앱은 호환 레퍼런스 값을 표시합니다. 'BOKKI 참고값' 표기는 자체 정의값입니다.")
+                Section(tr("데이터 출처")) {
+                    Text(tr("X-Rite (2016) ColorChecker Classic/SG 공식 사양, BabelColor 평균값, Image Engineering TE226 V2 — colour-science 데이터셋(BSD-3) 경유. Monk Skin Tone Scale © Google, CC BY 4.0. ColorChecker는 X-Rite/Calibrite의 상표이며 본 앱은 호환 레퍼런스 값을 표시합니다. 'BOKKI 참고값' 표기는 자체 정의값입니다."))
                         .font(.caption2).foregroundStyle(.secondary)
                 }
             }
-            .navigationTitle("BOKKI Checker")
+            .navigationTitle("BOKKI Chart")
             .toolbar {
                 Button { showSettings = true } label: { Image(systemName: "gearshape") }
             }
@@ -94,27 +94,27 @@ struct HomeView: View {
                 importError = error.localizedDescription
             }
         }
-        .alert("이름 변경", isPresented: Binding(get: { renaming != nil }, set: { if !$0 { renaming = nil } })) {
-            TextField("이름", text: $renameText)
-            Button("저장") {
+        .alert(tr("이름 변경"), isPresented: Binding(get: { renaming != nil }, set: { if !$0 { renaming = nil } })) {
+            TextField(tr("이름"), text: $renameText)
+            Button(tr("저장")) {
                 let name = renameText.trimmingCharacters(in: .whitespaces)
                 if let id = renaming?.id, !name.isEmpty { store.rename(id: id, to: name) }
                 renaming = nil
             }
-            Button("취소", role: .cancel) { renaming = nil }
+            Button(tr("취소"), role: .cancel) { renaming = nil }
         }
-        .confirmationDialog("이 커스텀 체커를 삭제할까요?", isPresented: Binding(get: { deleting != nil }, set: { if !$0 { deleting = nil } }),
+        .confirmationDialog(tr("이 커스텀 체커를 삭제할까요?"), isPresented: Binding(get: { deleting != nil }, set: { if !$0 { deleting = nil } }),
                             titleVisibility: .visible) {
-            Button("삭제", role: .destructive) {
+            Button(tr("삭제"), role: .destructive) {
                 if let id = deleting?.id { store.remove(id: id) }
                 deleting = nil
             }
-            Button("취소", role: .cancel) { deleting = nil }
+            Button(tr("취소"), role: .cancel) { deleting = nil }
         } message: {
             Text(deleting?.title ?? "")
         }
-        .alert("가져오기 실패", isPresented: Binding(get: { importError != nil }, set: { if !$0 { importError = nil } })) {
-            Button("확인", role: .cancel) {}
+        .alert(tr("가져오기 실패"), isPresented: Binding(get: { importError != nil }, set: { if !$0 { importError = nil } })) {
+            Button(tr("확인"), role: .cancel) {}
         } message: { Text(importError ?? "") }
     }
 }
@@ -135,9 +135,9 @@ extension HomeView {
             .buttonStyle(.plain)
             Spacer(minLength: 0)
             Menu {
-                Button { presented = ChartItem(chart) } label: { Label("색상 편집", systemImage: "slider.horizontal.3") }
-                Button { renameText = chart.title; renaming = chart } label: { Label("이름 변경", systemImage: "pencil") }
-                Button(role: .destructive) { deleting = chart } label: { Label("삭제", systemImage: "trash") }
+                Button { presented = ChartItem(chart) } label: { Label(tr("색상 편집"), systemImage: "slider.horizontal.3") }
+                Button { renameText = chart.title; renaming = chart } label: { Label(tr("이름 변경"), systemImage: "pencil") }
+                Button(role: .destructive) { deleting = chart } label: { Label(tr("삭제"), systemImage: "trash") }
             } label: {
                 Image(systemName: "ellipsis.circle").font(.title3).frame(width: 36, height: 36)
             }

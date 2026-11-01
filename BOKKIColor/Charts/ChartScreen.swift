@@ -71,15 +71,15 @@ struct ChartScreen: View {
         .sheet(item: $selected) { patch in
             detail(for: patch).presentationDetents([.medium, .large]).presentationBackground(Color(.systemBackground))
         }
-        .alert("커스텀 체커로 저장", isPresented: $saving) {
-            TextField("이름", text: $saveName)
+        .alert(tr("커스텀 체커로 저장"), isPresented: $saving) {
+            TextField(tr("이름"), text: $saveName)
             if originalChart?.id.hasPrefix("custom_") == true {
-                Button("덮어쓰기") { save(overwrite: true) }
+                Button(tr("덮어쓰기")) { save(overwrite: true) }
             }
-            Button("새로 저장") { save(overwrite: false) }
-            Button("취소", role: .cancel) {}
+            Button(tr("새로 저장")) { save(overwrite: false) }
+            Button(tr("취소"), role: .cancel) {}
         } message: {
-            Text("튜닝한 색상을 커스텀 체커 목록에 저장합니다. 원본(기본값)은 그대로 유지됩니다.")
+            Text(tr("튜닝한 색상을 커스텀 체커 목록에 저장합니다. 원본(기본값)은 그대로 유지됩니다."))
         }
     }
 
@@ -121,11 +121,11 @@ struct ChartScreen: View {
     private func save(overwrite: Bool) {
         guard var chart = working, let base = originalChart else { return }
         let name = saveName.trimmingCharacters(in: .whitespaces)
-        chart.title = name.isEmpty ? base.title + " (튜닝)" : name
+        chart.title = name.isEmpty ? base.title + tr(" (튜닝)") : name
         if !overwrite {
             chart.id = "custom_\(UUID().uuidString)"
-            chart.subtitle = "튜닝 · 기본: \(base.title)"
-            chart.source = "BOKKI 튜닝 (기본값: \(base.source.isEmpty ? base.title : base.source))"
+            chart.subtitle = String(format: tr("튜닝 · 기본: %@"), base.title)
+            chart.source = String(format: tr("BOKKI 튜닝 (기본값: %@)"), base.source.isEmpty ? base.title : base.source)
             chart.patches = chart.patches.map { var p = $0; p.id = UUID(); return p }
             // Tuning a tuned copy still files it under the original built-in chart.
             chart.baseID = base.baseID ?? (base.id.hasPrefix("custom_") ? nil : base.id)
@@ -178,7 +178,7 @@ struct ChartScreen: View {
                 Button { dismiss() } label: { Image(systemName: "xmark") }
                 VStack(alignment: .leading, spacing: 0) {
                     Text(item.title).font(.subheadline.bold()).lineLimit(1)
-                    Text("\(space.title) · 밝기 \(lockBrightness ? "100% 고정" : "수동")").font(.caption2).opacity(0.8)
+                    Text(String(format: tr("%@ · 밝기 %@"), space.title, lockBrightness ? tr("100% 고정") : tr("수동"))).font(.caption2).opacity(0.8)
                 }
                 Spacer()
                 Button { hideTask?.cancel(); settingsOpen = true } label: { Image(systemName: "slider.horizontal.3") }
@@ -206,8 +206,8 @@ struct ChartScreen: View {
                     Button { seqIndex = (seqIndex - 1 + chart.patches.count) % chart.patches.count } label: { Image(systemName: "backward.fill") }
                     Button { seqPaused.toggle() } label: { Image(systemName: seqPaused ? "play.fill" : "pause.fill") }
                     Button { seqIndex = (seqIndex + 1) % chart.patches.count } label: { Image(systemName: "forward.fill") }
-                    Picker("간격", selection: $interval) {
-                        ForEach([1.0, 2.0, 3.0, 5.0], id: \.self) { Text("\(Int($0))초").tag($0) }
+                    Picker(tr("간격"), selection: $interval) {
+                        ForEach([1.0, 2.0, 3.0, 5.0], id: \.self) { Text(String(format: tr("%lld초"), Int($0))).tag($0) }
                     }.pickerStyle(.segmented).frame(width: 180)
                     Button { selected = chart.patches[seqIndex] } label: { Image(systemName: "info.circle") }
                 }
@@ -216,10 +216,10 @@ struct ChartScreen: View {
                 .background(.ultraThinMaterial, in: Capsule())
                 .padding(.bottom, 8)
             } else if savedNotice {
-                Label("커스텀 체커에 저장됨", systemImage: "checkmark.circle.fill")
+                Label(tr("커스텀 체커에 저장됨"), systemImage: "checkmark.circle.fill")
                     .font(.caption.bold()).padding(8).background(.ultraThinMaterial, in: Capsule()).padding(.bottom, 8)
             } else if item.kind != .slate {
-                Text(isTuned ? "튜닝 중 · ↩︎ 기본값 복원 · ⤓ 커스텀 저장" : "패치를 탭하면 색상 정보 · 정밀 튜닝 · 화면 탭하면 컨트롤 숨김")
+                Text(isTuned ? tr("튜닝 중 · ↩︎ 기본값 복원 · ⤓ 커스텀 저장") : tr("패치를 탭하면 색상 정보 · 정밀 튜닝 · 화면 탭하면 컨트롤 숨김"))
                     .font(.caption).padding(8).background(.ultraThinMaterial, in: Capsule()).padding(.bottom, 8)
             }
         }
@@ -232,21 +232,21 @@ struct ChartScreen: View {
     private var displaySettings: some View {
         NavigationStack {
             Form {
-                Picker("색공간", selection: $space) { ForEach(OutputSpace.allCases) { Text($0.title).tag($0) } }
+                Picker(tr("색공간"), selection: $space) { ForEach(OutputSpace.allCases) { Text($0.title).tag($0) } }
                     .pickerStyle(.segmented)
                 // The slate's checker uses the ratio too; only the surround is fixed (black).
                 if isPatches || item.kind == .slate {
-                    Picker("비율", selection: $aspectRaw) { ForEach(AspectMode.allCases) { Text($0.title).tag($0.rawValue) } }
+                    Picker(tr("비율"), selection: $aspectRaw) { ForEach(AspectMode.allCases) { Text($0.title).tag($0.rawValue) } }
                         .pickerStyle(.segmented)
                 }
                 if isPatches {
-                    Picker("주변색", selection: $surroundRaw) { ForEach(Surround.allCases) { Text($0.title).tag($0.rawValue) } }
+                    Picker(tr("주변색"), selection: $surroundRaw) { ForEach(Surround.allCases) { Text($0.title).tag($0.rawValue) } }
                         .pickerStyle(.segmented)
                 }
             }
-            .navigationTitle("표시 설정")
+            .navigationTitle(tr("표시 설정"))
             .navigationBarTitleDisplayMode(.inline)
-            .toolbar { Button("완료") { settingsOpen = false } }
+            .toolbar { Button(tr("완료")) { settingsOpen = false } }
         }
         .presentationDetents([.height(isPatches ? 300 : item.kind == .slate ? 240 : 180)])
     }

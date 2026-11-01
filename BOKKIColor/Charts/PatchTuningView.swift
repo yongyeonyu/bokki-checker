@@ -15,7 +15,7 @@ struct PatchTuningSection: View {
 
     var body: some View {
         Section {
-            Picker("조정 방식", selection: $mode) { ForEach(Mode.allCases) { Text($0.rawValue).tag($0) } }
+            Picker(tr("조정 방식"), selection: $mode) { ForEach(Mode.allCases) { Text(tr($0.rawValue)).tag($0) } }
                 .pickerStyle(.segmented)
             switch mode {
             case .lab:
@@ -32,14 +32,14 @@ struct PatchTuningSection: View {
                 ValueRow(label: "B", value: e.z.rounded(), range: 0...maxV, step: 1, format: fmt) { setRGB(Vec3(e.x, e.y, $0) / maxV) }
             }
             if let original, patch.tuned == true {
-                Button("이 패치 기본값으로", role: .destructive) { patch = original }
+                Button(tr("이 패치 기본값으로"), role: .destructive) { patch = original }
             }
         } header: {
-            Text("정밀 튜닝")
+            Text(tr("정밀 튜닝"))
         } footer: {
             Text(mode == .lab
-                 ? "L*a*b*(D50)를 0.1 단위로 조정합니다. 체커 화면에 바로 반영되며, 상단 '저장'으로 커스텀 체커로 보관하세요."
-                 : "\(space.title) 코드값을 직접 지정합니다. 다른 색공간으로 바꾸면 같은 빛이 나도록 자동 변환됩니다.")
+                 ? tr("L*a*b*(D50)를 0.1 단위로 조정합니다. 체커 화면에 바로 반영되며, 상단 '저장'으로 커스텀 체커로 보관하세요.")
+                 : String(format: tr("%@ 코드값을 직접 지정합니다. 다른 색공간으로 바꾸면 같은 빛이 나도록 자동 변환됩니다."), space.title))
         }
     }
 

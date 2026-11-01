@@ -4,7 +4,7 @@ import os
 @preconcurrency import MultipeerConnectivity
 import UIKit
 
-/// BOKKI CAM ↔ BOKKI Checker calibration link, protocol v1. The wire format is specified in the
+/// BOKKI CAM ↔ BOKKI Chart calibration link (named BOKKI Checker before the rename), protocol v1. The wire format is specified in the
 /// BOKKI CAM repository, `docs/calibration/CALIB1101-checker-link.md`; these types mirror it field for field.
 enum CalibrationProtocol {
     static let version = 1
@@ -142,7 +142,7 @@ struct CalibrationFrame {
     var step: CalibrationStep?
 }
 
-/// The Checker end of the link: advertises `bokki-calib`, accepts one BOKKI CAM at a time and answers
+/// The Chart end of the link: advertises `bokki-calib`, accepts one BOKKI CAM at a time and answers
 /// its requests by putting targets on screen.
 @MainActor
 @Observable
@@ -166,7 +166,7 @@ final class CalibrationLink: NSObject {
     /// The last run's `result`; stays on screen (also after `end`) until `dismissResult()`.
     private(set) var result: CalibrationResult?
     /// Fresh for every waiting screen; advertised in the discovery info and shown as a QR so a CAM
-    /// connects to this Checker only.
+    /// connects to this Chart app only.
     private(set) var token = CalibrationLink.makeToken()
 
     /// QR payload (protocol: `bokkicalib://connect?pv=1&token=<token>`), read by BOKKI CAM's Photo preview.
@@ -223,7 +223,7 @@ final class CalibrationLink: NSObject {
         log.info("waiting with token \(self.token, privacy: .public)")
         replaceSession()
         let advertiser = MCNearbyServiceAdvertiser(peer: peer,
-                                                   discoveryInfo: ["app": "BOKKI Checker", "pv": String(CalibrationProtocol.version),
+                                                   discoveryInfo: ["app": "BOKKI Chart", "pv": String(CalibrationProtocol.version),
                                                                    "token": token],
                                                    serviceType: CalibrationProtocol.serviceType)
         advertiser.delegate = self
@@ -289,7 +289,7 @@ final class CalibrationLink: NSObject {
             state = .connected(m.device ?? peerID.displayName)
             let native = UIScreen.main.nativeBounds.size
             let display = CalibrationDisplayInfo(brightnessLocked: true, widthPx: Int(native.width), heightPx: Int(native.height))
-            send(CalibrationEnvelope(type: "ready", pv: CalibrationProtocol.version, app: "BOKKI Checker",
+            send(CalibrationEnvelope(type: "ready", pv: CalibrationProtocol.version, app: "BOKKI Chart",
                                      device: Self.modelIdentifier, display: display, charts: availableCharts(),
                                      features: ["handshake", "results"]), to: peerID)
         case "show":

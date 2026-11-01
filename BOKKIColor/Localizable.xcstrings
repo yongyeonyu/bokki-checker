@@ -1,0 +1,3066 @@
+{
+  "sourceLanguage": "ko",
+  "strings": {
+    " (개멋 밖, 클립됨)": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": " (out of gamut, clipped)"
+          }
+        }
+      }
+    },
+    " (튜닝)": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": " (Tuned)"
+          }
+        }
+      }
+    },
+    " (현재 출력)": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": " (current output)"
+          }
+        }
+      }
+    },
+    "#735244 … 제조사 공개 sRGB 코드값 그대로": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "#735244 … manufacturer's published sRGB code values as-is"
+          }
+        }
+      }
+    },
+    "%@ · 밝기 %@": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%@ · Brightness %@"
+          }
+        }
+      }
+    },
+    "%@ 연결됨": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%@ connected"
+          }
+        }
+      }
+    },
+    "%@ 연결이 끊겼습니다. 다시 연결을 기다리는 중…": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%@ disconnected. Waiting to reconnect…"
+          }
+        }
+      }
+    },
+    "%@ 재연결 대기 중": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Waiting for %@ to reconnect"
+          }
+        }
+      }
+    },
+    "%@ 캘리브레이션 완료 — 결과는 BOKKI CAM에서 확인하세요.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%@ calibration complete — check the results in BOKKI CAM."
+          }
+        }
+      }
+    },
+    "%@ 코드값을 직접 지정합니다. 다른 색공간으로 바꾸면 같은 빛이 나도록 자동 변환됩니다.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Set %@ code values directly. Switching color space converts them automatically so the light output stays the same."
+          }
+        }
+      }
+    },
+    "%lld단 그레이 (L* 등간격)": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%lld-step gray (L* evenly spaced)"
+          }
+        }
+      }
+    },
+    "%lld초": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%lld s"
+          }
+        }
+      }
+    },
+    "%lld패치 · 가져온 체커": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%lld patches · imported chart"
+          }
+        }
+      }
+    },
+    "0~255 균등 32단": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "0–255 evenly in 32 steps"
+          }
+        }
+      }
+    },
+    "1. 단축어 앱 › 오른쪽 위 + › ‘동작 추가’": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "1. Shortcuts app › + at top right › ‘Add Action’"
+          }
+        }
+      }
+    },
+    "100% 고정": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Locked at 100%"
+          }
+        }
+      }
+    },
+    "100% 컬러바": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "100% Color Bars"
+          }
+        }
+      }
+    },
+    "100→0% 코드값": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "100→0% code values"
+          }
+        }
+      }
+    },
+    "10비트/ch": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "10-bit/ch"
+          }
+        }
+      }
+    },
+    "140색 SG (2014.11 이전)": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "140-Color SG (before Nov 2014)"
+          }
+        }
+      }
+    },
+    "140색 SG (2014.11 이후)": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "140-Color SG (after Nov 2014)"
+          }
+        }
+      }
+    },
+    "16비트 RGB565": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "16-bit RGB565"
+          }
+        }
+      }
+    },
+    "16비트 렌더 · 밴딩 확인": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "16-bit render · check banding"
+          }
+        }
+      }
+    },
+    "16비트/ch (48bit)": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "16-bit/ch (48bit)"
+          }
+        }
+      }
+    },
+    "18% 그레이": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "18% Gray"
+          }
+        }
+      }
+    },
+    "18% 그레이 필드": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "18% Gray Field"
+          }
+        }
+      }
+    },
+    "1·2·3·4 px 선 · 모아레": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "1·2·3·4 px lines · moiré"
+          }
+        }
+      }
+    },
+    "2. 동작을 검색해 차례로 추가하고 모두 ‘끔’으로:\n   · True Tone 설정\n   · Night Shift 설정\n   · 저전력 모드 설정\n   · 화이트 포인트 줄이기 설정\n   · 색상 필터 설정": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "2. Search for and add these actions in order, all set to ‘Off’:\n   · Set True Tone\n   · Set Night Shift\n   · Set Low Power Mode\n   · Set Reduce White Point\n   · Set Color Filters"
+          }
+        }
+      }
+    },
+    "24비트 (8bit/ch)": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "24-bit (8bit/ch)"
+          }
+        }
+      }
+    },
+    "24색 + 6단 그레이": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "24 colors + 6-step gray"
+          }
+        }
+      }
+    },
+    "24색 + 8단 그레이 + 피부 8": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "24 colors + 8-step gray + 8 skin"
+          }
+        }
+      }
+    },
+    "24색 + P3 원색/2차색 6": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "24 colors + 6 P3 primaries/secondaries"
+          }
+        }
+      }
+    },
+    "24색 + 그레이 + 촬영 정보 · Resolve Color Match용": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "24 colors + gray + shoot info · for Resolve Color Match"
+          }
+        }
+      }
+    },
+    "24색 클래식 (1976 원본)": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "24-Color Classic (1976 original)"
+          }
+        }
+      }
+    },
+    "24색 클래식 (2005)": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "24-Color Classic (2005)"
+          }
+        }
+      }
+    },
+    "24색 클래식 (2014.11 이전)": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "24-Color Classic (before Nov 2014)"
+          }
+        }
+      }
+    },
+    "24색 클래식 (2014.11 이후)": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "24-Color Classic (after Nov 2014)"
+          }
+        }
+      }
+    },
+    "24색 클래식 (BabelColor 평균)": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "24-Color Classic (BabelColor average)"
+          }
+        }
+      }
+    },
+    "24색 클래식 (제조사 sRGB HEX)": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "24-Color Classic (manufacturer sRGB HEX)"
+          }
+        }
+      }
+    },
+    "26색 (24색 + 퓨어 블랙/화이트)": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "26 Colors (24 colors + pure black/white)"
+          }
+        }
+      }
+    },
+    "2700K–7500K 나란히": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "2700K–7500K side by side"
+          }
+        }
+      }
+    },
+    "3. ‘밝기 설정’을 추가하고 100%": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "3. Add ‘Set Brightness’ and set it to 100%"
+          }
+        }
+      }
+    },
+    "32단 코드값 그레이": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "32-Step Code Value Gray"
+          }
+        }
+      }
+    },
+    "3단 그레이스케일": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "3-Step Grayscale"
+          }
+        }
+      }
+    },
+    "4. 단축어 이름을 정확히 ‘%@’로 저장": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "4. Save the shortcut with the exact name ‘%@’"
+          }
+        }
+      }
+    },
+    "45색 체커 (TE226 V2 타입)": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "45-Color Chart (TE226 V2 type)"
+          }
+        }
+      }
+    },
+    "5. (선택) 같은 동작을 ‘켬’으로 바꾼 ‘%@’도 만들면 촬영 후 되돌릴 수 있습니다.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "5. (Optional) Also create ‘%@’ with the same actions set to ‘On’ so you can restore after shooting."
+          }
+        }
+      }
+    },
+    "6단 그레이": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "6-Step Gray"
+          }
+        }
+      }
+    },
+    "6색 × 8단, 채도 커브·클리핑 확인": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "6 colors × 8 steps, check saturation curve · clipping"
+          }
+        }
+      }
+    },
+    "7색 컬러바 100%": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "7-Color Bars 100%"
+          }
+        }
+      }
+    },
+    "8비트 RGB332": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "8-bit RGB332"
+          }
+        }
+      }
+    },
+    "AWB 중립 필드": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "AWB Neutral Field"
+          }
+        }
+      }
+    },
+    "BOKKI CAM 사진 화면에 이 QR을 비추면 이 화면에 바로 연결됩니다.\n또는 BOKKI CAM에서 캘리브레이션을 시작하세요 (Bluetooth · Wi-Fi 켜기).": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Point BOKKI CAM's photo screen at this QR to connect to this screen right away.\nOr start calibration in BOKKI CAM (turn on Bluetooth · Wi-Fi)."
+          }
+        }
+      }
+    },
+    "BOKKI CAM 연결 QR 코드": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "BOKKI CAM connection QR code"
+          }
+        }
+      }
+    },
+    "BOKKI CAM 연결 대기 중": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Waiting for BOKKI CAM"
+          }
+        }
+      }
+    },
+    "BOKKI CAM 응답이 없습니다. BOKKI CAM에서 캘리브레이션이 멈췄거나 끝났을 수 있습니다.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "No response from BOKKI CAM. Calibration may have stopped or finished in BOKKI CAM."
+          }
+        }
+      }
+    },
+    "BOKKI CAM 캘리브레이션": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "BOKKI CAM Calibration"
+          }
+        }
+      }
+    },
+    "BOKKI CAM 화면에 네 모서리의 흰 사각형이 모두 들어오게 맞추세요. 화면을 정면에서, 프레임을 거의 채우게 찍어야 합니다.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Frame BOKKI CAM so all four white corner squares are visible. Shoot the screen straight on, nearly filling the frame."
+          }
+        }
+      }
+    },
+    "BOKKI CAM이 타깃을 띄울 때까지 화면을 카메라 쪽으로 두세요.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Keep the screen facing the camera until BOKKI CAM shows the target."
+          }
+        }
+      }
+    },
+    "BOKKI 정의": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "BOKKI-defined"
+          }
+        }
+      }
+    },
+    "BOKKI 정의 참고값 (표준 아님)": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "BOKKI-defined reference values (not a standard)"
+          }
+        }
+      }
+    },
+    "BOKKI 콤보 40": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "BOKKI Combo 40"
+          }
+        }
+      }
+    },
+    "BOKKI 튜닝 (기본값: %@)": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "BOKKI Tuned (Default: %@)"
+          }
+        }
+      }
+    },
+    "BabelColor · 실물 30장 측정 평균": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "BabelColor · average of 30 physical charts measured"
+          }
+        }
+      }
+    },
+    "CC 스킨 2 + BOKKI 참고 피부 6": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "CC Skin 2 + BOKKI reference skin 6"
+          }
+        }
+      }
+    },
+    "CC24 After Nov 2014 + BOKKI 정의 참고값": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "CC24 After Nov 2014 + BOKKI-defined reference values"
+          }
+        }
+      }
+    },
+    "CC24 After Nov 2014 중립 패치 값": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "CC24 After Nov 2014 neutral patch values"
+          }
+        }
+      }
+    },
+    "CMYK (단순 변환)": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "CMYK (simple conversion)"
+          }
+        }
+      }
+    },
+    "CSV / CGATS 파일 가져오기": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Import CSV / CGATS File"
+          }
+        }
+      }
+    },
+    "D-Log 촬영 전 먼저 찍는 컬러 매칭 슬레이트": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Color-matching slate to shoot first before D-Log footage"
+          }
+        }
+      }
+    },
+    "D-Log 컬러 슬레이트": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "D-Log Color Slate"
+          }
+        }
+      }
+    },
+    "Display P3 권장: 24색 전체를 클립 없이 표시합니다. sRGB·Rec.709는 원색이 같아 화면 색이 같고, cyan 패치만 약간 클립됩니다. Rec.709를 고르면 패치 값이 BT.709 감마 코드값(풀/리미티드 레인지)으로 표시되어 카메라의 Rec.709 출력과 바로 비교할 수 있습니다.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Display P3 recommended: shows all 24 colors without clipping. sRGB and Rec.709 share the same primaries, so screen colors are identical, and only the cyan patch is slightly clipped. Choosing Rec.709 shows patch values as BT.709 gamma code values (full/limited range), so you can compare them directly with the camera's Rec.709 output."
+          }
+        }
+      }
+    },
+    "EBU 75% 컬러바": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "EBU 75% Color Bars"
+          }
+        }
+      }
+    },
+    "EG-1 스타일 + PLUGE": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "EG-1 style + PLUGE"
+          }
+        }
+      }
+    },
+    "GretagMacbeth 2005 레퍼런스": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "GretagMacbeth 2005 reference"
+          }
+        }
+      }
+    },
+    "Image Engineering TE226 V2 · 36색 + 9단 그레이 (YE0222 등 45색 차트 동일 배치)": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Image Engineering TE226 V2 · 36 colors + 9-step gray (same layout as 45-color charts such as YE0222)"
+          }
+        }
+      }
+    },
+    "L* %.0f C* %.0f h %.0f° · BOKKI 정의": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "L* %.0f C* %.0f h %.0f° · BOKKI-defined"
+          }
+        }
+      }
+    },
+    "L* %.0f a* %.0f b* %.0f (BOKKI 참고값)": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "L* %.0f a* %.0f b* %.0f (BOKKI reference value)"
+          }
+        }
+      }
+    },
+    "L* %lld · C* %lld 고정, 휴 쉬프트 확인": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "L* %lld · C* %lld fixed, check hue shift"
+          }
+        }
+      }
+    },
+    "L*a*b*(D50)를 0.1 단위로 조정합니다. 체커 화면에 바로 반영되며, 상단 '저장'으로 커스텀 체커로 보관하세요.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Adjust L*a*b*(D50) in 0.1 steps. Changes show on the chart screen right away; use 'Save' at the top to keep it as a custom chart."
+          }
+        }
+      }
+    },
+    "McCamy 1976 원본 (광원 C)": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "McCamy 1976 original (Illuminant C)"
+          }
+        }
+      }
+    },
+    "Night Shift 끄기": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Turn Off Night Shift"
+          }
+        }
+      }
+    },
+    "P3 원형 그라데이션": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "P3 circular gradient"
+          }
+        }
+      }
+    },
+    "RGB + 그레이 램프": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "RGB + Gray Ramp"
+          }
+        }
+      }
+    },
+    "RGB 16비트": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "RGB 16-bit"
+          }
+        }
+      }
+    },
+    "RGB 8비트": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "RGB 8-bit"
+          }
+        }
+      }
+    },
+    "Rec.709 75% 바": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Rec.709 75% bars"
+          }
+        }
+      }
+    },
+    "Rec.709 풀 레벨": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Rec.709 full level"
+          }
+        }
+      }
+    },
+    "SMPTE 컬러바": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "SMPTE Color Bars"
+          }
+        }
+      }
+    },
+    "True Tone · Night Shift · 자동 밝기 끄기 — 항상 같은 색을 내기 위한 필수 단계": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Turn off True Tone · Night Shift · Auto-Brightness — essential for consistent color"
+          }
+        }
+      }
+    },
+    "True Tone · Night Shift · 자동 밝기는 iOS가 앱에 상태를 알려주지 않으므로 아래에서 직접 확인하세요.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "iOS doesn't tell apps the state of True Tone · Night Shift · Auto-Brightness, so check them yourself below."
+          }
+        }
+      }
+    },
+    "True Tone · Night Shift · 자동 밝기를 끄고, 화면을 닦고, 조명이 화면에 비치지 않게 두세요.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Turn off True Tone · Night Shift · Auto-Brightness, clean the screen, and keep lights from reflecting on it."
+          }
+        }
+      }
+    },
+    "True Tone 끄기": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Turn Off True Tone"
+          }
+        }
+      }
+    },
+    "X-Rite (2016) ColorChecker Classic/SG 공식 사양, BabelColor 평균값, Image Engineering TE226 V2 — colour-science 데이터셋(BSD-3) 경유. Monk Skin Tone Scale © Google, CC BY 4.0. ColorChecker는 X-Rite/Calibrite의 상표이며 본 앱은 호환 레퍼런스 값을 표시합니다. 'BOKKI 참고값' 표기는 자체 정의값입니다.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "X-Rite (2016) ColorChecker Classic/SG official specs, BabelColor average values, Image Engineering TE226 V2 — via the colour-science datasets (BSD-3). Monk Skin Tone Scale © Google, CC BY 4.0. ColorChecker is a trademark of X-Rite/Calibrite; this app displays compatible reference values. 'BOKKI reference value' marks values defined by BOKKI."
+          }
+        }
+      }
+    },
+    "X-Rite 공식 · 140패치 SG (2014.11 이전)": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "X-Rite official · 140-patch SG (before Nov 2014)"
+          }
+        }
+      }
+    },
+    "X-Rite 공식 · 140패치 SG (2014.11 이후)": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "X-Rite official · 140-patch SG (after Nov 2014)"
+          }
+        }
+      }
+    },
+    "X-Rite 공식 · 2014년 11월 이전 제작 차트": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "X-Rite official · charts made before Nov 2014"
+          }
+        }
+      }
+    },
+    "X-Rite 공식 · 2014년 11월 이후 제작 차트 (기본)": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "X-Rite official · charts made after Nov 2014 (default)"
+          }
+        }
+      }
+    },
+    "e-SFR / MTF 측정용": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "For e-SFR / MTF measurement"
+          }
+        }
+      }
+    },
+    "iOS는 앱이 True Tone·Night Shift 같은 설정을 직접 바꾸지 못하게 합니다. 대신 단축어 앱이 바꿀 수 있어서, 아래 단축어를 한 번 만들어 두면 위 버튼 한 번으로 모두 바뀝니다.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "iOS doesn't let apps change settings like True Tone or Night Shift directly. The Shortcuts app can, so create the shortcut below once and a single tap of the button above changes everything."
+          }
+        }
+      }
+    },
+    "· 개멋 밖, 클립됨": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "· Out of gamut, clipped"
+          }
+        }
+      }
+    },
+    "‘%@’ 단축어 자동 추가": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Auto-add ‘%@’ shortcut"
+          }
+        }
+      }
+    },
+    "‘%@’를 복사했습니다. 설정 화면 아래 검색창에 붙여넣으면 바로 찾아갑니다.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Copied ‘%@’. Paste it into the search field at the bottom of Settings to jump right to it."
+          }
+        }
+      }
+    },
+    "‘지금 실행’은 촬영용 설정을 켜고, ‘지금 종료’는 원래대로 돌립니다. 처음 한 번 ‘자동 추가’를 누르고 공유 목록에서 ‘단축어’를 고른 뒤 ‘단축어 추가’를 누르세요. True Tone·Night Shift·저전력 모드·화이트 포인트 줄이기·색상 반전·색상 필터를 끄고 밝기를 100%로 맞춥니다. 예전에 추가한 단축어는 지우고 다시 추가하세요. 실행이 끝나면 이 앱으로 돌아옵니다.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "‘Start now’ turns on shooting settings and ‘End now (restore)’ returns everything to normal. The first time, tap ‘Auto-add’, choose ‘Shortcuts’ in the share list, then tap ‘Add Shortcut’. It turns off True Tone · Night Shift · Low Power Mode · Reduce White Point · Invert Colors · Color Filters and sets brightness to 100%. Delete any previously added shortcut and add it again. When it finishes, you return to this app."
+          }
+        }
+      }
+    },
+    "↗︎를 누르면 설정 앱이 열리고 항목 이름이 복사됩니다. 설정 검색창에 붙여넣어 바로 이동하세요. iOS는 앱이 설정의 특정 화면을 직접 열 수 있게 하지 않습니다.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Tap ↗︎ to open the Settings app and copy the item name. Paste it into the Settings search field to jump there. iOS doesn't let apps open a specific Settings screen directly."
+          }
+        }
+      }
+    },
+    "⚠︎ 개멋 밖": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "⚠︎ Out of gamut"
+          }
+        }
+      }
+    },
+    "가져오기 실패": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Import Failed"
+          }
+        }
+      }
+    },
+    "가져온 체커 · 튜닝한 체커는 각 원본 체커 아래에 표시됩니다 · ⋯ 메뉴로 편집/이름 변경/삭제": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Imported and tuned charts appear under their original charts · use the ⋯ menu to edit/rename/delete"
+          }
+        }
+      }
+    },
+    "간격": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Interval"
+          }
+        }
+      }
+    },
+    "감지된 문제 없음": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "No issues detected"
+          }
+        }
+      }
+    },
+    "계단 램프 32": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Stepped Ramp 32"
+          }
+        }
+      }
+    },
+    "공식 데이터 기반 24 / 140 / 45 패치": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "24 / 140 / 45 patches from official data"
+          }
+        }
+      }
+    },
+    "그레이 11 · 어스톤 11 · 색상 33 (라벨에 HEX/RGB/CMYK)": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Gray 11 · Earth tone 11 · Color 33 (labels with HEX/RGB/CMYK)"
+          }
+        }
+      }
+    },
+    "그레이스케일": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Grayscale"
+          }
+        }
+      }
+    },
+    "근처의 BOKKI CAM과 연결 — 카메라가 요청하는 체커·색상을 전체 화면으로 표시": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Connect to a nearby BOKKI CAM — shows the charts and colors the camera requests, full screen"
+          }
+        }
+      }
+    },
+    "기기 과열: 화면 감광 중일 수 있음": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Device overheating: screen may be dimming"
+          }
+        }
+      }
+    },
+    "기본값 ": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Default "
+          }
+        }
+      }
+    },
+    "김치": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Kimchi"
+          }
+        }
+      }
+    },
+    "나뭇잎": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Leaf"
+          }
+        }
+      }
+    },
+    "노랑": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Yellow"
+          }
+        }
+      }
+    },
+    "노출·WB 기준 (L* ≈ 49.5)": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Exposure · WB reference (L* ≈ 49.5)"
+          }
+        }
+      }
+    },
+    "단축어 앱 열기": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Open Shortcuts App"
+          }
+        }
+      }
+    },
+    "닫기": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Close"
+          }
+        }
+      }
+    },
+    "대비 증가 켜짐": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Increase Contrast is on"
+          }
+        }
+      }
+    },
+    "덮어쓰기": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Overwrite"
+          }
+        }
+      }
+    },
+    "데이터 출처": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Data Sources"
+          }
+        }
+      }
+    },
+    "디스플레이 점검": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Display Check"
+          }
+        }
+      }
+    },
+    "디지털 0 / 255 기준점 추가": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Adds digital 0 / 255 reference points"
+          }
+        }
+      }
+    },
+    "라인 페어": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Line Pairs"
+          }
+        }
+      }
+    },
+    "레이아웃만 비디오 차트 참고, 값은 CC24 공식 + BOKKI 정의": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Layout only follows the video chart; values are CC24 official + BOKKI-defined"
+          }
+        }
+      }
+    },
+    "레퍼런스 모드": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Reference Mode"
+          }
+        }
+      }
+    },
+    "레퍼런스 모드 (iPad Pro)": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Reference Mode (iPad Pro)"
+          }
+        }
+      }
+    },
+    "레퍼런스 컬러체커": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Reference Color Charts"
+          }
+        }
+      }
+    },
+    "렌즈 셰이딩 · 균일도": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Lens shading · uniformity"
+          }
+        }
+      }
+    },
+    "리미티드 10비트 (64–940)": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Limited 10-bit (64–940)"
+          }
+        }
+      }
+    },
+    "리미티드 8비트 (16–235)": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Limited 8-bit (16–235)"
+          }
+        }
+      }
+    },
+    "맑은 하늘": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Clear Sky"
+          }
+        }
+      }
+    },
+    "메모리 컬러": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Memory Colors"
+          }
+        }
+      }
+    },
+    "명부 디테일 90–100%": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Highlight Detail 90–100%"
+          }
+        }
+      }
+    },
+    "명부~암부 코드값 단계 추가": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Adds highlight-to-shadow code value steps"
+          }
+        }
+      }
+    },
+    "모든 색이 바뀝니다.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "All colors change."
+          }
+        }
+      }
+    },
+    "무광/블루라이트 필름은 색을 바꿉니다": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Matte/blue-light films change colors"
+          }
+        }
+      }
+    },
+    "바나나": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Banana"
+          }
+        }
+      }
+    },
+    "바다": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Sea"
+          }
+        }
+      }
+    },
+    "밝기 %.0f%% (100%%가 아님)": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Brightness %.0f%% (not 100%%)"
+          }
+        }
+      }
+    },
+    "밝은": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Light"
+          }
+        }
+      }
+    },
+    "밝은 색의 세기를 줄여 하이라이트가 어두워집니다.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Reduces the intensity of bright colors, which darkens highlights."
+          }
+        }
+      }
+    },
+    "밝은 피부": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Light Skin"
+          }
+        }
+      }
+    },
+    "배럴/핀쿠션 왜곡": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Barrel/pincushion distortion"
+          }
+        }
+      }
+    },
+    "벚꽃": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Cherry Blossom"
+          }
+        }
+      }
+    },
+    "보라": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Purple"
+          }
+        }
+      }
+    },
+    "보호필름·반사 제거": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Remove Screen Protector · Reflections"
+          }
+        }
+      }
+    },
+    "복사": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Copy"
+          }
+        }
+      }
+    },
+    "복사됨": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Copied"
+          }
+        }
+      }
+    },
+    "블랙": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Black"
+          }
+        }
+      }
+    },
+    "블랙 레벨 · 플레어": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Black level · flare"
+          }
+        }
+      }
+    },
+    "블랙 크러시 확인": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Check black crush"
+          }
+        }
+      }
+    },
+    "블랙 필드": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Black Field"
+          }
+        }
+      }
+    },
+    "비디오 표준": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Video Standards"
+          }
+        }
+      }
+    },
+    "비디오형 체커": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Video-Style Chart"
+          }
+        }
+      }
+    },
+    "비율": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Aspect"
+          }
+        }
+      }
+    },
+    "빨강": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Red"
+          }
+        }
+      }
+    },
+    "사람이 기억하는 '예쁜 색' 기준": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Reference for the 'pretty colors' people remember"
+          }
+        }
+      }
+    },
+    "사용자 가져오기": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "User import"
+          }
+        }
+      }
+    },
+    "삭제": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Delete"
+          }
+        }
+      }
+    },
+    "새 QR로 다시 연결": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Reconnect with New QR"
+          }
+        }
+      }
+    },
+    "새로 저장": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Save as New"
+          }
+        }
+      }
+    },
+    "색공간": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Color Space"
+          }
+        }
+      }
+    },
+    "색공간: %@": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Color space: %@"
+          }
+        }
+      }
+    },
+    "색상 · 채도": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Hue · Saturation"
+          }
+        }
+      }
+    },
+    "색상 반전 켜짐": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Invert Colors is on"
+          }
+        }
+      }
+    },
+    "색상 편집": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Edit Colors"
+          }
+        }
+      }
+    },
+    "색상 필터": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Color Filters"
+          }
+        }
+      }
+    },
+    "색상 필터 / 반전 끄기": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Turn Off Color Filters / Invert Colors"
+          }
+        }
+      }
+    },
+    "색상환 %lld분할": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Hue Wheel %lld Divisions"
+          }
+        }
+      }
+    },
+    "색온도 스트립": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Color Temperature Strip"
+          }
+        }
+      }
+    },
+    "색온도별 중립 필드로 AWB 반응 확인": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Neutral fields by color temperature to check AWB response"
+          }
+        }
+      }
+    },
+    "샤프닝 할로 · 정렬": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Sharpening halo · alignment"
+          }
+        }
+      }
+    },
+    "선명도 · 광학": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Sharpness · Optics"
+          }
+        }
+      }
+    },
+    "선형 광량": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Linear light"
+          }
+        }
+      }
+    },
+    "설정": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Settings"
+          }
+        }
+      }
+    },
+    "설정 › 디스플레이 및 밝기 › Night Shift": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Settings › Display & Brightness › Night Shift"
+          }
+        }
+      }
+    },
+    "설정 › 디스플레이 및 밝기 › True Tone": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Settings › Display & Brightness › True Tone"
+          }
+        }
+      }
+    },
+    "설정 › 디스플레이 및 밝기 › 고급 › 레퍼런스 모드": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Settings › Display & Brightness › Advanced › Reference Mode"
+          }
+        }
+      }
+    },
+    "설정 › 손쉬운 사용 › 디스플레이 및 텍스트 크기": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Settings › Accessibility › Display & Text Size"
+          }
+        }
+      }
+    },
+    "설정 › 손쉬운 사용 › 디스플레이 및 텍스트 크기 › 자동 밝기": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Settings › Accessibility › Display & Text Size › Auto-Brightness"
+          }
+        }
+      }
+    },
+    "설정 앱 열기": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Open Settings App"
+          }
+        }
+      }
+    },
+    "설정 열기: %@": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Open Settings: %@"
+          }
+        }
+      }
+    },
+    "세로 화면에서 가로형 체커 90° 회전": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Rotate Landscape Charts 90° in Portrait"
+          }
+        }
+      }
+    },
+    "수동": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Manual"
+          }
+        }
+      }
+    },
+    "수동 점검": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Manual Check"
+          }
+        }
+      }
+    },
+    "스무스 그레이 램프": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Smooth Gray Ramp"
+          }
+        }
+      }
+    },
+    "스와치 시트 55": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Swatch Sheet 55"
+          }
+        }
+      }
+    },
+    "스킨톤": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Skin Tones"
+          }
+        }
+      }
+    },
+    "스킨톤 (동아시아 참고)": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Skin Tones (East Asian reference)"
+          }
+        }
+      }
+    },
+    "슬랜티드 엣지 5°": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Slanted Edge 5°"
+          }
+        }
+      }
+    },
+    "시먼스 스타": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Siemens Star"
+          }
+        }
+      }
+    },
+    "실물 비율": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Actual Proportions"
+          }
+        }
+      }
+    },
+    "암부 디테일 0–10%": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Shadow Detail 0–10%"
+          }
+        }
+      }
+    },
+    "앱이 100%로 고정하지만 자동 밝기가 다시 낮출 수 있습니다.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The app locks brightness at 100%, but Auto-Brightness can lower it again."
+          }
+        }
+      }
+    },
+    "어두운": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Dark"
+          }
+        }
+      }
+    },
+    "연결이 잠시 끊겼습니다. BOKKI CAM이 자동으로 다시 연결합니다.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The connection dropped briefly. BOKKI CAM will reconnect automatically."
+          }
+        }
+      }
+    },
+    "연속 색상환": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Continuous Hue Wheel"
+          }
+        }
+      }
+    },
+    "영상 제목": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Video Title"
+          }
+        }
+      }
+    },
+    "예약 시간에 화면이 노랗게 변합니다.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The screen turns yellow at the scheduled time."
+          }
+        }
+      }
+    },
+    "오렌지": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Orange"
+          }
+        }
+      }
+    },
+    "와이드 개멋 30": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Wide Gamut 30"
+          }
+        }
+      }
+    },
+    "완료": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Done"
+          }
+        }
+      }
+    },
+    "왜곡 그리드": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Distortion Grid"
+          }
+        }
+      }
+    },
+    "원클릭 촬영 모드": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "One-Tap Shoot Mode"
+          }
+        }
+      }
+    },
+    "이 커스텀 체커를 삭제할까요?": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Delete this custom chart?"
+          }
+        }
+      }
+    },
+    "이 패치 기본값으로": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Reset to Patch Default"
+          }
+        }
+      }
+    },
+    "이름": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Name"
+          }
+        }
+      }
+    },
+    "이름 변경": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Rename"
+          }
+        }
+      }
+    },
+    "인물·셀피 피부색 튜닝": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Skin tone tuning for portraits · selfies"
+          }
+        }
+      }
+    },
+    "자동 100% 고정": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Auto-locked at 100%"
+          }
+        }
+      }
+    },
+    "자동 밝기": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Auto-Brightness"
+          }
+        }
+      }
+    },
+    "자동 밝기 끄기": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Turn Off Auto-Brightness"
+          }
+        }
+      }
+    },
+    "자동 밝기는 단축어로도 바꿀 수 없어 설정 › 손쉬운 사용에서 한 번 꺼 두세요.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Auto-Brightness can't be changed by shortcuts either, so turn it off once in Settings › Accessibility."
+          }
+        }
+      }
+    },
+    "자동 점검": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Auto Check"
+          }
+        }
+      }
+    },
+    "잔디": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Grass"
+          }
+        }
+      }
+    },
+    "저녁 하늘": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Evening Sky"
+          }
+        }
+      }
+    },
+    "저장": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Save"
+          }
+        }
+      }
+    },
+    "저장한 카메라": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Saved Cameras"
+          }
+        }
+      }
+    },
+    "저장한 카메라 삭제": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Delete Saved Camera"
+          }
+        }
+      }
+    },
+    "저장한 카메라는 ⌄ 목록에서 언제든 다시 고를 수 있습니다.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Saved cameras can be picked again anytime from the ⌄ list."
+          }
+        }
+      }
+    },
+    "저전력 모드": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Low Power Mode"
+          }
+        }
+      }
+    },
+    "저전력 모드 끄기 · 충전 연결": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Turn Off Low Power Mode · Plug In to Charge"
+          }
+        }
+      }
+    },
+    "저전력 모드: 밝기 제한 가능": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Low Power Mode: brightness may be limited"
+          }
+        }
+      }
+    },
+    "저전력·과열 시 시스템이 최대 밝기를 제한합니다.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Low power or overheating makes the system limit maximum brightness."
+          }
+        }
+      }
+    },
+    "정규화 0–1": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Normalized 0–1"
+          }
+        }
+      }
+    },
+    "정밀 튜닝": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Fine Tuning"
+          }
+        }
+      }
+    },
+    "제어 센터 / 설정 › 배터리": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Control Center / Settings › Battery"
+          }
+        }
+      }
+    },
+    "조정 방식": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Adjustment Mode"
+          }
+        }
+      }
+    },
+    "조합형 체커": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Combo Charts"
+          }
+        }
+      }
+    },
+    "주변광에 따라 화이트포인트가 바뀌어 매번 색이 달라집니다.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The white point shifts with ambient light, so colors differ every time."
+          }
+        }
+      }
+    },
+    "주변색": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Surround"
+          }
+        }
+      }
+    },
+    "중간": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Medium"
+          }
+        }
+      }
+    },
+    "중간 밝은": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Medium Light"
+          }
+        }
+      }
+    },
+    "중간 어두운": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Medium Dark"
+          }
+        }
+      }
+    },
+    "지각 균일 밝기 단계": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Perceptually uniform brightness steps"
+          }
+        }
+      }
+    },
+    "지금 실행": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Start now"
+          }
+        }
+      }
+    },
+    "지금 종료 (원래대로)": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "End now (restore)"
+          }
+        }
+      }
+    },
+    "지원 기기에서 켜면 가장 정확한 P3/SDR 출력이 됩니다. 켜면 밝기 고정이 기기 정책에 따릅니다.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "On supported devices, turning it on gives the most accurate P3/SDR output. When on, brightness locking follows device policy."
+          }
+        }
+      }
+    },
+    "직접 만들기": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Create manually"
+          }
+        }
+      }
+    },
+    "채널별 톤 커브": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Per-channel tone curve"
+          }
+        }
+      }
+    },
+    "채도 스윕 (P3)": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Saturation Sweep (P3)"
+          }
+        }
+      }
+    },
+    "체커 표시": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Chart Display"
+          }
+        }
+      }
+    },
+    "체커 화면 밝기": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Chart Screen Brightness"
+          }
+        }
+      }
+    },
+    "체커 화면에서 밝기 100% 고정": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Lock Brightness at 100% on Chart Screen"
+          }
+        }
+      }
+    },
+    "체커보드": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Checkerboard"
+          }
+        }
+      }
+    },
+    "초록": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Green"
+          }
+        }
+      }
+    },
+    "촬영 모드 켜짐 — 촬영이 끝나면 ‘지금 종료’를 누르세요": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Shoot mode is on — tap ‘End now (restore)’ when you finish shooting"
+          }
+        }
+      }
+    },
+    "촬영 슬레이트": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Shooting Slate"
+          }
+        }
+      }
+    },
+    "촬영 전 디스플레이 점검": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Pre-Shoot Display Check"
+          }
+        }
+      }
+    },
+    "출력 색공간": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Output Color Space"
+          }
+        }
+      }
+    },
+    "취소": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Cancel"
+          }
+        }
+      }
+    },
+    "카메라 이름": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Camera Name"
+          }
+        }
+      }
+    },
+    "카메라 추가": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Add Camera"
+          }
+        }
+      }
+    },
+    "카메라 추가…": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Add Camera…"
+          }
+        }
+      }
+    },
+    "커스텀 체커": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Custom Charts"
+          }
+        }
+      }
+    },
+    "커스텀 체커로 저장": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Save as Custom Chart"
+          }
+        }
+      }
+    },
+    "커스텀 체커에 저장됨": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Saved to Custom Charts"
+          }
+        }
+      }
+    },
+    "커피": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Coffee"
+          }
+        }
+      }
+    },
+    "컬러바 · 모니터 기준 신호": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Color bars · monitor reference signals"
+          }
+        }
+      }
+    },
+    "켜면 체커를 여는 동안 밝기를 최대로 유지하고(사용자가 바꿔도 즉시 복귀), 화면 꺼짐을 막습니다. 닫으면 원래 밝기로 돌아갑니다.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "When on, keeps brightness at maximum while a chart is open (restoring it immediately if you change it) and prevents the screen from sleeping. Closing returns to the original brightness."
+          }
+        }
+      }
+    },
+    "코드값 8단위 계단": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Code values in steps of 8"
+          }
+        }
+      }
+    },
+    "키보드 닫기": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Dismiss Keyboard"
+          }
+        }
+      }
+    },
+    "토마토": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Tomato"
+          }
+        }
+      }
+    },
+    "톤 커브 · 감마 · 암부/명부 디테일": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Tone curve · gamma · shadow/highlight detail"
+          }
+        }
+      }
+    },
+    "튜닝 · 기본: %@": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Tuned · Default: %@"
+          }
+        }
+      }
+    },
+    "튜닝 목적별로 묶은 BOKKI 체커": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "BOKKI charts grouped by tuning purpose"
+          }
+        }
+      }
+    },
+    "튜닝 중 · ↩︎ 기본값 복원 · ⤓ 커스텀 저장": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Tuning · ↩︎ Restore default · ⤓ Save as custom"
+          }
+        }
+      }
+    },
+    "튜닝됨": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Tuned"
+          }
+        }
+      }
+    },
+    "튜닝한 색상을 커스텀 체커 목록에 저장합니다. 원본(기본값)은 그대로 유지됩니다.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Saves the tuned colors to your custom charts list. The original (default) stays unchanged."
+          }
+        }
+      }
+    },
+    "파랑": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Blue"
+          }
+        }
+      }
+    },
+    "파일을 읽을 수 없습니다.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Can't read the file."
+          }
+        }
+      }
+    },
+    "패치 데이터를 찾지 못했습니다. 'name,L,a,b' 형식의 CSV 또는 LAB_L/LAB_A/LAB_B 필드가 있는 CGATS 파일을 사용하세요.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "No patch data found. Use a CSV in 'name,L,a,b' format or a CGATS file with LAB_L/LAB_A/LAB_B fields."
+          }
+        }
+      }
+    },
+    "패치 색상 정보": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Patch Color Info"
+          }
+        }
+      }
+    },
+    "패치를 탭하면 색상 정보 · 정밀 튜닝 · 화면 탭하면 컨트롤 숨김": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Tap a patch for color info · fine tuning · Tap the screen to hide controls"
+          }
+        }
+      }
+    },
+    "포용적 피부톤 10단계": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Inclusive Skin Tones 10 Steps"
+          }
+        }
+      }
+    },
+    "포커스 · 해상력": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Focus · resolution"
+          }
+        }
+      }
+    },
+    "포커스 · 해상력 · 왜곡 · 모아레": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Focus · resolution · distortion · moiré"
+          }
+        }
+      }
+    },
+    "포토 체커 6×4": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Photo Chart 6×4"
+          }
+        }
+      }
+    },
+    "표시 Lab(D50) %.1f / %.1f / %.1f": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Display Lab(D50) %.1f / %.1f / %.1f"
+          }
+        }
+      }
+    },
+    "표시 설정": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Display Settings"
+          }
+        }
+      }
+    },
+    "프로파일": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Profile"
+          }
+        }
+      }
+    },
+    "피부": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Skin"
+          }
+        }
+      }
+    },
+    "피부·보라·노랑·초록·빨강·파랑 3단 + 그레이": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Skin · Purple · Yellow · Green · Red · Blue 3 steps + gray"
+          }
+        }
+      }
+    },
+    "피부톤 열 + 그레이 띠 + 원색 열 (공식 Video 값 비공개 → BOKKI 정의)": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Skin tone column + gray band + primaries column (official Video values not public → BOKKI-defined)"
+          }
+        }
+      }
+    },
+    "하이라이트 클리핑 확인": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Check highlight clipping"
+          }
+        }
+      }
+    },
+    "현재 밝기": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Current Brightness"
+          }
+        }
+      }
+    },
+    "홍조": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Blush"
+          }
+        }
+      }
+    },
+    "화면 꽉 채움": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Fill Screen"
+          }
+        }
+      }
+    },
+    "화면을 정면에서, 주변 조명이 비치지 않게 촬영하세요.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Shoot the screen straight on, with no ambient light reflecting on it."
+          }
+        }
+      }
+    },
+    "화이트": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "White"
+          }
+        }
+      }
+    },
+    "화이트 · 18% 그레이 · 블랙 띠 — 라이팅/WB 밸런스": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "White · 18% gray · black bands — lighting/WB balance"
+          }
+        }
+      }
+    },
+    "화이트 포인트 줄이기": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Reduce White Point"
+          }
+        }
+      }
+    },
+    "화이트 포인트 줄이기 끄기": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Turn Off Reduce White Point"
+          }
+        }
+      }
+    },
+    "화이트 필드": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "White Field"
+          }
+        }
+      }
+    },
+    "화이트·옐로·시안·그린·마젠타·레드·블루": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "White · Yellow · Cyan · Green · Magenta · Red · Blue"
+          }
+        }
+      }
+    },
+    "화이트밸런스": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "White Balance"
+          }
+        }
+      }
+    },
+    "확인": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "OK"
+          }
+        }
+      }
+    },
+    "휴 쉬프트 · 채도 커브 · 메모리 컬러": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Hue shift · saturation curve · memory colors"
+          }
+        }
+      }
+    },
+    "흑백(색상 필터) 켜짐": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Grayscale (Color Filters) is on"
+          }
+        }
+      }
+    },
+    "흰 쌀밥": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "White Rice"
+          }
+        }
+      }
+    }
+  },
+  "version": "1.0"
+}
