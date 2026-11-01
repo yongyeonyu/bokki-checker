@@ -260,7 +260,7 @@ struct SlateView: View {
     }
     static let profiles = ["D-Log M", "D-Log", "HLG", "Normal", "Rec.709"]
     static let whiteBalances = ["Auto", "2800K", "3200K", "4000K", "5000K", "5600K", "6500K", "7500K"]
-    static let isos = ["ISO 100", "ISO 200", "ISO 400", "ISO 800", "ISO 1600", "ISO 3200"]
+    static let isos = ["ISO Auto", "ISO 100", "ISO 200", "ISO 400", "ISO 800", "ISO 1600", "ISO 3200"]
 
     /// Scene / take number with − and + on either side.
     private func counter(_ label: String, value: Binding<Int>, size: CGFloat) -> some View {
