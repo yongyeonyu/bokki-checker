@@ -17,16 +17,19 @@ struct DisplayCheckView: View {
         let note: String
         /// Term to paste into the Settings search box; nil when there is no setting to open.
         let keyword: String?
+        /// Settings URL for this item's own page. Newer iOS may ignore the path and open the
+        /// Settings home instead, so the keyword is copied as well.
+        var url: String = "App-prefs:"
     }
 
     private let items: [Item] = [
-        Item(title: "True Tone 끄기", path: "설정 › 디스플레이 및 밝기 › True Tone", note: "주변광에 따라 화이트포인트가 바뀌어 매번 색이 달라집니다.", keyword: "True Tone"),
-        Item(title: "Night Shift 끄기", path: "설정 › 디스플레이 및 밝기 › Night Shift", note: "예약 시간에 화면이 노랗게 변합니다.", keyword: "Night Shift"),
-        Item(title: "자동 밝기 끄기", path: "설정 › 손쉬운 사용 › 디스플레이 및 텍스트 크기 › 자동 밝기", note: "앱이 100%로 고정하지만 자동 밝기가 다시 낮출 수 있습니다.", keyword: "자동 밝기"),
-        Item(title: "화이트 포인트 줄이기 끄기", path: "설정 › 손쉬운 사용 › 디스플레이 및 텍스트 크기", note: "밝은 색의 세기를 줄여 하이라이트가 어두워집니다.", keyword: "화이트 포인트 줄이기"),
-        Item(title: "색상 필터 / 반전 끄기", path: "설정 › 손쉬운 사용 › 디스플레이 및 텍스트 크기", note: "모든 색이 바뀝니다.", keyword: "색상 필터"),
-        Item(title: "레퍼런스 모드 (iPad Pro)", path: "설정 › 디스플레이 및 밝기 › 고급 › 레퍼런스 모드", note: "지원 기기에서 켜면 가장 정확한 P3/SDR 출력이 됩니다. 켜면 밝기 고정이 기기 정책에 따릅니다.", keyword: "레퍼런스 모드"),
-        Item(title: "저전력 모드 끄기 · 충전 연결", path: "제어 센터 / 설정 › 배터리", note: "저전력·과열 시 시스템이 최대 밝기를 제한합니다.", keyword: "저전력 모드"),
+        Item(title: "True Tone 끄기", path: "설정 › 디스플레이 및 밝기 › True Tone", note: "주변광에 따라 화이트포인트가 바뀌어 매번 색이 달라집니다.", keyword: "True Tone", url: "App-prefs:DISPLAY"),
+        Item(title: "Night Shift 끄기", path: "설정 › 디스플레이 및 밝기 › Night Shift", note: "예약 시간에 화면이 노랗게 변합니다.", keyword: "Night Shift", url: "App-prefs:DISPLAY&path=BLUE_LIGHT_REDUCTION"),
+        Item(title: "자동 밝기 끄기", path: "설정 › 손쉬운 사용 › 디스플레이 및 텍스트 크기 › 자동 밝기", note: "앱이 100%로 고정하지만 자동 밝기가 다시 낮출 수 있습니다.", keyword: "자동 밝기", url: "App-prefs:ACCESSIBILITY&path=DISPLAY_AND_TEXT"),
+        Item(title: "화이트 포인트 줄이기 끄기", path: "설정 › 손쉬운 사용 › 디스플레이 및 텍스트 크기", note: "밝은 색의 세기를 줄여 하이라이트가 어두워집니다.", keyword: "화이트 포인트 줄이기", url: "App-prefs:ACCESSIBILITY&path=DISPLAY_AND_TEXT"),
+        Item(title: "색상 필터 / 반전 끄기", path: "설정 › 손쉬운 사용 › 디스플레이 및 텍스트 크기", note: "모든 색이 바뀝니다.", keyword: "색상 필터", url: "App-prefs:ACCESSIBILITY&path=DISPLAY_AND_TEXT/DISPLAY_FILTER"),
+        Item(title: "레퍼런스 모드 (iPad Pro)", path: "설정 › 디스플레이 및 밝기 › 고급 › 레퍼런스 모드", note: "지원 기기에서 켜면 가장 정확한 P3/SDR 출력이 됩니다. 켜면 밝기 고정이 기기 정책에 따릅니다.", keyword: "레퍼런스 모드", url: "App-prefs:DISPLAY&path=ADVANCED"),
+        Item(title: "저전력 모드 끄기 · 충전 연결", path: "제어 센터 / 설정 › 배터리", note: "저전력·과열 시 시스템이 최대 밝기를 제한합니다.", keyword: "저전력 모드", url: "App-prefs:BATTERY_USAGE"),
         Item(title: "보호필름·반사 제거", path: "무광/블루라이트 필름은 색을 바꿉니다", note: "화면을 정면에서, 주변 조명이 비치지 않게 촬영하세요.", keyword: nil),
     ]
 
@@ -43,7 +46,15 @@ struct DisplayCheckView: View {
                     Button { runShortcut(restoreName) } label: {
                         Label("원래대로 되돌리기", systemImage: "arrow.uturn.backward")
                     }
-                    DisclosureGroup("처음 한 번: 단축어 만들기", isExpanded: $showGuide) {
+                    // Signed shortcut files bundled with the app; the share sheet's 단축어 app imports them.
+                    ForEach([shortcutName, restoreName], id: \.self) { name in
+                        if let file = Bundle.main.url(forResource: name, withExtension: "shortcut") {
+                            ShareLink(item: file) {
+                                Label("‘\(name)’ 단축어 자동 추가", systemImage: "square.and.arrow.down")
+                            }
+                        }
+                    }
+                    DisclosureGroup("직접 만들기", isExpanded: $showGuide) {
                         VStack(alignment: .leading, spacing: 8) {
                             Text("iOS는 앱이 True Tone·Night Shift 같은 설정을 직접 바꾸지 못하게 합니다. 대신 단축어 앱이 바꿀 수 있어서, 아래 단축어를 한 번 만들어 두면 위 버튼 한 번으로 모두 바뀝니다.")
                                 .font(.caption).foregroundStyle(.secondary)
@@ -65,7 +76,7 @@ struct DisplayCheckView: View {
                 } header: {
                     Text("원클릭 촬영 모드")
                 } footer: {
-                    Text("단축어 실행이 끝나면 이 앱으로 돌아옵니다. 단축어가 없으면 단축어 앱이 오류를 표시합니다.")
+                    Text("처음 한 번 ‘자동 추가’를 누르고 공유 목록에서 ‘단축어’를 고른 뒤 ‘단축어 추가’를 누르세요. True Tone·Night Shift·저전력 모드를 끄고 밝기를 100%로 맞춥니다. 실행이 끝나면 이 앱으로 돌아옵니다.")
                 }
                 Section {
                     LabeledContent("현재 밝기", value: "\(Int(UIScreen.main.brightness * 100))%")
@@ -96,7 +107,7 @@ struct DisplayCheckView: View {
                             Spacer(minLength: 0)
                             if let keyword = item.keyword {
                                 Button {
-                                    openSettings(keyword: keyword)
+                                    openSettings(keyword: keyword, url: item.url)
                                 } label: {
                                     Label("설정", systemImage: "arrow.up.forward.app")
                                         .labelStyle(.iconOnly).font(.title3)
@@ -137,14 +148,14 @@ struct DisplayCheckView: View {
 
     /// Copies the search keyword (when given) and opens the Settings home screen, where the
     /// search box finds the item. Falls back to this app's own settings page if that fails.
-    private func openSettings(keyword: String?) {
+    private func openSettings(keyword: String?, url: String = "App-prefs:") {
         if let keyword {
             UIPasteboard.general.string = keyword
             copiedKeyword = keyword
         }
         let fallback = URL(string: UIApplication.openSettingsURLString)
-        guard let home = URL(string: "App-prefs:") else { return }
-        UIApplication.shared.open(home) { ok in
+        guard let page = URL(string: url) else { return }
+        UIApplication.shared.open(page) { ok in
             if !ok, let fallback { UIApplication.shared.open(fallback) }
         }
     }
