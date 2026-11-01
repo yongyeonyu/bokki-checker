@@ -2,6 +2,13 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
+	<key>NSLocalNetworkUsageDescription</key>
+	<string>근처의 BOKKI CAM과 연결해 카메라 색 보정용 체커를 표시합니다.</string>
+	<key>NSBonjourServices</key>
+	<array>
+		<string>_bokki-calib._tcp</string>
+		<string>_bokki-calib._udp</string>
+	</array>
 	<key>CFBundleURLTypes</key>
 	<array>
 		<dict>

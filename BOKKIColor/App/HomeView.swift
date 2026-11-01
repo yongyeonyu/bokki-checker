@@ -4,6 +4,7 @@ struct HomeView: View {
     @State private var store = CustomChartStore()
     @State private var presented: ChartItem?
     @State private var showCheck = false
+    @State private var calibrating = false
     @State private var showSettings = false
     @State private var importing = false
     @State private var importError: String?
@@ -33,6 +34,15 @@ struct HomeView: View {
                                     .font(.caption).foregroundStyle(.secondary)
                             }
                         } icon: { Image(systemName: "checklist") }
+                    }
+                    Button { calibrating = true } label: {
+                        Label {
+                            VStack(alignment: .leading) {
+                                Text("BOKKI CAM 캘리브레이션").font(.headline)
+                                Text("근처의 BOKKI CAM과 연결 — 카메라가 요청하는 체커·색상을 전체 화면으로 표시")
+                                    .font(.caption).foregroundStyle(.secondary)
+                            }
+                        } icon: { Image(systemName: "camera.aperture") }
                     }
                 }
                 ForEach(categories) { cat in
@@ -67,6 +77,7 @@ struct HomeView: View {
         }
         .fullScreenCover(item: $presented) { ChartScreen(item: $0).environment(store) }
         .sheet(isPresented: $showCheck) { DisplayCheckView() }
+        .fullScreenCover(isPresented: $calibrating) { CalibrationScreen().environment(store) }
         .sheet(isPresented: $showSettings) { SettingsView() }
         .fileImporter(isPresented: $importing, allowedContentTypes: [.commaSeparatedText, .plainText, .text, .data]) { result in
             do {
