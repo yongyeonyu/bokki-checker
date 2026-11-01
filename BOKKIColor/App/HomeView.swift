@@ -22,8 +22,28 @@ struct HomeView: View {
 
     private var categories: [ChartCategory] { ChartCatalog.categories(custom: looseCustom) }
 
+    #if DEBUG
+    /// App Store previews: `-demoTour YES` scrolls the list and walks through the main screens on its own.
+    private func demoTour(_ proxy: ScrollViewProxy) async {
+        guard UserDefaults.standard.bool(forKey: "demoTour") else { return }
+        let all = categories.flatMap(\.items)
+        func pause(_ seconds: Double) async { try? await Task.sleep(for: .seconds(seconds)) }
+        await pause(1.5)
+        withAnimation(.easeInOut(duration: 1.4)) { proxy.scrollTo("hdr-hue", anchor: .top) }
+        await pause(1.6)
+        withAnimation(.easeInOut(duration: 1.2)) { proxy.scrollTo("hdr-slate", anchor: .top) }
+        await pause(1.4)
+        showCheck = true; await pause(2.8); showCheck = false; await pause(0.9)
+        calibrating = true; await pause(3.2); calibrating = false; await pause(0.9)
+        for id in ["slate", "cc24_after2014", "hue_wheel", "star"] {
+            presented = all.first { $0.id == id }; await pause(2.6); presented = nil; await pause(0.9)
+        }
+    }
+    #endif
+
     var body: some View {
         NavigationStack {
+            ScrollViewReader { proxy in
             List {
                 Section {
                     Button { showCheck = true } label: {
@@ -60,7 +80,7 @@ struct HomeView: View {
                             Button { importing = true } label: { Label(tr("CSV / CGATS 파일 가져오기"), systemImage: "plus") }
                         }
                     } header: {
-                        Label(cat.title, systemImage: cat.symbol)
+                        Label(cat.title, systemImage: cat.symbol).id("hdr-" + cat.id)
                     } footer: {
                         Text(cat.summary)
                     }
@@ -73,6 +93,10 @@ struct HomeView: View {
             .navigationTitle("BOKKI Chart")
             .toolbar {
                 Button { showSettings = true } label: { Image(systemName: "gearshape") }
+            }
+            #if DEBUG
+            .task { await demoTour(proxy) }
+            #endif
             }
         }
         .fullScreenCover(item: $presented) { ChartScreen(item: $0).environment(store) }

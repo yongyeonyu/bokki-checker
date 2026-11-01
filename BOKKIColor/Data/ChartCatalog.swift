@@ -87,7 +87,7 @@ enum ChartCatalog {
             ChartCategory(id: "wb", title: tr("화이트밸런스"), symbol: "thermometer.sun", summary: tr("색온도별 중립 필드로 AWB 반응 확인"),
                           items: [ChartItem(g.cctStrip)] + g.cctList.map { ChartItem(g.cctField($0)) }),
             ChartCategory(id: "skin", title: tr("스킨톤"), symbol: "person.crop.circle", summary: tr("인물·셀피 피부색 튜닝"),
-                          items: [ChartItem(g.skinTones), ChartItem(g.monk)]),
+                          items: [ChartItem(g.skinITA), ChartItem(g.skinTones), ChartItem(g.monk)]),
             ChartCategory(id: "hue", title: tr("색상 · 채도"), symbol: "paintpalette", summary: tr("휴 쉬프트 · 채도 커브 · 메모리 컬러"),
                           items: [ChartItem(g.hueGrid(count: 24)), ChartItem(g.hueGrid(count: 36)), ChartItem(g.saturationSweep),
                                   ChartItem(id: "hue_wheel", title: tr("연속 색상환"), subtitle: tr("P3 원형 그라데이션"), kind: .pattern(.hueWheel)),

@@ -35,6 +35,7 @@ xcodebuild -project BOKKIColor.xcodeproj -scheme BOKKIColor \
 - Image Engineering TE226 V2 data sheet
 - Dataset files come from [colour-science](https://github.com/colour-science/colour) (BSD-3-Clause)
 - Monk Skin Tone Scale, Google, CC BY 4.0
+- ITA skin tone classes: Del Bino et al. (Pigment Cell Research, 2006); mean facial hue angle: Wang, Luo et al., *Spectrophotometric measurement of human skin colour*, Color Research & Application 42(6), 2017
 
 Values marked "BOKKI 정의" in the app are app-defined and are not published standards.
 ColorChecker is a trademark of X-Rite/Calibrite. This project is not affiliated with them.

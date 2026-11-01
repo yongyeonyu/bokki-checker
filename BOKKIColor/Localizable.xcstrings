@@ -751,6 +751,26 @@
         }
       }
     },
+    "ITA 6분류(Del Bino 외) 각 구간의 중앙 각도 + 얼굴 평균 색상각 56°(Wang 외 2017), 채도는 BOKKI 정의": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Middle angle of each ITA class (Del Bino et al.) + mean facial hue 56° (Wang et al., 2017); chroma is BOKKI-defined"
+          }
+        }
+      }
+    },
+    "ITA 피부톤 6단계": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "ITA Skin Tone Scale (6 steps)"
+          }
+        }
+      }
+    },
     "Image Engineering TE226 V2 · 36색 + 9단 그레이 (YE0222 등 45색 차트 동일 배치)": {
       "localizations": {
         "en": {
@@ -1091,6 +1111,16 @@
         }
       }
     },
+    "갈색 피부": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Brown Skin"
+          }
+        }
+      }
+    },
     "감지된 문제 없음": {
       "localizations": {
         "en": {
@@ -1371,6 +1401,16 @@
         }
       }
     },
+    "매우 밝은 피부": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Very Light Skin"
+          }
+        }
+      }
+    },
     "메모리 컬러": {
       "localizations": {
         "en": {
@@ -1477,6 +1517,16 @@
           "stringUnit": {
             "state": "translated",
             "value": "Light Skin"
+          }
+        }
+      }
+    },
+    "밝음 → 어두움 · BOKKI 정의 (실측 평균 아님)": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Light → dark · BOKKI-defined (not measured averages)"
           }
         }
       }
@@ -2011,6 +2061,16 @@
         }
       }
     },
+    "어두운 피부": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Dark Skin"
+          }
+        }
+      }
+    },
     "연결이 잠시 끊겼습니다. BOKKI CAM이 자동으로 다시 연결합니다.": {
       "localizations": {
         "en": {
@@ -2401,6 +2461,16 @@
         }
       }
     },
+    "중간 피부": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Intermediate Skin"
+          }
+        }
+      }
+    },
     "지각 균일 밝기 단계": {
       "localizations": {
         "en": {
@@ -2677,6 +2747,16 @@
           "stringUnit": {
             "state": "translated",
             "value": "Dismiss Keyboard"
+          }
+        }
+      }
+    },
+    "탠 피부": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Tan Skin"
           }
         }
       }

@@ -121,6 +121,25 @@ enum GeneratedCharts {
                           rows: 2, columns: 4, patches: p, source: tr("CC24 After Nov 2014 + BOKKI 정의 참고값"))
     }
 
+    /// One skin tone per class of the six-class Individual Typology Angle scale, ITA = atan((L* - 50) / b*) in degrees
+    /// (class limits as published by Del Bino et al.). Each patch uses the middle of its class, a facial hue angle of 56°
+    /// (mean of the facial sites in Wang et al., 2017) and a BOKKI-defined chroma, so these are not measured averages.
+    static var skinITA: PatchChart {
+        let steps: [(String, Double, Double, String)] = [
+            (tr("매우 밝은 피부"), 62, 17, "> 55°"), (tr("밝은 피부"), 48, 18, "41° – 55°"), (tr("중간 피부"), 34.5, 20, "28° – 41°"),
+            (tr("탠 피부"), 19, 22, "10° – 28°"), (tr("갈색 피부"), -10, 20, "-30° – 10°"), (tr("어두운 피부"), -45, 16, "< -30°"),
+        ]
+        let hue = 56.0 * Double.pi / 180
+        let patches = steps.map { s -> Patch in
+            let b = s.2 * sin(hue), a = s.2 * cos(hue)
+            let l = 50 + b * tan(s.1 * Double.pi / 180)
+            return Patch(name: s.0, spec: .lab(l, a, b), reference: "L* \(String(format: "%.1f", l)) a* \(String(format: "%.1f", a)) b* \(String(format: "%.1f", b)) · ITA \(s.3)")
+        }
+        return PatchChart(id: "skin_ita", title: tr("ITA 피부톤 6단계"), subtitle: tr("밝음 → 어두움 · BOKKI 정의 (실측 평균 아님)"),
+                          rows: 2, columns: 3, patches: patches,
+                          source: tr("ITA 6분류(Del Bino 외) 각 구간의 중앙 각도 + 얼굴 평균 색상각 56°(Wang 외 2017), 채도는 BOKKI 정의"))
+    }
+
     static let memoryColors: [(String, Vec3)] = [
         (tr("맑은 하늘"), Vec3(62, -6, -34)), (tr("저녁 하늘"), Vec3(68, 22, 38)), (tr("바다"), Vec3(48, -22, -26)), (tr("잔디"), Vec3(50, -36, 42)),
         (tr("나뭇잎"), Vec3(40, -22, 30)), (tr("벚꽃"), Vec3(82, 16, 2)), (tr("바나나"), Vec3(84, 2, 72)), (tr("오렌지"), Vec3(66, 40, 70)),
