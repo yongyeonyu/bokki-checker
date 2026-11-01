@@ -63,6 +63,14 @@ struct CalibrationLayout: Codable {
     var orientation: String
 }
 
+/// Where a `show` sits in the CAM's run; only used to show progress. Fields optional so a partial
+/// `step` never makes a message unreadable.
+struct CalibrationStep: Codable, Equatable {
+    var index: Int?
+    var total: Int?
+    var label: String?
+}
+
 struct CalibrationPatch: Codable {
     var index: Int
     var name: String
@@ -80,11 +88,20 @@ struct CalibrationEnvelope: Codable {
     var device: String?
     var display: CalibrationDisplayInfo?
     var charts: [String]?
+    var features: [String]?
     var seq: Int?
+    var ok: Bool?
+    var step: CalibrationStep?
     var target: CalibrationTarget?
     var layout: CalibrationLayout?
     var patches: [CalibrationPatch]?
     var message: String?
+}
+
+/// Just enough of a message to ack a `captured` whose other fields did not decode.
+private struct MessageHead: Decodable {
+    var type: String
+    var seq: Int?
 }
 
 /// What the calibration screen draws for the current target.
@@ -93,6 +110,8 @@ struct CalibrationFrame {
     /// Grid as drawn (already turned to the screen's orientation); nil for a flat field.
     var chart: PatchChart?
     var flat: Vec3?
+    /// The CAM's progress for this round, shown in the chart's black margin (never on flats).
+    var step: CalibrationStep?
 }
 
 /// The Checker end of the link: advertises `bokki-calib`, accepts one BOKKI CAM at a time and answers
@@ -100,24 +119,19 @@ struct CalibrationFrame {
 @MainActor
 @Observable
 final class CalibrationLink: NSObject {
-    enum State: Equatable { case waiting, connected(String), finished(String) }
+    enum State: Equatable { case waiting, connected(String) }
 
     private(set) var state: State = .waiting
     private(set) var frame: CalibrationFrame?
     private(set) var lastError: String?
-    /// Pairing code for this screen session, shown as a QR so a CAM can connect to this Checker only.
-    let pairingCode: String = String((0..<6).map { _ in "ABCDEFGHJKLMNPQRSTUVWXYZ23456789".randomElement()! })
+    /// Camera that finished the last run (after `end`), shown on the waiting screen.
+    private(set) var lastFinished: String?
+    /// Fresh for every waiting screen; advertised in the discovery info and shown as a QR so a CAM
+    /// connects to this Checker only.
+    private(set) var token = CalibrationLink.makeToken()
 
-    /// Opened by scanning the QR: launches BOKKI CAM straight into calibration with this Checker.
-    var pairingURL: URL {
-        var c = URLComponents()
-        c.scheme = "bokkicam"
-        c.host = "calibrate"
-        c.queryItems = [URLQueryItem(name: "pv", value: String(CalibrationProtocol.version)),
-                        URLQueryItem(name: "code", value: pairingCode),
-                        URLQueryItem(name: "name", value: peer.displayName)]
-        return c.url!
-    }
+    /// QR payload (protocol: `bokkicalib://connect?pv=1&token=<token>`), read by BOKKI CAM's Photo preview.
+    var pairingPayload: String { "bokkicalib://connect?pv=\(CalibrationProtocol.version)&token=\(token)" }
 
     /// Set by the screen: resolves a chart id (built-in or custom) and the canvas orientation.
     var chartLookup: (String) -> PatchChart? = { _ in nil }
@@ -126,39 +140,64 @@ final class CalibrationLink: NSObject {
     var canvasSize: CGSize = UIScreen.main.bounds.size
 
     @ObservationIgnored private let peer = MCPeerID(displayName: UIDevice.current.name)
-    @ObservationIgnored private var session: MCSession!
-    @ObservationIgnored private var advertiser: MCNearbyServiceAdvertiser!
+    @ObservationIgnored private var session: MCSession?
+    @ObservationIgnored private var advertiser: MCNearbyServiceAdvertiser?
     @ObservationIgnored private var camera: MCPeerID?
     @ObservationIgnored private var lastShown: (seq: Int, data: Data)?
 
-    override init() {
-        super.init()
-        session = MCSession(peer: peer, securityIdentity: nil, encryptionPreference: .required)
-        session.delegate = self
-        advertiser = MCNearbyServiceAdvertiser(peer: peer,
-                                               discoveryInfo: ["app": "BOKKI Checker", "pv": String(CalibrationProtocol.version),
-                                                               "code": pairingCode],
-                                               serviceType: CalibrationProtocol.serviceType)
-        advertiser.delegate = self
-    }
-
     func start() {
-        state = .waiting
-        advertiser.startAdvertisingPeer()
+        lastFinished = nil
+        beginWaiting()
     }
 
     func stop() {
-        advertiser.stopAdvertisingPeer()
-        session.disconnect()
+        tearDown()
+        state = .waiting
+    }
+
+    /// New token, new session and a new advertiser carrying that token; the old camera (if any) is dropped.
+    private func beginWaiting() {
+        tearDown()
+        token = Self.makeToken()
+        state = .waiting
+        let session = MCSession(peer: peer, securityIdentity: nil, encryptionPreference: .required)
+        session.delegate = self
+        self.session = session
+        let advertiser = MCNearbyServiceAdvertiser(peer: peer,
+                                                   discoveryInfo: ["app": "BOKKI Checker", "pv": String(CalibrationProtocol.version),
+                                                                   "token": token],
+                                                   serviceType: CalibrationProtocol.serviceType)
+        advertiser.delegate = self
+        self.advertiser = advertiser
+        advertiser.startAdvertisingPeer()
+    }
+
+    private func tearDown() {
+        advertiser?.stopAdvertisingPeer()
+        advertiser?.delegate = nil
+        advertiser = nil
+        session?.delegate = nil
+        session?.disconnect()
+        session = nil
         camera = nil
         frame = nil
+        lastShown = nil
+    }
+
+    private static func makeToken() -> String {
+        String((0..<10).map { _ in "ABCDEFGHJKLMNPQRSTUVWXYZ23456789".randomElement()! })
     }
 
     // MARK: Messages
 
     private func handle(_ data: Data, from peerID: MCPeerID) {
         guard let m = try? JSONDecoder().decode(CalibrationEnvelope.self, from: data) else {
-            send(CalibrationEnvelope(type: "error", message: "unreadable message"), to: peerID)
+            // `captured` is never answered with an error: ack it even if some other field is malformed.
+            if let head = try? JSONDecoder().decode(MessageHead.self, from: data), head.type == "captured", let seq = head.seq {
+                send(CalibrationEnvelope(type: "ack", seq: seq), to: peerID)
+            } else {
+                send(CalibrationEnvelope(type: "error", message: "unreadable message"), to: peerID)
+            }
             return
         }
         switch m.type {
@@ -171,34 +210,40 @@ final class CalibrationLink: NSObject {
             let native = UIScreen.main.nativeBounds.size
             let display = CalibrationDisplayInfo(brightnessLocked: true, widthPx: Int(native.width), heightPx: Int(native.height))
             send(CalibrationEnvelope(type: "ready", pv: CalibrationProtocol.version, app: "BOKKI Checker",
-                                     device: Self.modelIdentifier, display: display, charts: availableCharts()), to: peerID)
+                                     device: Self.modelIdentifier, display: display, charts: availableCharts(),
+                                     features: ["handshake"]), to: peerID)
         case "show":
             guard let seq = m.seq, let target = m.target else {
                 send(CalibrationEnvelope(type: "error", seq: m.seq, message: "show needs seq and target"), to: peerID)
                 return
             }
             if let last = lastShown, last.seq == seq {
-                try? session.send(last.data, toPeers: [peerID], with: .reliable)
+                try? session?.send(last.data, toPeers: [peerID], with: .reliable)
                 return
             }
-            show(target, seq: seq, to: peerID)
+            show(target, seq: seq, step: m.step, to: peerID)
+        case "captured":
+            // Handshake: the CAM has its shot. The target stays up until the next `show`.
+            guard let seq = m.seq else { return }
+            send(CalibrationEnvelope(type: "ack", seq: seq), to: peerID)
         case "end":
-            frame = nil
-            if case .connected(let name) = state { state = .finished(name) }
+            if case .connected(let name) = state { lastFinished = name }
+            beginWaiting()
         default:
             send(CalibrationEnvelope(type: "error", seq: m.seq, message: "unknown type \(m.type)"), to: peerID)
         }
     }
 
-    private func show(_ target: CalibrationTarget, seq: Int, to peerID: MCPeerID) {
+    private func show(_ target: CalibrationTarget, seq: Int, step: CalibrationStep?, to peerID: MCPeerID) {
         let landscape = canvasSize.width > canvasSize.height
         switch target {
         case .flat(let p3):
-            guard p3.count == 3 else {
-                send(CalibrationEnvelope(type: "error", seq: seq, message: "flat needs three p3 values"), to: peerID)
+            guard p3.count == 3, p3.allSatisfy({ $0.isFinite && (0...1).contains($0) }) else {
+                send(CalibrationEnvelope(type: "error", seq: seq, message: "flat needs three p3 values in 0...1"), to: peerID)
                 return
             }
-            frame = CalibrationFrame(target: target, flat: Vec3(p3[0], p3[1], p3[2]))
+            // Drawn exactly as sent: Display P3 gamma-encoded, no tone mapping or user tuning.
+            frame = CalibrationFrame(target: target, flat: Vec3(p3[0], p3[1], p3[2]), step: step)
             reply(CalibrationEnvelope(type: "shown", seq: seq, target: target, patches: []), seq: seq, to: peerID)
         case .chart(let id):
             guard let base = chartLookup(id), base.patches.count == base.rows * base.columns, base.layoutRects == nil else {
@@ -207,7 +252,7 @@ final class CalibrationLink: NSObject {
             }
             // Fill the screen the long way: a landscape card on a portrait screen is turned 90°.
             let chart = base.isLandscape != landscape ? base.rotatedClockwise : base
-            frame = CalibrationFrame(target: target, chart: chart)
+            frame = CalibrationFrame(target: target, chart: chart, step: step)
             let patches = chart.patches.enumerated().map { i, p in
                 let e = p.spec.encoded(in: .displayP3)
                 let lab = p.spec.labD50
@@ -226,15 +271,15 @@ final class CalibrationLink: NSObject {
     private func reply(_ message: CalibrationEnvelope, seq: Int, to peerID: MCPeerID) {
         Task {
             try? await Task.sleep(for: .milliseconds(120))
-            guard let data = try? JSONEncoder().encode(message) else { return }
+            guard peerID == camera, let data = try? JSONEncoder().encode(message) else { return }
             lastShown = (seq, data)
-            try? session.send(data, toPeers: [peerID], with: .reliable)
+            try? session?.send(data, toPeers: [peerID], with: .reliable)
         }
     }
 
     private func send(_ message: CalibrationEnvelope, to peerID: MCPeerID) {
         guard let data = try? JSONEncoder().encode(message) else { return }
-        do { try session.send(data, toPeers: [peerID], with: .reliable) } catch { lastError = error.localizedDescription }
+        do { try session?.send(data, toPeers: [peerID], with: .reliable) } catch { lastError = error.localizedDescription }
     }
 
     private static let modelIdentifier: String = {
@@ -245,23 +290,27 @@ final class CalibrationLink: NSObject {
 
     // MARK: Delegate hops (MultipeerConnectivity calls back on its own queues)
 
-    fileprivate func invited(by peerID: MCPeerID, handler: @escaping (Bool, MCSession?) -> Void) {
-        // One camera at a time.
-        guard camera == nil else { handler(false, nil); return }
+    fileprivate func invited(by peerID: MCPeerID, via advertiser: MCNearbyServiceAdvertiser,
+                             handler: @escaping (Bool, MCSession?) -> Void) {
+        // One camera at a time, and only through the advertiser carrying the current token.
+        guard advertiser === self.advertiser, camera == nil, let session else { handler(false, nil); return }
         camera = peerID
         handler(true, session)
     }
 
-    fileprivate func changed(_ peerID: MCPeerID, to state: MCSessionState) {
-        guard peerID == camera, state == .notConnected else { return }
-        camera = nil
-        frame = nil
-        lastShown = nil
-        if case .connected = self.state { self.state = .waiting }
+    fileprivate func changed(_ peerID: MCPeerID, in session: MCSession, to state: MCSessionState) {
+        guard session === self.session, peerID == camera, state == .notConnected else { return }
+        guard case .connected = self.state else {
+            // The invitation never got as far as `hello`: keep this token so the same QR can retry.
+            camera = nil
+            return
+        }
+        // Dropped mid-run: back to waiting with a new token and QR.
+        beginWaiting()
     }
 
-    fileprivate func received(_ data: Data, from peerID: MCPeerID) {
-        guard peerID == camera else { return }
+    fileprivate func received(_ data: Data, in session: MCSession, from peerID: MCPeerID) {
+        guard session === self.session, peerID == camera else { return }
         handle(data, from: peerID)
     }
 }
@@ -270,17 +319,17 @@ extension CalibrationLink: MCNearbyServiceAdvertiserDelegate {
     nonisolated func advertiser(_ advertiser: MCNearbyServiceAdvertiser, didReceiveInvitationFromPeer peerID: MCPeerID,
                                 withContext context: Data?, invitationHandler: @escaping (Bool, MCSession?) -> Void) {
         nonisolated(unsafe) let handler = invitationHandler
-        Task { @MainActor in self.invited(by: peerID, handler: handler) }
+        Task { @MainActor in self.invited(by: peerID, via: advertiser, handler: handler) }
     }
 }
 
 extension CalibrationLink: MCSessionDelegate {
     nonisolated func session(_ session: MCSession, peer peerID: MCPeerID, didChange state: MCSessionState) {
-        Task { @MainActor in self.changed(peerID, to: state) }
+        Task { @MainActor in self.changed(peerID, in: session, to: state) }
     }
 
     nonisolated func session(_ session: MCSession, didReceive data: Data, fromPeer peerID: MCPeerID) {
-        Task { @MainActor in self.received(data, from: peerID) }
+        Task { @MainActor in self.received(data, in: session, from: peerID) }
     }
 
     nonisolated func session(_ session: MCSession, didReceive stream: InputStream, withName streamName: String, fromPeer peerID: MCPeerID) {}

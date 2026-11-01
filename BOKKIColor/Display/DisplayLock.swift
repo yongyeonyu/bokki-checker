@@ -36,14 +36,22 @@ enum SettingsKey {
     static let autoRotate = "autoRotate"
     static let shortcutName = "display.shortcutName"
     static let restoreShortcutName = "display.restoreShortcutName"
-    static let autoRunShortcut = "display.autoRunShortcut"
-    static let autoRunRestore = "display.autoRunRestore"
+    static let shootModeOn = "display.shootModeOn"
 }
 
 /// Runs the user's Shortcuts shortcuts that switch display settings iOS won't let an app change.
 enum DisplayShortcut {
     static let defaultName = "BOKKI 촬영 모드"
     static let defaultRestoreName = "BOKKI 촬영 종료"
+
+    /// The bundled signed shortcut, copied out as `<name>.shortcut` for the share sheet. It is stored
+    /// as `.bokkishortcut` in the project because macOS/iCloud import (and remove) loose `.shortcut` files.
+    static func shareableFile(_ name: String) -> URL? {
+        guard let source = Bundle.main.url(forResource: name, withExtension: "bokkishortcut") else { return nil }
+        let out = FileManager.default.temporaryDirectory.appendingPathComponent(name + ".shortcut")
+        try? FileManager.default.removeItem(at: out)
+        return (try? FileManager.default.copyItem(at: source, to: out)) != nil ? out : nil
+    }
 
     /// Runs a shortcut by name; Shortcuts comes back to this app when it finishes.
     @MainActor

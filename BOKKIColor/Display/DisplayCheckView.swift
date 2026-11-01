@@ -10,8 +10,8 @@ struct DisplayCheckView: View {
     /// Name of the user's Shortcuts shortcut that switches every display setting at once.
     @AppStorage(SettingsKey.shortcutName) private var shortcutName = DisplayShortcut.defaultName
     @AppStorage(SettingsKey.restoreShortcutName) private var restoreName = DisplayShortcut.defaultRestoreName
-    @AppStorage(SettingsKey.autoRunShortcut) private var autoRun = false
-    @AppStorage(SettingsKey.autoRunRestore) private var autoRestore = false
+    /// Remembered between launches so the screen can remind the user to switch back after shooting.
+    @AppStorage(SettingsKey.shootModeOn) private var shootModeOn = false
 
     private struct Item {
         let title: String
@@ -39,25 +39,33 @@ struct DisplayCheckView: View {
         NavigationStack {
             List {
                 Section {
+                    // Run once for the shoot, then switch everything back when done.
+                    if shootModeOn {
+                        Label("촬영 모드 켜짐 — 촬영이 끝나면 ‘지금 종료’를 누르세요", systemImage: "record.circle")
+                            .foregroundStyle(.orange).font(.callout)
+                    }
                     Button {
                         DisplayShortcut.run(shortcutName)
+                        shootModeOn = true
                     } label: {
-                        Label("디스플레이 한 번에 설정", systemImage: "bolt.badge.checkmark.fill")
+                        Label("지금 실행", systemImage: "bolt.badge.checkmark.fill")
                             .font(.headline)
                     }
-                    Button { DisplayShortcut.run(restoreName) } label: {
-                        Label("원래대로 되돌리기", systemImage: "arrow.uturn.backward")
+                    Button {
+                        DisplayShortcut.run(restoreName)
+                        shootModeOn = false
+                    } label: {
+                        Label("지금 종료 (원래대로)", systemImage: "arrow.uturn.backward")
+                            .font(.headline)
                     }
                     // Signed shortcut files bundled with the app; the share sheet's 단축어 app imports them.
                     ForEach([shortcutName, restoreName], id: \.self) { name in
-                        if let file = Bundle.main.url(forResource: name, withExtension: "shortcut") {
+                        if let file = DisplayShortcut.shareableFile(name) {
                             ShareLink(item: file) {
                                 Label("‘\(name)’ 단축어 자동 추가", systemImage: "square.and.arrow.down")
                             }
                         }
                     }
-                    Toggle("체커를 열 때 ‘\(shortcutName)’ 자동 실행", isOn: $autoRun)
-                    Toggle("체커를 닫을 때 ‘\(restoreName)’ 자동 실행", isOn: $autoRestore)
                     DisclosureGroup("직접 만들기", isExpanded: $showGuide) {
                         VStack(alignment: .leading, spacing: 8) {
                             Text("iOS는 앱이 True Tone·Night Shift 같은 설정을 직접 바꾸지 못하게 합니다. 대신 단축어 앱이 바꿀 수 있어서, 아래 단축어를 한 번 만들어 두면 위 버튼 한 번으로 모두 바뀝니다.")
@@ -80,7 +88,7 @@ struct DisplayCheckView: View {
                 } header: {
                     Text("원클릭 촬영 모드")
                 } footer: {
-                    Text("처음 한 번 ‘자동 추가’를 누르고 공유 목록에서 ‘단축어’를 고른 뒤 ‘단축어 추가’를 누르세요. True Tone·Night Shift·저전력 모드·화이트 포인트 줄이기·색상 반전·색상 필터를 끄고 밝기를 100%로 맞춥니다. 예전에 추가한 단축어는 지우고 다시 추가하세요. 실행이 끝나면 이 앱으로 돌아옵니다. 자동 실행을 켜면 체커를 열고 닫을 때 단축어 앱이 잠깐 나타났다 돌아옵니다.")
+                    Text("‘지금 실행’은 촬영용 설정을 켜고, ‘지금 종료’는 원래대로 돌립니다. 처음 한 번 ‘자동 추가’를 누르고 공유 목록에서 ‘단축어’를 고른 뒤 ‘단축어 추가’를 누르세요. True Tone·Night Shift·저전력 모드·화이트 포인트 줄이기·색상 반전·색상 필터를 끄고 밝기를 100%로 맞춥니다. 예전에 추가한 단축어는 지우고 다시 추가하세요. 실행이 끝나면 이 앱으로 돌아옵니다.")
                 }
                 Section {
                     LabeledContent("현재 밝기", value: "\(Int(UIScreen.main.brightness * 100))%")
