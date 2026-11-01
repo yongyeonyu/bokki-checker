@@ -70,6 +70,32 @@ struct CalibrationStep: Codable, Equatable {
     var index: Int?
     var total: Int?
     var label: String?
+    /// CALIBV2-1101: setup | exposure | measure | skin | verify.
+    var phase: String?
+    /// This `show` repeats a step whose shot was unusable (`captured` with `ok: false`).
+    var retake: Bool?
+}
+
+/// CALIBV2-1101 `result` (feature `results`): the run's outcome, shown until the user leaves it.
+/// Every field optional so a partial result still shows what it has.
+struct CalibrationResult: Codable, Equatable {
+    struct Patch: Codable, Equatable {
+        var name: String?
+        var p3: [Double]?
+        /// CIEDE2000 between the screen colour and the camera, before and after correction.
+        var before: Double?
+        var after: Double?
+        var skin: Bool?
+    }
+
+    /// `balanced` or `skin`.
+    var focus: String?
+    var look: String?
+    var averageBefore: Double?
+    var averageAfter: Double?
+    var skinAverageAfter: Double?
+    var verifyAverageAfter: Double?
+    var patches: [Patch]?
 }
 
 struct CalibrationPatch: Codable {
@@ -93,6 +119,7 @@ struct CalibrationEnvelope: Codable {
     var seq: Int?
     var ok: Bool?
     var step: CalibrationStep?
+    var result: CalibrationResult?
     var target: CalibrationTarget?
     var layout: CalibrationLayout?
     var patches: [CalibrationPatch]?
@@ -136,6 +163,8 @@ final class CalibrationLink: NSObject {
     private(set) var stalled = false
     /// Camera that finished the last run (after `end`), shown on the waiting screen.
     private(set) var lastFinished: String?
+    /// The last run's `result`; stays on screen (also after `end`) until `dismissResult()`.
+    private(set) var result: CalibrationResult?
     /// Fresh for every waiting screen; advertised in the discovery info and shown as a QR so a CAM
     /// connects to this Checker only.
     private(set) var token = CalibrationLink.makeToken()
@@ -172,6 +201,12 @@ final class CalibrationLink: NSObject {
     func stop() {
         tearDown()
         state = .waiting
+        result = nil
+    }
+
+    /// The user left the result screen.
+    func dismissResult() {
+        result = nil
     }
 
     /// Back in the foreground: iOS stops advertising in the background, so advertise again (same token).
@@ -256,7 +291,7 @@ final class CalibrationLink: NSObject {
             let display = CalibrationDisplayInfo(brightnessLocked: true, widthPx: Int(native.width), heightPx: Int(native.height))
             send(CalibrationEnvelope(type: "ready", pv: CalibrationProtocol.version, app: "BOKKI Checker",
                                      device: Self.modelIdentifier, display: display, charts: availableCharts(),
-                                     features: ["handshake"]), to: peerID)
+                                     features: ["handshake", "results"]), to: peerID)
         case "show":
             guard let seq = m.seq, let target = m.target else {
                 send(CalibrationEnvelope(type: "error", seq: m.seq, message: "show needs seq and target"), to: peerID)
@@ -267,12 +302,27 @@ final class CalibrationLink: NSObject {
                 try? session?.send(last.data, toPeers: [peerID], with: .reliable)
                 return
             }
+            result = nil
             show(target, seq: seq, step: m.step, to: peerID)
         case "captured":
             // Handshake: the CAM has its shot. The target stays up until the next `show`.
             guard let seq = m.seq else { return }
             log.debug("captured \(seq): ack")
             send(CalibrationEnvelope(type: "ack", seq: seq), to: peerID)
+        case "result":
+            guard let seq = m.seq, let result = m.result else {
+                send(CalibrationEnvelope(type: "error", seq: m.seq, message: "result needs seq and result"), to: peerID)
+                return
+            }
+            log.info("result \(seq): \(result.patches?.count ?? 0) patches")
+            frame = nil
+            self.result = result
+            // `ack` once the result screen is on screen, like `shown`.
+            Task {
+                try? await Task.sleep(for: .milliseconds(120))
+                guard peerID == camera else { return }
+                send(CalibrationEnvelope(type: "ack", seq: seq), to: peerID)
+            }
         case "end":
             log.info("end")
             if case .connected(let name) = state { lastFinished = name }

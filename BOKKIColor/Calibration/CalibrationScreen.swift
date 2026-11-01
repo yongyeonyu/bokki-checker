@@ -20,6 +20,8 @@ struct CalibrationScreen: View {
                     if let notice = lostNotice {
                         lostPanel(notice)
                     }
+                } else if let result = link.result {
+                    CalibrationResultView(result: result) { link.dismissResult() }
                 } else {
                     // The corner markers stay up while waiting, so the camera can be framed first.
                     fiducials(size: geo.size)
@@ -35,7 +37,7 @@ struct CalibrationScreen: View {
         .contentShape(Rectangle())
         .onTapGesture { if link.frame != nil { showClose.toggle() } }
         .overlay(alignment: .bottom) {
-            if link.frame == nil || showClose {
+            if (link.frame == nil && link.result == nil) || showClose {
                 Button { dismiss() } label: {
                     Image(systemName: "xmark").font(.title3.bold()).foregroundStyle(.white)
                         .frame(width: 44, height: 44).background(.white.opacity(0.15), in: Circle())
@@ -152,14 +154,16 @@ struct CalibrationScreen: View {
         }
     }
 
-    /// `index / total · label`, from whatever parts of `step` the CAM sent.
+    /// `index / total · Phase · label` (+ a retake note), from whatever parts of `step` the CAM sent.
     private static func progressText(_ step: CalibrationStep?) -> String? {
         guard let step else { return nil }
         var parts: [String] = []
         if let i = step.index {
             parts.append(step.total.map { "\(i) / \($0)" } ?? "\(i)")
         }
+        if let phase = step.phase, !phase.isEmpty { parts.append(phase.prefix(1).uppercased() + phase.dropFirst()) }
         if let label = step.label, !label.isEmpty { parts.append(label) }
+        if step.retake == true { parts.append("Retake — hold still") }
         return parts.isEmpty ? nil : parts.joined(separator: " · ")
     }
 
@@ -198,5 +202,82 @@ struct CalibrationScreen: View {
                        CGPoint(x: inset, y: size.height - inset - f)] {
             ctx.fill(Path(CGRect(origin: origin, size: CGSize(width: f, height: f))), with: .color(.white))
         }
+    }
+}
+
+/// CALIBV2-1101 result from BOKKI CAM: averages and a per-patch list, until the user taps Done.
+private struct CalibrationResultView: View {
+    let result: CalibrationResult
+    let done: () -> Void
+
+    var body: some View {
+        VStack(spacing: 20) {
+            VStack(spacing: 6) {
+                Text("Calibration result").font(.title.bold())
+                Text(result.look ?? "—").font(.title3)
+                Text("Focus: \(focus)").foregroundStyle(.white.opacity(0.7))
+            }
+            HStack(spacing: 28) {
+                stat("Average ΔE", "\(Self.number(result.averageBefore)) → \(Self.number(result.averageAfter))")
+                stat("Skin average after", Self.number(result.skinAverageAfter))
+                stat("Verify average after", Self.number(result.verifyAverageAfter))
+            }
+            ScrollView {
+                LazyVStack(spacing: 0) {
+                    ForEach(Array((result.patches ?? []).enumerated()), id: \.offset) { _, patch in
+                        row(patch)
+                        Divider().overlay(.white.opacity(0.15))
+                    }
+                }
+            }
+            .frame(maxWidth: 640)
+            Button("Done", action: done)
+                .buttonStyle(.borderedProminent).controlSize(.large)
+        }
+        .foregroundStyle(.white)
+        .padding(.horizontal, 32).padding(.vertical, 48)
+    }
+
+    private var focus: String {
+        switch result.focus {
+        case "skin": "Skin"
+        case "balanced": "Balanced"
+        case let other: other ?? "—"
+        }
+    }
+
+    private func stat(_ title: String, _ value: String) -> some View {
+        VStack(spacing: 4) {
+            Text(value).font(.title2.bold().monospacedDigit())
+            Text(title).font(.caption).foregroundStyle(.white.opacity(0.7))
+        }
+    }
+
+    private func row(_ patch: CalibrationResult.Patch) -> some View {
+        HStack(spacing: 12) {
+            swatch(patch.p3)
+            Text(patch.name ?? "—")
+            if patch.skin == true {
+                Text("Skin").font(.caption.bold()).padding(.horizontal, 6).padding(.vertical, 2)
+                    .background(.orange.opacity(0.3), in: Capsule())
+            }
+            Spacer()
+            Text("\(Self.number(patch.before)) → \(Self.number(patch.after))").monospacedDigit()
+        }
+        .padding(.vertical, 8)
+    }
+
+    @ViewBuilder
+    private func swatch(_ p3: [Double]?) -> some View {
+        let shape = RoundedRectangle(cornerRadius: 4)
+        if let p3, p3.count == 3 {
+            shape.fill(Color(.displayP3, red: p3[0], green: p3[1], blue: p3[2])).frame(width: 28, height: 28)
+        } else {
+            shape.stroke(.white.opacity(0.3)).frame(width: 28, height: 28)
+        }
+    }
+
+    private static func number(_ value: Double?) -> String {
+        value.map { String(format: "%.1f", $0) } ?? "—"
     }
 }
