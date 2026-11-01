@@ -10,7 +10,7 @@ struct SlateView: View {
 
     @AppStorage("slate.chart") private var chartID = "cc24_after2014"
     @AppStorage("slate.project") private var project = "BOKKI"
-    @AppStorage("slate.camera") private var camera = "Osmo Action"
+    @AppStorage("slate.camera") private var camera = ""
     @AppStorage("slate.profile") private var profile = "D-Log M"
     @AppStorage("slate.wb") private var wb = "5600K"
     @AppStorage("slate.iso") private var iso = "ISO 100"
@@ -57,6 +57,10 @@ struct SlateView: View {
             }
         }
         .background(Color.black.ignoresSafeArea())
+        .onAppear {
+            // Earlier builds filled in a preset camera; start blank unless the user saved that name.
+            if Self.legacyCameras.contains(camera) && !savedCameras.contains(camera) { camera = "" }
+        }
         .alert("카메라 추가", isPresented: $addingCamera) {
             TextField("카메라 이름", text: $newCameraName)
             Button("저장") {
@@ -67,7 +71,7 @@ struct SlateView: View {
             }
             Button("취소", role: .cancel) {}
         } message: {
-            Text("저장한 카메라는 목록 위쪽에 표시되고 언제든 다시 고를 수 있습니다.")
+            Text("저장한 카메라는 ⌄ 목록에서 언제든 다시 고를 수 있습니다.")
         }
         // Close-keyboard button, pinned just above the keyboard while typing.
         .overlay(alignment: .bottomTrailing) {
@@ -218,9 +222,10 @@ struct SlateView: View {
         return f
     }()
 
-    static let cameras = [
-        "DJI Osmo Action 5 Pro", "DJI Osmo Action 4", "DJI Osmo Action 3", "DJI Osmo Pocket 3", "DJI Osmo 360",
-        "GoPro HERO13 Black", "GoPro HERO12 Black", "Insta360 Ace Pro 2", "Insta360 X4",
+    /// Presets from earlier builds, cleared from the slate on launch.
+    private static let legacyCameras: Set<String> = [
+        "Osmo Action", "DJI Osmo Action 5 Pro", "DJI Osmo Action 4", "DJI Osmo Action 3", "DJI Osmo Pocket 3",
+        "DJI Osmo 360", "GoPro HERO13 Black", "GoPro HERO12 Black", "Insta360 Ace Pro 2", "Insta360 X4",
         "iPhone 17 Pro", "iPhone 16 Pro", "Sony ZV-1 II", "BOKKI CAM",
     ]
 
@@ -228,7 +233,7 @@ struct SlateView: View {
         savedCamerasRaw.split(separator: "\n").map(String.init).filter { !$0.isEmpty }
     }
 
-    /// Saved cameras first, then built-in presets; the typed name can be saved for next time.
+    /// Only cameras the user added; there is no built-in list.
     @ViewBuilder
     private var cameraMenu: some View {
         Button { newCameraName = ""; addingCamera = true } label: {
@@ -248,13 +253,6 @@ struct SlateView: View {
                         } label: { Label(saved, systemImage: "trash") }
                     }
                 } label: { Label("저장한 카메라 삭제", systemImage: "trash") }
-            }
-        }
-        Section("기본 목록") {
-            ForEach(Self.cameras, id: \.self) { preset in
-                Button { camera = preset } label: {
-                    if preset == camera { Label(preset, systemImage: "checkmark") } else { Text(preset) }
-                }
             }
         }
     }
