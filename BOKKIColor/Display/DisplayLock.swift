@@ -34,6 +34,27 @@ enum SettingsKey {
     static let lockBrightness = "lockBrightness"
     static let sequenceInterval = "sequenceInterval"
     static let autoRotate = "autoRotate"
+    static let shortcutName = "display.shortcutName"
+    static let restoreShortcutName = "display.restoreShortcutName"
+    static let autoRunShortcut = "display.autoRunShortcut"
+    static let autoRunRestore = "display.autoRunRestore"
+}
+
+/// Runs the user's Shortcuts shortcuts that switch display settings iOS won't let an app change.
+enum DisplayShortcut {
+    static let defaultName = "BOKKI 촬영 모드"
+    static let defaultRestoreName = "BOKKI 촬영 종료"
+
+    /// Runs a shortcut by name; Shortcuts comes back to this app when it finishes.
+    @MainActor
+    static func run(_ name: String) {
+        var c = URLComponents(string: "shortcuts://x-callback-url/run-shortcut")!
+        c.queryItems = [URLQueryItem(name: "name", value: name),
+                        URLQueryItem(name: "x-success", value: "bokkichecker://"),
+                        URLQueryItem(name: "x-cancel", value: "bokkichecker://"),
+                        URLQueryItem(name: "x-error", value: "bokkichecker://")]
+        if let url = c.url { UIApplication.shared.open(url) }
+    }
 }
 
 /// Keeps the screen at full brightness and awake while a chart is shown so every capture sees

@@ -8,8 +8,10 @@ struct DisplayCheckView: View {
     @State private var copiedKeyword: String?
     @State private var showGuide = false
     /// Name of the user's Shortcuts shortcut that switches every display setting at once.
-    @AppStorage("display.shortcutName") private var shortcutName = "BOKKI 촬영 모드"
-    @AppStorage("display.restoreShortcutName") private var restoreName = "BOKKI 촬영 종료"
+    @AppStorage(SettingsKey.shortcutName) private var shortcutName = DisplayShortcut.defaultName
+    @AppStorage(SettingsKey.restoreShortcutName) private var restoreName = DisplayShortcut.defaultRestoreName
+    @AppStorage(SettingsKey.autoRunShortcut) private var autoRun = false
+    @AppStorage(SettingsKey.autoRunRestore) private var autoRestore = false
 
     private struct Item {
         let title: String
@@ -38,12 +40,12 @@ struct DisplayCheckView: View {
             List {
                 Section {
                     Button {
-                        runShortcut(shortcutName)
+                        DisplayShortcut.run(shortcutName)
                     } label: {
                         Label("디스플레이 한 번에 설정", systemImage: "bolt.badge.checkmark.fill")
                             .font(.headline)
                     }
-                    Button { runShortcut(restoreName) } label: {
+                    Button { DisplayShortcut.run(restoreName) } label: {
                         Label("원래대로 되돌리기", systemImage: "arrow.uturn.backward")
                     }
                     // Signed shortcut files bundled with the app; the share sheet's 단축어 app imports them.
@@ -54,6 +56,8 @@ struct DisplayCheckView: View {
                             }
                         }
                     }
+                    Toggle("체커를 열 때 ‘\(shortcutName)’ 자동 실행", isOn: $autoRun)
+                    Toggle("체커를 닫을 때 ‘\(restoreName)’ 자동 실행", isOn: $autoRestore)
                     DisclosureGroup("직접 만들기", isExpanded: $showGuide) {
                         VStack(alignment: .leading, spacing: 8) {
                             Text("iOS는 앱이 True Tone·Night Shift 같은 설정을 직접 바꾸지 못하게 합니다. 대신 단축어 앱이 바꿀 수 있어서, 아래 단축어를 한 번 만들어 두면 위 버튼 한 번으로 모두 바뀝니다.")
@@ -76,7 +80,7 @@ struct DisplayCheckView: View {
                 } header: {
                     Text("원클릭 촬영 모드")
                 } footer: {
-                    Text("처음 한 번 ‘자동 추가’를 누르고 공유 목록에서 ‘단축어’를 고른 뒤 ‘단축어 추가’를 누르세요. True Tone·Night Shift·저전력 모드를 끄고 밝기를 100%로 맞춥니다. 실행이 끝나면 이 앱으로 돌아옵니다.")
+                    Text("처음 한 번 ‘자동 추가’를 누르고 공유 목록에서 ‘단축어’를 고른 뒤 ‘단축어 추가’를 누르세요. True Tone·Night Shift·저전력 모드를 끄고 밝기를 100%로 맞춥니다. 실행이 끝나면 이 앱으로 돌아옵니다. 자동 실행을 켜면 체커를 열고 닫을 때 단축어 앱이 잠깐 나타났다 돌아옵니다.")
                 }
                 Section {
                     LabeledContent("현재 밝기", value: "\(Int(UIScreen.main.brightness * 100))%")
@@ -134,16 +138,6 @@ struct DisplayCheckView: View {
             .toolbar { Button("완료") { dismiss() } }
             .onAppear { lock.refreshWarnings() }
         }
-    }
-
-    /// Runs a Shortcuts shortcut by name and comes back to this app when it finishes.
-    private func runShortcut(_ name: String) {
-        var c = URLComponents(string: "shortcuts://x-callback-url/run-shortcut")!
-        c.queryItems = [URLQueryItem(name: "name", value: name),
-                        URLQueryItem(name: "x-success", value: "bokkichecker://"),
-                        URLQueryItem(name: "x-cancel", value: "bokkichecker://"),
-                        URLQueryItem(name: "x-error", value: "bokkichecker://")]
-        if let url = c.url { UIApplication.shared.open(url) }
     }
 
     /// Copies the search keyword (when given), then tries the item's own Settings page, then the

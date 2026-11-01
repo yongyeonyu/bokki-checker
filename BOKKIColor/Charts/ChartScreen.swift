@@ -11,6 +11,10 @@ struct ChartScreen: View {
     @AppStorage(SettingsKey.lockBrightness) private var lockBrightness = true
     @AppStorage(SettingsKey.sequenceInterval) private var interval = 2.0
     @AppStorage(SettingsKey.autoRotate) private var autoRotate = true
+    @AppStorage(SettingsKey.shortcutName) private var shortcutName = DisplayShortcut.defaultName
+    @AppStorage(SettingsKey.restoreShortcutName) private var restoreName = DisplayShortcut.defaultRestoreName
+    @AppStorage(SettingsKey.autoRunShortcut) private var autoRun = false
+    @AppStorage(SettingsKey.autoRunRestore) private var autoRestore = false
 
     @State private var lock = DisplayLock()
     @State private var showControls = true
@@ -59,10 +63,12 @@ struct ChartScreen: View {
             if working == nil { working = originalChart }
             lock.start(lockBrightness: lockBrightness)
             reveal()
+            if autoRun { DisplayShortcut.run(shortcutName) }
         }
         .onDisappear {
             hideTask?.cancel()
             lock.stop()
+            if autoRestore { DisplayShortcut.run(restoreName) }
         }
         .onChange(of: selected) { _, new in if new == nil { reveal() } }
         .onChange(of: saving) { _, now in if !now { reveal() } }
