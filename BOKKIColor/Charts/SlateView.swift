@@ -32,15 +32,29 @@ struct SlateView: View {
     var body: some View {
         GeometryReader { geo in
             let wide = geo.size.width > geo.size.height
-            let layout = wide ? AnyLayout(HStackLayout(spacing: 0)) : AnyLayout(VStackLayout(spacing: 0))
-            // While typing, the checker shrinks so the field being edited stays above the keyboard.
-            let chartShare = focus == nil ? (wide ? 0.62 : 0.6) : (wide ? 0.4 : 0.25)
-            layout {
-                PatchGridView(chart: chart, space: space, aspect: aspect, surround: .black, onSelect: onSelect)
-                    .frame(width: wide ? geo.size.width * chartShare : nil, height: wide ? nil : geo.size.height * chartShare)
-                info(wide: wide)
+            if wide {
+                // Landscape: the checker gets the full width; shot info sits bottom-left, neutrals bottom-right.
+                VStack(spacing: 0) {
+                    PatchGridView(chart: chart, space: space, aspect: aspect, surround: .black, onSelect: onSelect)
+                        .frame(maxHeight: .infinity)
+                    HStack(alignment: .bottom, spacing: 16) {
+                        wideInfo
+                        Spacer(minLength: 0)
+                        neutralStrip.frame(width: geo.size.width * 0.24, height: 64)
+                    }
+                    .padding(.horizontal, 14)
+                    .padding(.vertical, 10)
+                    .fixedSize(horizontal: false, vertical: true)
+                }
+            } else {
+                // While typing, the checker shrinks so the field being edited stays above the keyboard.
+                VStack(spacing: 0) {
+                    PatchGridView(chart: chart, space: space, aspect: aspect, surround: .black, onSelect: onSelect)
+                        .frame(height: geo.size.height * (focus == nil ? 0.6 : 0.25))
+                    info(wide: false)
+                }
+                .animation(.easeInOut(duration: 0.2), value: focus)
             }
-            .animation(.easeInOut(duration: 0.2), value: focus)
         }
         .background(Color.black.ignoresSafeArea())
         .alert("카메라 추가", isPresented: $addingCamera) {
@@ -98,18 +112,8 @@ struct SlateView: View {
                 }
             }
             Group {
-                HStack(spacing: 4) {
-                    slateField("카메라 이름", $camera)
-                        .focused($focus, equals: .camera)
-                        .submitLabel(.done)
-                        .onSubmit { focus = nil }
-                        // Hug the text so the ⌄ sits right after the camera name.
-                        .fixedSize(horizontal: true, vertical: false)
-                    Menu {
-                        cameraMenu
-                    } label: {
-                        Image(systemName: "chevron.down").font(.caption2).opacity(0.6).frame(width: 28, height: 28)
-                    }
+                HStack(spacing: 0) {
+                    cameraRow
                     Spacer(minLength: 0)
                 }
                 ViewThatFits(in: .horizontal) {
@@ -131,24 +135,80 @@ struct SlateView: View {
                 }
             }
             .font(.system(.subheadline, design: .monospaced))
-            Menu {
-                ForEach(ChartCatalog.referenceIDs.filter { !$0.hasPrefix("sg140") }, id: \.self) { id in
-                    Button(ChartCatalog.references[id]?.title ?? id) { chartID = id }
-                }
-                ForEach(store.charts.filter { [24, 45].contains($0.patches.count) }) { c in
-                    Button("✎ " + c.title) { chartID = c.id }
-                }
-            } label: {
-                Label(chart.title, systemImage: "chevron.up.chevron.down")
-                    .font(.system(.subheadline, design: .monospaced)).foregroundStyle(.gray)
-                    .lineLimit(1).minimumScaleFactor(0.6)
-            }
+            chartMenu
             Spacer(minLength: 4)
             if wide { neutralStrip.frame(maxHeight: 120) }
         }
         .foregroundStyle(.white)
         .padding(14)
         .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
+    }
+
+    /// Compact three-line shot info for the landscape bottom-left corner.
+    private var wideInfo: some View {
+        VStack(alignment: .leading, spacing: 6) {
+            HStack(spacing: 14) {
+                TimelineView(.periodic(from: .now, by: 1)) { ctx in
+                    Text(Self.stamp.string(from: ctx.date))
+                        .font(.system(.subheadline, design: .monospaced))
+                        .lineLimit(1)
+                }
+                slateField("영상 제목", $project, font: .title3.bold())
+                    .focused($focus, equals: .title)
+                    .submitLabel(.next)
+                    .onSubmit { focus = .camera }
+                    .fixedSize(horizontal: true, vertical: false)
+            }
+            HStack(spacing: 18) {
+                counter("S", value: $scene, size: 24)
+                counter("T", value: $take, size: 24)
+                cameraRow
+            }
+            HStack(spacing: 6) {
+                SlatePickerField(prompt: "프로파일", text: $profile, options: Self.profiles)
+                Text("·")
+                SlatePickerField(prompt: "WB", text: $wb, options: Self.whiteBalances)
+                Text("·")
+                SlatePickerField(prompt: "ISO", text: $iso, options: Self.isos)
+                chartMenu.padding(.leading, 10)
+            }
+            .font(.system(.subheadline, design: .monospaced))
+        }
+        .foregroundStyle(.white)
+        .lineLimit(1)
+        .minimumScaleFactor(0.7)
+    }
+
+    private var cameraRow: some View {
+        HStack(spacing: 4) {
+            slateField("카메라 이름", $camera)
+                .focused($focus, equals: .camera)
+                .submitLabel(.done)
+                .onSubmit { focus = nil }
+                // Hug the text so the ⌄ sits right after the camera name.
+                .fixedSize(horizontal: true, vertical: false)
+            Menu {
+                cameraMenu
+            } label: {
+                Image(systemName: "chevron.down").font(.caption2).opacity(0.6).frame(width: 28, height: 28)
+            }
+        }
+        .font(.system(.subheadline, design: .monospaced))
+    }
+
+    private var chartMenu: some View {
+        Menu {
+            ForEach(ChartCatalog.referenceIDs.filter { !$0.hasPrefix("sg140") }, id: \.self) { id in
+                Button(ChartCatalog.references[id]?.title ?? id) { chartID = id }
+            }
+            ForEach(store.charts.filter { [24, 45].contains($0.patches.count) }) { c in
+                Button("✎ " + c.title) { chartID = c.id }
+            }
+        } label: {
+            Label(chart.title, systemImage: "chevron.up.chevron.down")
+                .font(.system(.subheadline, design: .monospaced)).foregroundStyle(.gray)
+                .lineLimit(1).minimumScaleFactor(0.6)
+        }
     }
 
     private static let stamp: DateFormatter = {
