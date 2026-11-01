@@ -146,18 +146,19 @@ struct DisplayCheckView: View {
         if let url = c.url { UIApplication.shared.open(url) }
     }
 
-    /// Copies the search keyword (when given) and opens the Settings home screen, where the
-    /// search box finds the item. Falls back to this app's own settings page if that fails.
+    /// Copies the search keyword (when given), then tries the item's own Settings page, then the
+    /// Settings home (where the search box finds the item), then this app's own settings page.
     private func openSettings(keyword: String?, url: String = "App-prefs:") {
         if let keyword {
             UIPasteboard.general.string = keyword
             copiedKeyword = keyword
         }
-        let fallback = URL(string: UIApplication.openSettingsURLString)
-        guard let page = URL(string: url) else { return }
-        UIApplication.shared.open(page) { ok in
-            if !ok, let fallback { UIApplication.shared.open(fallback) }
+        let candidates = [url, "App-prefs:", UIApplication.openSettingsURLString].compactMap(URL.init(string:))
+        func open(_ i: Int) {
+            guard i < candidates.count else { return }
+            UIApplication.shared.open(candidates[i]) { ok in if !ok { open(i + 1) } }
         }
+        open(0)
     }
 }
 
