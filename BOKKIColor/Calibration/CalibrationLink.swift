@@ -1,5 +1,6 @@
 import Foundation
 import Observation
+import os
 @preconcurrency import MultipeerConnectivity
 import UIKit
 
@@ -119,7 +120,11 @@ struct CalibrationFrame {
 @MainActor
 @Observable
 final class CalibrationLink: NSObject {
-    enum State: Equatable { case waiting, connected(String) }
+    /// `reconnecting`: the camera dropped mid-run; the token, target and step stay up while it rejoins.
+    enum State: Equatable { case waiting, connected(String), reconnecting(String) }
+
+    /// How long a dropped camera has to rejoin before the screen goes back to a new QR.
+    static let rejoinWindow: Duration = .seconds(60)
 
     private(set) var state: State = .waiting
     private(set) var frame: CalibrationFrame?
@@ -144,6 +149,8 @@ final class CalibrationLink: NSObject {
     @ObservationIgnored private var advertiser: MCNearbyServiceAdvertiser?
     @ObservationIgnored private var camera: MCPeerID?
     @ObservationIgnored private var lastShown: (seq: Int, data: Data)?
+    @ObservationIgnored private var rejoinTimeout: Task<Void, Never>?
+    @ObservationIgnored private let log = Logger(subsystem: "com.bokki.checker", category: "calibration")
 
     func start() {
         lastFinished = nil
@@ -155,14 +162,19 @@ final class CalibrationLink: NSObject {
         state = .waiting
     }
 
+    /// Back in the foreground: iOS stops advertising in the background, so advertise again (same token).
+    func resume() {
+        log.info("foreground: advertising again, camera \(self.camera?.displayName ?? "none", privacy: .public)")
+        advertiser?.startAdvertisingPeer()
+    }
+
     /// New token, new session and a new advertiser carrying that token; the old camera (if any) is dropped.
     private func beginWaiting() {
         tearDown()
         token = Self.makeToken()
         state = .waiting
-        let session = MCSession(peer: peer, securityIdentity: nil, encryptionPreference: .required)
-        session.delegate = self
-        self.session = session
+        log.info("waiting with token \(self.token, privacy: .public)")
+        replaceSession()
         let advertiser = MCNearbyServiceAdvertiser(peer: peer,
                                                    discoveryInfo: ["app": "BOKKI Checker", "pv": String(CalibrationProtocol.version),
                                                                    "token": token],
@@ -172,7 +184,19 @@ final class CalibrationLink: NSObject {
         advertiser.startAdvertisingPeer()
     }
 
+    /// A fresh session for the next (or returning) camera; the old one is dropped without callbacks.
+    private func replaceSession() {
+        session?.delegate = nil
+        session?.disconnect()
+        let session = MCSession(peer: peer, securityIdentity: nil, encryptionPreference: .required)
+        session.delegate = self
+        self.session = session
+        camera = nil
+    }
+
     private func tearDown() {
+        rejoinTimeout?.cancel()
+        rejoinTimeout = nil
         advertiser?.stopAdvertisingPeer()
         advertiser?.delegate = nil
         advertiser = nil
@@ -206,6 +230,10 @@ final class CalibrationLink: NSObject {
                 send(CalibrationEnvelope(type: "error", message: "protocol version \(m.pv ?? 0) not supported"), to: peerID)
                 return
             }
+            // A second `hello` mid-run is a rejoin: answer `ready` again and keep the target on screen.
+            rejoinTimeout?.cancel()
+            rejoinTimeout = nil
+            log.info("hello from \(peerID.displayName, privacy: .public), rejoin \(self.frame != nil)")
             state = .connected(m.device ?? peerID.displayName)
             let native = UIScreen.main.nativeBounds.size
             let display = CalibrationDisplayInfo(brightnessLocked: true, widthPx: Int(native.width), heightPx: Int(native.height))
@@ -218,6 +246,7 @@ final class CalibrationLink: NSObject {
                 return
             }
             if let last = lastShown, last.seq == seq {
+                log.info("show \(seq) again: resending shown")
                 try? session?.send(last.data, toPeers: [peerID], with: .reliable)
                 return
             }
@@ -225,8 +254,10 @@ final class CalibrationLink: NSObject {
         case "captured":
             // Handshake: the CAM has its shot. The target stays up until the next `show`.
             guard let seq = m.seq else { return }
+            log.debug("captured \(seq): ack")
             send(CalibrationEnvelope(type: "ack", seq: seq), to: peerID)
         case "end":
+            log.info("end")
             if case .connected(let name) = state { lastFinished = name }
             beginWaiting()
         default:
@@ -293,20 +324,41 @@ final class CalibrationLink: NSObject {
     fileprivate func invited(by peerID: MCPeerID, via advertiser: MCNearbyServiceAdvertiser,
                              handler: @escaping (Bool, MCSession?) -> Void) {
         // One camera at a time, and only through the advertiser carrying the current token.
-        guard advertiser === self.advertiser, camera == nil, let session else { handler(false, nil); return }
+        guard advertiser === self.advertiser else { handler(false, nil); return }
+        if let camera {
+            let stillConnecting = camera == peerID && session?.connectedPeers.contains(peerID) != true
+            guard camera.displayName == peerID.displayName, !stillConnecting else {
+                // Another camera, or a repeat invitation while the first is connecting (that would drop both).
+                log.info("invite from \(peerID.displayName, privacy: .public) declined: busy")
+                handler(false, nil); return
+            }
+            // The same phone inviting again before its drop reached us: it is rejoining, so give it a fresh session.
+            log.info("invite from \(peerID.displayName, privacy: .public) while connected: rejoin, replacing session")
+            replaceSession()
+        }
+        guard let session else { handler(false, nil); return }
+        log.info("invite from \(peerID.displayName, privacy: .public) accepted")
         camera = peerID
         handler(true, session)
     }
 
     fileprivate func changed(_ peerID: MCPeerID, in session: MCSession, to state: MCSessionState) {
-        guard session === self.session, peerID == camera, state == .notConnected else { return }
-        guard case .connected = self.state else {
-            // The invitation never got as far as `hello`: keep this token so the same QR can retry.
-            camera = nil
-            return
+        guard session === self.session, peerID == camera else { return }
+        log.info("\(peerID.displayName, privacy: .public) -> \(String(describing: state), privacy: .public)")
+        guard state == .notConnected else { return }
+        // Keep the token and keep advertising so the camera can rejoin; a fresh session takes it.
+        replaceSession()
+        advertiser?.startAdvertisingPeer()
+        guard case .connected(let name) = self.state else { return }  // dropped before `hello`
+        // Dropped mid-run: target and step stay up; a new QR only if it does not come back in time.
+        self.state = .reconnecting(name)
+        rejoinTimeout?.cancel()
+        rejoinTimeout = Task { [weak self] in
+            try? await Task.sleep(for: CalibrationLink.rejoinWindow)
+            guard let self, !Task.isCancelled, case .reconnecting = self.state else { return }
+            self.log.info("no rejoin: back to waiting")
+            self.beginWaiting()
         }
-        // Dropped mid-run: back to waiting with a new token and QR.
-        beginWaiting()
     }
 
     fileprivate func received(_ data: Data, in session: MCSession, from peerID: MCPeerID) {

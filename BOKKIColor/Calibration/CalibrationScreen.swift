@@ -5,6 +5,7 @@ import SwiftUI
 /// connection state; while a target is up nothing else is drawn, so the camera sees only the target.
 struct CalibrationScreen: View {
     @Environment(\.dismiss) private var dismiss
+    @Environment(\.scenePhase) private var scenePhase
     @Environment(CustomChartStore.self) private var store
     @State private var link = CalibrationLink()
     @State private var lock = DisplayLock()
@@ -19,7 +20,7 @@ struct CalibrationScreen: View {
                 } else {
                     // The corner markers stay up while waiting, so the camera can be framed first.
                     fiducials(size: geo.size)
-                    status
+                    status(size: geo.size)
                 }
             }
             .onAppear { link.canvasSize = geo.size }
@@ -53,31 +54,38 @@ struct CalibrationScreen: View {
             lock.stop()
         }
         .onChange(of: link.frame == nil) { _, _ in showClose = false }
+        .onChange(of: scenePhase) { _, phase in if phase == .active { link.resume() } }
     }
 
-    private var status: some View {
+    private func status(size: CGSize) -> some View {
         VStack(spacing: 16) {
             switch link.state {
             case .waiting:
+                if let name = link.lastFinished {
+                    Label("\(name) 캘리브레이션 완료 — 결과는 BOKKI CAM에서 확인하세요.", systemImage: "checkmark.circle.fill")
+                        .font(.callout.weight(.semibold)).foregroundStyle(.green)
+                }
                 Text("BOKKI CAM 연결 대기 중").font(.title2.bold())
-                if let qr = Self.qrImage(link.pairingURL.absoluteString) {
+                // Big enough for BOKKI CAM to read from about 1 m; white quiet zone around the code.
+                let side = min(min(size.width, size.height) * 0.5, max(size.width, size.height) * 0.36)
+                if let qr = Self.qrImage(link.pairingPayload) {
                     Image(uiImage: qr).interpolation(.none).resizable().scaledToFit()
-                        .frame(width: 220, height: 220)
-                        .padding(14).background(.white, in: RoundedRectangle(cornerRadius: 12))
+                        .frame(width: side, height: side)
+                        .padding(side * 0.08).background(.white)
                         .accessibilityLabel("BOKKI CAM 연결 QR 코드")
                 }
-                Text("연결 코드 \(link.pairingCode)").font(.system(.title3, design: .monospaced).bold())
-                Text("아이폰 카메라나 BOKKI CAM으로 QR을 찍으면 바로 연결됩니다.\n또는 BOKKI CAM에서 캘리브레이션을 시작하세요 (Bluetooth · Wi-Fi 켜기).")
+                Text("BOKKI CAM 사진 화면에 이 QR을 비추면 이 화면에 바로 연결됩니다.\n또는 BOKKI CAM에서 캘리브레이션을 시작하세요 (Bluetooth · Wi-Fi 켜기).")
                     .multilineTextAlignment(.center).foregroundStyle(.white.opacity(0.7))
             case .connected(let name):
                 Image(systemName: "link.circle.fill").font(.system(size: 56)).foregroundStyle(.green)
                 Text("\(name) 연결됨").font(.title2.bold())
                 Text("BOKKI CAM이 타깃을 띄울 때까지 화면을 카메라 쪽으로 두세요.")
                     .foregroundStyle(.white.opacity(0.7))
-            case .finished(let name):
-                Image(systemName: "checkmark.circle.fill").font(.system(size: 56)).foregroundStyle(.green)
-                Text("캘리브레이션 완료").font(.title2.bold())
-                Text("\(name)에서 결과를 확인하세요.").foregroundStyle(.white.opacity(0.7))
+            case .reconnecting(let name):
+                ProgressView().tint(.white).controlSize(.large)
+                Text("\(name) 재연결 대기 중").font(.title2.bold())
+                Text("연결이 잠시 끊겼습니다. BOKKI CAM이 자동으로 다시 연결합니다.")
+                    .foregroundStyle(.white.opacity(0.7))
             }
             Label("BOKKI CAM 화면에 네 모서리의 흰 사각형이 모두 들어오게 맞추세요. 화면을 정면에서, 프레임을 거의 채우게 찍어야 합니다.",
                   systemImage: "viewfinder")
@@ -92,6 +100,7 @@ struct CalibrationScreen: View {
     @ViewBuilder
     private func target(_ frame: CalibrationFrame, size: CGSize) -> some View {
         if let flat = frame.flat {
+            // Only the colour, edge to edge: no progress text on flats (the CAM finds the screen from them).
             Color(.displayP3, red: flat.x, green: flat.y, blue: flat.z)
         } else if let chart = frame.chart {
             Canvas { ctx, size in
@@ -108,8 +117,34 @@ struct CalibrationScreen: View {
                     let rect = CGRect(x: margin + c * pw * (1 + g), y: margin + r * ph * (1 + g), width: pw, height: ph)
                     ctx.fill(Path(rect), with: .color(patch.spec.color(in: .displayP3)))
                 }
+                if let text = Self.progressText(frame.step) {
+                    Self.drawProgress(text, in: &ctx, size: size)
+                }
             }
         }
+    }
+
+    /// `index / total · label`, from whatever parts of `step` the CAM sent.
+    private static func progressText(_ step: CalibrationStep?) -> String? {
+        guard let step else { return nil }
+        var parts: [String] = []
+        if let i = step.index {
+            parts.append(step.total.map { "\(i) / \($0)" } ?? "\(i)")
+        }
+        if let label = step.label, !label.isEmpty { parts.append(label) }
+        return parts.isEmpty ? nil : parts.joined(separator: " · ")
+    }
+
+    /// Progress in the top black margin, between the corner markers and above the patches: the
+    /// band from 0.02 to 0.08 × short side tall, from 0.1 × short side in from each end.
+    private static func drawProgress(_ text: String, in ctx: inout GraphicsContext, size: CGSize) {
+        let short = min(size.width, size.height)
+        let band = CGRect(x: 0.1 * short, y: 0.02 * short, width: size.width - 0.2 * short, height: 0.06 * short)
+        guard band.width > 0 else { return }
+        let label = Text(text).font(.system(size: 0.03 * short, weight: .semibold)).foregroundStyle(Color(white: 0.5))
+        var inner = ctx
+        inner.clip(to: Path(band))
+        inner.draw(inner.resolve(label), at: CGPoint(x: band.midX, y: band.midY), anchor: .center)
     }
 
     /// QR code bitmap for the pairing URL (black on white, one pixel per module; scaled up without smoothing).
