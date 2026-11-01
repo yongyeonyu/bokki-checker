@@ -105,6 +105,19 @@ final class CalibrationLink: NSObject {
     private(set) var state: State = .waiting
     private(set) var frame: CalibrationFrame?
     private(set) var lastError: String?
+    /// Pairing code for this screen session, shown as a QR so a CAM can connect to this Checker only.
+    let pairingCode: String = String((0..<6).map { _ in "ABCDEFGHJKLMNPQRSTUVWXYZ23456789".randomElement()! })
+
+    /// Opened by scanning the QR: launches BOKKI CAM straight into calibration with this Checker.
+    var pairingURL: URL {
+        var c = URLComponents()
+        c.scheme = "bokkicam"
+        c.host = "calibrate"
+        c.queryItems = [URLQueryItem(name: "pv", value: String(CalibrationProtocol.version)),
+                        URLQueryItem(name: "code", value: pairingCode),
+                        URLQueryItem(name: "name", value: peer.displayName)]
+        return c.url!
+    }
 
     /// Set by the screen: resolves a chart id (built-in or custom) and the canvas orientation.
     var chartLookup: (String) -> PatchChart? = { _ in nil }
@@ -123,7 +136,8 @@ final class CalibrationLink: NSObject {
         session = MCSession(peer: peer, securityIdentity: nil, encryptionPreference: .required)
         session.delegate = self
         advertiser = MCNearbyServiceAdvertiser(peer: peer,
-                                               discoveryInfo: ["app": "BOKKI Checker", "pv": String(CalibrationProtocol.version)],
+                                               discoveryInfo: ["app": "BOKKI Checker", "pv": String(CalibrationProtocol.version),
+                                                               "code": pairingCode],
                                                serviceType: CalibrationProtocol.serviceType)
         advertiser.delegate = self
     }

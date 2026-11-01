@@ -1,3 +1,4 @@
+import CoreImage.CIFilterBuiltins
 import SwiftUI
 
 /// Full-screen calibration target that BOKKI CAM drives over the link. While idle it shows the
@@ -16,6 +17,8 @@ struct CalibrationScreen: View {
                 if let frame = link.frame {
                     target(frame, size: geo.size)
                 } else {
+                    // The corner markers stay up while waiting, so the camera can be framed first.
+                    fiducials(size: geo.size)
                     status
                 }
             }
@@ -27,13 +30,13 @@ struct CalibrationScreen: View {
         .persistentSystemOverlays(.hidden)
         .contentShape(Rectangle())
         .onTapGesture { if link.frame != nil { showClose.toggle() } }
-        .overlay(alignment: .topTrailing) {
+        .overlay(alignment: .bottom) {
             if link.frame == nil || showClose {
                 Button { dismiss() } label: {
                     Image(systemName: "xmark").font(.title3.bold()).foregroundStyle(.white)
                         .frame(width: 44, height: 44).background(.white.opacity(0.15), in: Circle())
                 }
-                .padding(24)
+                .padding(.bottom, 48)
                 .accessibilityLabel("닫기")
             }
         }
@@ -56,9 +59,15 @@ struct CalibrationScreen: View {
         VStack(spacing: 16) {
             switch link.state {
             case .waiting:
-                ProgressView().tint(.white).scaleEffect(1.4)
                 Text("BOKKI CAM 연결 대기 중").font(.title2.bold())
-                Text("다른 기기에서 BOKKI CAM을 열고 캘리브레이션을 시작하세요.\n두 기기는 가까이 두기만 하면 됩니다 (Bluetooth · Wi-Fi 켜기).")
+                if let qr = Self.qrImage(link.pairingURL.absoluteString) {
+                    Image(uiImage: qr).interpolation(.none).resizable().scaledToFit()
+                        .frame(width: 220, height: 220)
+                        .padding(14).background(.white, in: RoundedRectangle(cornerRadius: 12))
+                        .accessibilityLabel("BOKKI CAM 연결 QR 코드")
+                }
+                Text("연결 코드 \(link.pairingCode)").font(.system(.title3, design: .monospaced).bold())
+                Text("아이폰 카메라나 BOKKI CAM으로 QR을 찍으면 바로 연결됩니다.\n또는 BOKKI CAM에서 캘리브레이션을 시작하세요 (Bluetooth · Wi-Fi 켜기).")
                     .multilineTextAlignment(.center).foregroundStyle(.white.opacity(0.7))
             case .connected(let name):
                 Image(systemName: "link.circle.fill").font(.system(size: 56)).foregroundStyle(.green)
@@ -70,8 +79,11 @@ struct CalibrationScreen: View {
                 Text("캘리브레이션 완료").font(.title2.bold())
                 Text("\(name)에서 결과를 확인하세요.").foregroundStyle(.white.opacity(0.7))
             }
-            Text("True Tone · Night Shift · 자동 밝기를 끄고, 화면에 조명이 비치지 않게 두세요.")
-                .font(.footnote).foregroundStyle(.orange).padding(.top, 12)
+            Label("BOKKI CAM 화면에 네 모서리의 흰 사각형이 모두 들어오게 맞추세요. 화면을 정면에서, 프레임을 거의 채우게 찍어야 합니다.",
+                  systemImage: "viewfinder")
+                .font(.callout.weight(.semibold)).multilineTextAlignment(.center).padding(.top, 12)
+            Text("True Tone · Night Shift · 자동 밝기를 끄고, 화면을 닦고, 조명이 화면에 비치지 않게 두세요.")
+                .font(.footnote).foregroundStyle(.orange)
         }
         .foregroundStyle(.white)
         .padding(40)
@@ -84,13 +96,7 @@ struct CalibrationScreen: View {
         } else if let chart = frame.chart {
             Canvas { ctx, size in
                 let short = min(size.width, size.height)
-                // Fiducials: white squares in the corners (protocol: 0.06 × short side, inset 0.02).
-                let f = 0.06 * short, inset = 0.02 * short
-                for origin in [CGPoint(x: inset, y: inset), CGPoint(x: size.width - inset - f, y: inset),
-                               CGPoint(x: size.width - inset - f, y: size.height - inset - f),
-                               CGPoint(x: inset, y: size.height - inset - f)] {
-                    ctx.fill(Path(CGRect(origin: origin, size: CGSize(width: f, height: f))), with: .color(.white))
-                }
+                Self.drawFiducials(in: &ctx, size: size)
                 // Same geometry BOKKI CAM uses to find the patches.
                 let margin = CalibrationProtocol.marginFraction * short
                 let g = CalibrationProtocol.gapFraction
@@ -103,6 +109,31 @@ struct CalibrationScreen: View {
                     ctx.fill(Path(rect), with: .color(patch.spec.color(in: .displayP3)))
                 }
             }
+        }
+    }
+
+    /// QR code bitmap for the pairing URL (black on white, one pixel per module; scaled up without smoothing).
+    private static func qrImage(_ text: String) -> UIImage? {
+        let filter = CIFilter.qrCodeGenerator()
+        filter.message = Data(text.utf8)
+        filter.correctionLevel = "M"
+        guard let output = filter.outputImage,
+              let cg = CIContext().createCGImage(output, from: output.extent) else { return nil }
+        return UIImage(cgImage: cg)
+    }
+
+    private func fiducials(size: CGSize) -> some View {
+        Canvas { ctx, size in Self.drawFiducials(in: &ctx, size: size) }
+    }
+
+    /// White squares in the corners (protocol: 0.06 × short side, inset 0.02) that BOKKI CAM finds.
+    private static func drawFiducials(in ctx: inout GraphicsContext, size: CGSize) {
+        let short = min(size.width, size.height)
+        let f = 0.06 * short, inset = 0.02 * short
+        for origin in [CGPoint(x: inset, y: inset), CGPoint(x: size.width - inset - f, y: inset),
+                       CGPoint(x: size.width - inset - f, y: size.height - inset - f),
+                       CGPoint(x: inset, y: size.height - inset - f)] {
+            ctx.fill(Path(CGRect(origin: origin, size: CGSize(width: f, height: f))), with: .color(.white))
         }
     }
 }
