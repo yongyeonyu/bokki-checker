@@ -234,9 +234,12 @@ struct ChartScreen: View {
             Form {
                 Picker("색공간", selection: $space) { ForEach(OutputSpace.allCases) { Text($0.title).tag($0) } }
                     .pickerStyle(.segmented)
-                if isPatches {
+                // The slate's checker uses the ratio too; only the surround is fixed (black).
+                if isPatches || item.kind == .slate {
                     Picker("비율", selection: $aspectRaw) { ForEach(AspectMode.allCases) { Text($0.title).tag($0.rawValue) } }
                         .pickerStyle(.segmented)
+                }
+                if isPatches {
                     Picker("주변색", selection: $surroundRaw) { ForEach(Surround.allCases) { Text($0.title).tag($0.rawValue) } }
                         .pickerStyle(.segmented)
                 }
@@ -245,7 +248,7 @@ struct ChartScreen: View {
             .navigationBarTitleDisplayMode(.inline)
             .toolbar { Button("완료") { settingsOpen = false } }
         }
-        .presentationDetents([.height(isPatches ? 300 : 180)])
+        .presentationDetents([.height(isPatches ? 300 : item.kind == .slate ? 240 : 180)])
     }
 
     private var warningBadge: some View {
