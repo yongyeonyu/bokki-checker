@@ -76,6 +76,13 @@ struct HomeView: View {
             }
         }
         .fullScreenCover(item: $presented) { ChartScreen(item: $0).environment(store) }
+        #if DEBUG
+        // App Store captures: `-openChart <id>` opens that chart at launch.
+        .onAppear {
+            guard let id = UserDefaults.standard.string(forKey: "openChart") else { return }
+            presented = categories.flatMap(\.items).first { $0.id == id }
+        }
+        #endif
         .sheet(isPresented: $showCheck) { DisplayCheckView() }
         .fullScreenCover(isPresented: $calibrating) { CalibrationScreen().environment(store) }
         .sheet(isPresented: $showSettings) { SettingsView() }
